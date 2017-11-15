@@ -22,7 +22,7 @@
  *   THE SOFTWARE.
  */
 
-package com.earlydata.library.rx;
+package com.whatsmode.library.rx;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;

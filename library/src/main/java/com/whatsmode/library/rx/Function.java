@@ -22,9 +22,9 @@
  *   THE SOFTWARE.
  */
 
-package com.earlydata.library.rx;
+package com.whatsmode.library.rx;
 
-public interface BiFunction<T, U, R> {
+public interface Function<T, R> {
 
-  R apply(T t, U u);
+  R apply(T t);
 }

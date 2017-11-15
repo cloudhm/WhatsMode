@@ -22,7 +22,7 @@
  *   THE SOFTWARE.
  */
 
-package com.earlydata.library.rx;
+package com.whatsmode.library.rx;
 
 import com.shopify.buy3.GraphCall;
 import com.shopify.buy3.GraphResponse;

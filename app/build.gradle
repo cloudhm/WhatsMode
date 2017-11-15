@@ -1,8 +1,10 @@
 apply plugin: 'com.android.application'
+apply plugin: 'me.tatarka.retrolambda'
 
 android {
     compileSdkVersion 25
     buildToolsVersion "26.0.1"
+
     defaultConfig {
         applicationId "com.whatsmode.shopify"
         minSdkVersion 19
@@ -21,13 +23,17 @@ android {
             buildConfigField "String", "API_KEY", "\"42edd7ced5774d40a6d50abb03c295df\""
         }
     }
+
+    compileOptions{
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
+
 }
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.shopify.mobilebuysdk:buy3:3.1.1'
-    // optional library to help with Android Pay purchase flow
-    compile 'com.shopify.mobilebuysdk:buy3-pay-support:1.0.2'
+
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })

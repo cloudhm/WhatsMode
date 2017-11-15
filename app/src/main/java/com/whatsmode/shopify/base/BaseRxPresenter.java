@@ -1,60 +1,51 @@
 package com.whatsmode.shopify.base;
 
 
+import com.earlydata.library.rx.RxBus;
 import com.whatsmode.shopify.mvp.MvpBasePresenter;
 import com.whatsmode.shopify.mvp.MvpView;
 
-import java.util.HashMap;
-
-import rx.Subscription;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 
 public class BaseRxPresenter<V extends MvpView> extends MvpBasePresenter<V> {
 
-    //管理所有的Subscription,便于回收资源
-    private CompositeSubscription mSubParent;
-    private HashMap<String, Subscription> mSubMap;
+    protected CompositeDisposable mCompositeDisposable;
     @Override
     public void attachView(V view) {
         super.attachView(view);
-        mSubParent = new CompositeSubscription();
-        mSubMap = new HashMap<>();
     }
 
     @Override
     public void detachView() {
         super.detachView();
         //与View断开联系时 ,取消注册RxJava 防止内存溢出
-        if (mSubParent.hasSubscriptions()) {
-            mSubParent.unsubscribe();
-            mSubParent = null;
-        }
-        if (!mSubMap.isEmpty()) {
-            mSubMap.clear();
-            mSubMap = null;
+        unSubscribe();
+        mCompositeDisposable = null;
+    }
+
+
+    protected void unSubscribe(){
+        if (mCompositeDisposable != null) {
+            if (!mCompositeDisposable.isDisposed()) {
+                mCompositeDisposable.dispose();
+            }
+            mCompositeDisposable.clear();
         }
     }
 
-    /**
-     * 通过该方法添加的Subscription，会在Presenter与View解绑时unSubscribe
-     */
-    protected void addSubscription(Subscription s) {
-        if (mSubParent != null)
-            mSubParent.add(s);
+    public boolean addSubscribe(Disposable disposable) {
+        if (mCompositeDisposable == null) {
+            mCompositeDisposable = new CompositeDisposable();
+        }
+
+        return mCompositeDisposable.add(disposable);
     }
 
-    /**
-     * 通过该方法添加相同的key的Subscription，会把原来的Subscription remove and unSubscribe,并会在Presenter与View解绑时unSubscribe
-     */
-    protected void addSubscription(Subscription s, String key) {
-        if (mSubMap == null || mSubParent == null) {
-            return;
+    /*protected <U> void addRxBusSubscribe(Class<U> eventType, Consumer<U> act) {
+        if (mCompositeDisposable == null) {
+            mCompositeDisposable = new CompositeDisposable();
         }
-        Subscription subscription = mSubMap.get(key);
-        if (subscription != null) {
-            mSubParent.remove(subscription);
-        }
-        mSubMap.put(key, s);
-        mSubParent.add(s);
-    }
+        mCompositeDisposable.add(RxBus.getInstance().toDefalutFlowable(eventType, act));
+    }*/
 }

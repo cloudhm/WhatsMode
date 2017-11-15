@@ -33,7 +33,7 @@ import io.reactivex.Single;
 import io.reactivex.SingleTransformer;
 import io.reactivex.exceptions.Exceptions;
 
-import static com.mode.app.shopify.Util.fold;
+import static com.earlydata.library.rx.Util.fold;
 
 public final class RxUtil {
 

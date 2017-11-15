@@ -1,5 +1,25 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
+ext {
+    //项目版本
+    configuration = [
+            package          : "whatshots",
+            buildToolsVersion: "25.0.1",
+            compileVersion   : 25,
+            minSdk           : 19,
+            targetSdk        : 23,
+            version_code     : 1,
+            version_name     : "1.0 preview",
+    ]
 
+    //对一些库的版本进行统一管理
+    libraries = [
+            supportVersion: "25.0.1",
+            retrofit      : "2.1.0",
+            leakcanary    : "1.5",
+            blockcanary   : "1.4.0"
+    ]
+
+}
 buildscript {
     repositories {
         jcenter()
@@ -15,6 +35,12 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
+        mavenCentral()
+        maven { url "https://jitpack.io" }
+    }
+
+    tasks.withType(JavaCompile) {
+        options.encoding = "UTF-8"
     }
 }
 

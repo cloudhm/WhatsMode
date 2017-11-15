@@ -5,7 +5,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 
-import com.earlydata.waterdrop.base.BaseFragment;
+import com.example.administrator.whatshots.base.BaseFragment;
+
 
 public abstract class MvpFragment<P extends MvpPresenter> extends BaseFragment
         implements MvpView {

@@ -3,11 +3,8 @@ package com.example.administrator.whatshots.mvp.loader;
 import android.content.Context;
 import android.support.v4.content.Loader;
 
-import com.earlydata.waterdrop.mvp.MvpPresenter;
+import com.example.administrator.whatshots.mvp.MvpPresenter;
 
-/**
- * Created by Chu on 2016/11/17.
- */
 public abstract class PresenterLoader<T extends MvpPresenter> extends Loader<T> {
 
     private T presenter;

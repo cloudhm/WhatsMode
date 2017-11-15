@@ -3,8 +3,7 @@ package com.example.administrator.whatshots.mvp;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
-import com.earlydata.waterdrop.base.BaseActivity;
-
+import com.example.administrator.whatshots.base.BaseActivity;
 
 public abstract class MvpActivity<P extends MvpPresenter> extends BaseActivity implements MvpView {
     protected P mPresenter;

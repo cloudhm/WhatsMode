@@ -1,6 +1,8 @@
 package com.example.administrator.whatshots.base;
 
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.example.administrator.whatshots.mvp.MvpPresenter;
 import com.example.administrator.whatshots.mvp.MvpView;
 
 public interface BaseListContract {

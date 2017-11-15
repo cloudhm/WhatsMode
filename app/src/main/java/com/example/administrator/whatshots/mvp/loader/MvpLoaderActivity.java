@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 
+import com.example.administrator.whatshots.base.BaseActivity;
 import com.example.administrator.whatshots.mvp.MvpPresenter;
 import com.example.administrator.whatshots.mvp.MvpView;
 

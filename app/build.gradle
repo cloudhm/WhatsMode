@@ -16,6 +16,10 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        all {
+            buildConfigField "String", "SHOP_DOMAIN", "\"whatsmodetest.myshopify.com\""
+            buildConfigField "String", "API_KEY", "\"42edd7ced5774d40a6d50abb03c295df\""
+        }
     }
 }
 

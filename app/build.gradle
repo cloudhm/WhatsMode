@@ -1,8 +1,9 @@
 apply plugin: 'com.android.application'
-def libs = rootProject.ext.libraries
+apply plugin:'me.tatarka.retrolambda'
 android {
     compileSdkVersion 25
     buildToolsVersion "26.0.1"
+
     defaultConfig {
         applicationId "com.whatsmode.shopify"
         minSdkVersion 19
@@ -21,13 +22,15 @@ android {
             buildConfigField "String", "API_KEY", "\"42edd7ced5774d40a6d50abb03c295df\""
         }
     }
+
+    compileOptions{
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
+
 }
 
 dependencies {
-    compile 'com.squareup.retrofit2:retrofit:' + libs.retrofit
-    compile 'com.squareup.retrofit2:adapter-rxjava:' + libs.retrofit
-    compile 'com.squareup.retrofit2:converter-gson:' + libs.retrofit
-    compile 'com.squareup.retrofit2:converter-scalars:' + libs.retrofit
     compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'

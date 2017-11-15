@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Whatshots</string>
+    <string name="app_name">whatsMode</string>
     <string name="tabFirst">Mode</string>
     <string name="tabSecond">Influence</string>
     <string name="tabThird">Cart</string>

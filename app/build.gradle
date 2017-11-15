@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-
+def libs = rootProject.ext.libraries
 android {
     compileSdkVersion 25
     buildToolsVersion "26.0.1"
@@ -24,10 +24,11 @@ android {
 }
 
 dependencies {
+    compile 'com.squareup.retrofit2:retrofit:' + libs.retrofit
+    compile 'com.squareup.retrofit2:adapter-rxjava:' + libs.retrofit
+    compile 'com.squareup.retrofit2:converter-gson:' + libs.retrofit
+    compile 'com.squareup.retrofit2:converter-scalars:' + libs.retrofit
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.shopify.mobilebuysdk:buy3:3.1.1'
-    // optional library to help with Android Pay purchase flow
-    compile 'com.shopify.mobilebuysdk:buy3-pay-support:1.0.2'
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })

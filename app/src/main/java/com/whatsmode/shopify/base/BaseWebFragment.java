@@ -2,6 +2,7 @@ package com.whatsmode.shopify.base;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.View;
 import android.webkit.WebView;
 
@@ -27,7 +28,9 @@ public class BaseWebFragment extends BaseFragment {
         mWebView = (WebView) view.findViewById(R.id.webView);
         mWebView.getSettings().setJavaScriptEnabled(true);
         if (getArguments() != null) {
-            mWebView.loadUrl(getArguments().getString(KEY_URL));
+            if (!TextUtils.isEmpty(getArguments().getString(KEY_URL))) {
+                mWebView.loadUrl(getArguments().getString(KEY_URL));
+            }
         }
     }
 

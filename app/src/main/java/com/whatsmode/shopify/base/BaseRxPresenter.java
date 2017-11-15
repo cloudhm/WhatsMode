@@ -1,7 +1,6 @@
 package com.whatsmode.shopify.base;
 
 
-import com.earlydata.library.rx.RxBus;
 import com.whatsmode.shopify.mvp.MvpBasePresenter;
 import com.whatsmode.shopify.mvp.MvpView;
 

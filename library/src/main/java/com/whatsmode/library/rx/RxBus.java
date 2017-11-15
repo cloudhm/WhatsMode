@@ -1,6 +1,4 @@
-package com.earlydata.library.rx;
-
-import com.whatsmode.library.rx.RxUtil;
+package com.whatsmode.library.rx;
 
 import io.reactivex.Flowable;
 import io.reactivex.Observable;

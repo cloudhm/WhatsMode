@@ -2,7 +2,7 @@
 ext {
     //项目版本
     configuration = [
-            package          : "whatshots",
+            package          : "com.whatsmode.shopify",
             buildToolsVersion: "25.0.1",
             compileVersion   : 25,
             minSdk           : 19,
@@ -15,8 +15,6 @@ ext {
     libraries = [
             supportVersion: "25.0.1",
             retrofit      : "2.1.0",
-            leakcanary    : "1.5",
-            blockcanary   : "1.4.0"
     ]
 
 }

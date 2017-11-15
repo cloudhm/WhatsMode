@@ -1,8 +1,8 @@
-package com.example.administrator.whatshots.base;
+package com.whatsmode.shopify.base;
 
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.example.administrator.whatshots.mvp.MvpView;
+import com.whatsmode.shopify.mvp.MvpView;
 
 public interface BaseListView<E> extends MvpView {
     /**

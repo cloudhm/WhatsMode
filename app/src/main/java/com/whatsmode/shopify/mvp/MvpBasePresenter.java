@@ -1,4 +1,4 @@
-package com.example.administrator.whatshots.mvp;
+package com.whatsmode.shopify.mvp;
 
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;

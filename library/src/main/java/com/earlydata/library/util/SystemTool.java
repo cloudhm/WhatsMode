@@ -40,15 +40,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-
-/**
- * 系统信息工具包<br>
- * <p/>
- * <b>创建时间</b> 2014-8-14
- *
- * @author kymjs (https://github.com/kymjs)
- * @version 1.1
- */
 @SuppressLint("SimpleDateFormat")
 public final class SystemTool {
     /**

@@ -1,11 +1,11 @@
-package com.example.administrator.whatshots.mvp;
+package com.whatsmode.shopify.mvp;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 
-import com.example.administrator.whatshots.base.BaseFragment;
+import com.whatsmode.shopify.base.BaseFragment;
 
 
 public abstract class MvpFragment<P extends MvpPresenter> extends BaseFragment

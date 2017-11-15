@@ -8,10 +8,6 @@ import android.provider.MediaStore;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-/**
- * Created by liao on 16-12-12.
- */
-
 public class PhotoUtil {
 
     /**获取图片

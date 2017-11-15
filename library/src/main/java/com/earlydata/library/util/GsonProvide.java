@@ -2,10 +2,6 @@ package com.earlydata.library.util;
 
 import com.google.gson.Gson;
 
-/**
- * Created by zchu on 17-1-11.
- */
-
 public class GsonProvide {
 
 

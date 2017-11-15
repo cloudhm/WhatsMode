@@ -1,4 +1,4 @@
-package com.example.administrator.whatshots;
+package com.whatsmode.shopify;
 
 import org.junit.Test;
 

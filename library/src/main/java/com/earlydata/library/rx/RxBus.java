@@ -9,11 +9,6 @@ import rx.subjects.PublishSubject;
 import rx.subjects.SerializedSubject;
 import rx.subjects.Subject;
 
-/**
- * Created by zchu on 16-11-22.<br>
- * 详细的使用方法请看这里：<br>
- *  http://gogs.analyticservice.net/zchu/WaterDrop/src/master/Help/Rxbus%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8.md
- */
 public class RxBus {
     private static volatile RxBus mDefaultInstance;
     private final Subject<Object, Object> mBus;

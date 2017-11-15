@@ -7,10 +7,7 @@ import android.os.Build;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
-/**
- * @author MaTianyu(http://litesuits.com) on 2015-06-01
- * 软键盘控制帮助类
- */
+
 @TargetApi(Build.VERSION_CODES.CUPCAKE)
 public class InputMethodUtils {
 

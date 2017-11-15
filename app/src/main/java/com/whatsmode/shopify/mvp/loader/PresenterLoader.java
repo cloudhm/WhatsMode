@@ -1,9 +1,9 @@
-package com.example.administrator.whatshots.mvp.loader;
+package com.whatsmode.shopify.mvp.loader;
 
 import android.content.Context;
 import android.support.v4.content.Loader;
 
-import com.example.administrator.whatshots.mvp.MvpPresenter;
+import com.whatsmode.shopify.mvp.MvpPresenter;
 
 public abstract class PresenterLoader<T extends MvpPresenter> extends Loader<T> {
 

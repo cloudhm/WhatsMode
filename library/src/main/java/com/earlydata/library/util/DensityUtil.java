@@ -2,10 +2,6 @@ package com.earlydata.library.util;
 
 import android.content.Context;
 import android.util.TypedValue;
-
-/**
- * Created by z-chu on 2016/4/8.
- */
 public class DensityUtil {
     private DensityUtil() {
         throw new UnsupportedOperationException("cannot be instantiated");

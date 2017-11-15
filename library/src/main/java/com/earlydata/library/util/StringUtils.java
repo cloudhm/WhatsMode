@@ -12,14 +12,6 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
-/**
- * 字符串操作工具包
- *
- * @author liux (http://my.oschina.net/liux)
- * @author thanatosx
- * @version 2.0
- *          Updated 2016-08-11
- */
 public class StringUtils {
 
 

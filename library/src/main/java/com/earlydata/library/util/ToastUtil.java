@@ -3,10 +3,6 @@ package com.earlydata.library.util;
 import android.content.Context;
 import android.widget.Toast;
 
-
-/**
- * Created by Chu on 2016/3/14.
- */
 public class ToastUtil {
     private static Toast sToast = null;
     private static Context mContext;

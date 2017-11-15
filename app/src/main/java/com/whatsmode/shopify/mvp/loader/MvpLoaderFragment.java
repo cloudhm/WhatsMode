@@ -1,4 +1,4 @@
-package com.example.administrator.whatshots.mvp.loader;
+package com.whatsmode.shopify.mvp.loader;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -6,9 +6,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 
-import com.example.administrator.whatshots.base.BaseFragment;
-import com.example.administrator.whatshots.mvp.MvpPresenter;
-import com.example.administrator.whatshots.mvp.MvpView;
+import com.whatsmode.shopify.base.BaseFragment;
+import com.whatsmode.shopify.mvp.MvpPresenter;
+import com.whatsmode.shopify.mvp.MvpView;
 
 public abstract class MvpLoaderFragment <P extends MvpPresenter> extends BaseFragment implements MvpView, LoaderManager.LoaderCallbacks<P> {
 

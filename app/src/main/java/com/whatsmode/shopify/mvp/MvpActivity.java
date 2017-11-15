@@ -1,9 +1,9 @@
-package com.example.administrator.whatshots.mvp;
+package com.whatsmode.shopify.mvp;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
-import com.example.administrator.whatshots.base.BaseActivity;
+import com.whatsmode.shopify.base.BaseActivity;
 
 public abstract class MvpActivity<P extends MvpPresenter> extends BaseActivity implements MvpView {
     protected P mPresenter;

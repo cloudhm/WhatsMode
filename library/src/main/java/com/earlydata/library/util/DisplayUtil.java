@@ -4,10 +4,6 @@ import android.content.Context;
 import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
 
-
-/**
- * Created by z-chu on 2016/4/21.
- */
 public class DisplayUtil {
     private DisplayUtil(){}
 

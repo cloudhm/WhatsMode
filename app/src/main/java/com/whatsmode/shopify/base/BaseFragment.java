@@ -1,4 +1,4 @@
-package com.example.administrator.whatshots.base;
+package com.whatsmode.shopify.base;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

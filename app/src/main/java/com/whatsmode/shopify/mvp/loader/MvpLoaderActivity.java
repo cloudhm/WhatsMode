@@ -1,13 +1,13 @@
-package com.example.administrator.whatshots.mvp.loader;
+package com.whatsmode.shopify.mvp.loader;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 
-import com.example.administrator.whatshots.base.BaseActivity;
-import com.example.administrator.whatshots.mvp.MvpPresenter;
-import com.example.administrator.whatshots.mvp.MvpView;
+import com.whatsmode.shopify.base.BaseActivity;
+import com.whatsmode.shopify.mvp.MvpPresenter;
+import com.whatsmode.shopify.mvp.MvpView;
 
 public abstract class MvpLoaderActivity<P extends MvpPresenter> extends BaseActivity implements MvpView, LoaderManager.LoaderCallbacks<P> {
     protected P mPresenter;

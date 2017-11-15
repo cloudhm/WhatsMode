@@ -1,4 +1,4 @@
-package com.example.administrator.whatshots.mvp;
+package com.whatsmode.shopify.mvp;
 
 import android.support.annotation.UiThread;
 public interface MvpPresenter<V extends MvpView> {

@@ -8,9 +8,7 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
 import javax.crypto.spec.IvParameterSpec;
 
-/**
- * 作者: 赵成柱 on 2016/8/4 0004.
- */
+
 public class DES {
 
     public static final String ALGORITHM_DES = "DES/CBC/PKCS5Padding";

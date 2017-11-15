@@ -1,4 +1,4 @@
-package com.example.administrator.whatshots;
+package com.whatsmode.shopify;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

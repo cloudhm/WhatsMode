@@ -1,8 +1,8 @@
-package com.example.administrator.whatshots.base;
+package com.whatsmode.shopify.base;
 
 
-import com.example.administrator.whatshots.mvp.MvpBasePresenter;
-import com.example.administrator.whatshots.mvp.MvpView;
+import com.whatsmode.shopify.mvp.MvpBasePresenter;
+import com.whatsmode.shopify.mvp.MvpView;
 
 import java.util.HashMap;
 

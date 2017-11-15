@@ -12,13 +12,6 @@ import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
 
-
-
-/**
- * @Description 缓存拦截器
- * @Author MoseLin
- * @Date 2016/7/9.
- */
 public class RequestCacheInterceptor implements Interceptor {
 
     private Context mContext;

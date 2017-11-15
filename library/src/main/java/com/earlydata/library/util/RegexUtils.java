@@ -5,14 +5,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * <pre>
- *     author: Blankj
- *     blog  : http://blankj.com
- *     time  : 2016/8/2
- *     desc  : 正则相关工具类
- * </pre>
- */
 public class RegexUtils {
 
     private RegexUtils() {

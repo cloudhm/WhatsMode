@@ -15,9 +15,6 @@ import android.support.graphics.drawable.VectorDrawableCompat;
 
 import java.io.ByteArrayOutputStream;
 
-/**
- * Created by z-chu on 2016/4/8.
- */
 public class BitmapUtil {
 
 

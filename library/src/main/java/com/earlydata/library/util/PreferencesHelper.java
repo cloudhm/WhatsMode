@@ -4,12 +4,6 @@ package com.earlydata.library.util;
 import android.annotation.TargetApi;
 import android.content.SharedPreferences;
 
-
-/**
- * Preferences帮助类
- * 作者：z-chu on 2016/4/14 15:07
- * 邮箱：zchu8073@gmail.com
- */
 public class PreferencesHelper {
     /**
      * 移除某个key值已经对应的值

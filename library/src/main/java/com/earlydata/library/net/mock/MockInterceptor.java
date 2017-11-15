@@ -9,11 +9,6 @@ import okhttp3.Protocol;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
-/**
- * Created by zchu on 16-11-30.
- * 在测试模式下，拦截请求，提供虚假数据交给MockDataProvider去做
- */
-
 public class MockInterceptor implements Interceptor {
 
     private MockDataProvider mDataProvider;

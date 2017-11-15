@@ -29,9 +29,17 @@ import com.shopify.buy3.GraphResponse;
 import com.shopify.buy3.Storefront;
 import com.shopify.graphql.support.AbstractResponse;
 
+import io.reactivex.Flowable;
+import io.reactivex.FlowableTransformer;
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.ObservableTransformer;
 import io.reactivex.Single;
 import io.reactivex.SingleTransformer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.exceptions.Exceptions;
+import io.reactivex.schedulers.Schedulers;
 
 import static com.earlydata.library.rx.Util.fold;
 
@@ -73,6 +81,29 @@ public final class RxUtil {
     });
   }
 
+  public static <T> FlowableTransformer<T,T> defalutFlowableSchedule() {//compose简化线程
+    return new FlowableTransformer<T, T>() {
+      @Override
+      public Flowable<T> apply(@NonNull Flowable<T> upstream) {
+        return upstream.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(Schedulers.io());
+      }
+    };
+  }
+
+  public static <T>ObservableTransformer<T,T> defalutObservableSchedule() {
+    return new ObservableTransformer<T, T>() {
+      @Override
+      public ObservableSource<T> apply(@NonNull Observable<T> upstream) {
+        return upstream.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(Schedulers.io());
+      }
+    };
+  }
+
   private RxUtil() {
   }
+
 }

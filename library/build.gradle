@@ -42,8 +42,8 @@ dependencies {
     compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.30'
     compile 'com.github.z-chu:ZLog:2.0'
     //rx
-    compile 'io.reactivex:rxandroid:1.2.1'
-    compile 'io.reactivex:rxjava:1.2.2'
+    compile 'io.reactivex:rxandroid:2.0.1'
+    compile 'io.reactivex:rxjava:2.0.6'
     //netWork
     compile 'com.squareup.okio:okio:1.11.0'
     compile 'com.squareup.okhttp3:okhttp:3.4.2'

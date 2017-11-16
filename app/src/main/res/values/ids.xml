@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item name="toolbar" type="id">tool_bar</item>
+    <item name="swipe_refresh_header" type="id">layout_header</item>
+    <item name="swipe_load_more_footer" type="id">layout_footer</item>
 </resources>

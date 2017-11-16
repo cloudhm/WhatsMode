@@ -115,18 +115,30 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
         }else {
             initPopWindowView();
             popupWindow.showAsDropDown(ivSearch,0,5);
+            ivSearch.setEnabled(false);
         }
     }
 
     private void initPopWindowView() {
         View customView = getLayoutInflater().inflate(R.layout.search_menu,
                 null, false);
-        popupWindow = new PopupWindow(customView, ScreenUtils.getScreenWidth(this), ScreenUtils.dip2px(this,250));
+        popupWindow = new PopupWindow(customView, ScreenUtils.getScreenWidth(this), ScreenUtils.dip2px(this,225));
         popupWindow.setAnimationStyle(R.style.AnimationFade);
+        popupWindow.setOutsideTouchable(true);
+        popupWindow.setOnDismissListener(() -> ivSearch.setEnabled(true));
     }
 
     @Override
     public void showAbout() {
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (popupWindow != null && popupWindow.isShowing()) {
+            popupWindow.dismiss();
+        }
+        popupWindow = null;
     }
 
     @Override

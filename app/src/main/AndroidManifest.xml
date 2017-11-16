@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.whatsmode.shopify" >
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
         android:name="com.whatsmode.shopify.WhatsApplication"
         android:allowBackup="true"
@@ -11,12 +13,20 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme" >
         <activity android:name="com.whatsmode.shopify.block.main.MainActivity" >
+
+        </activity>
+
+        <activity android:name=".block.account.LoginActivity"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".block.account.RegisterActivity"
+            />
     </application>
 
 </manifest>

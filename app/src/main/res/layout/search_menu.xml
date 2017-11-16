@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="#888888"
+    android:layout_width="match_parent"
+    android:layout_height="250dp">
+    <LinearLayout
+        android:id="@+id/search_layout"
+        android:layout_width="match_parent"
+        android:layout_toRightOf="@+id/iv_notifications"
+        android:background="@drawable/search_bg"
+        android:layout_marginTop="30dp"
+        android:orientation="horizontal"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_toLeftOf="@+id/iv_cart"
+        android:layout_centerVertical="true"
+        android:layout_height="40dp">
+        <ImageView
+            android:layout_width="15dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="7dp"
+            android:src="@drawable/icon_search"
+            android:layout_height="15dp" />
+        <TextView
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="7dp"
+            android:text="輸入您想搜索的內容"
+            android:textSize="16sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <TextView
+        android:text="女裝"
+        android:gravity="center"
+        android:textSize="18sp"
+        android:textColor="@color/colorPrimary"
+        android:layout_width="match_parent"
+        android:layout_height="50dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:background="#0f0f0f"
+        android:layout_height="0.5dp" />
+    <TextView
+        android:text="女裝"
+        android:gravity="center"
+        android:textSize="18sp"
+        android:textColor="@color/colorPrimary"
+        android:layout_width="match_parent"
+        android:layout_height="50dp" />
+    <View
+        android:layout_width="match_parent"
+        android:background="#0f0f0f"
+        android:layout_height="0.5dp" />
+    <TextView
+        android:text="女裝"
+        android:gravity="center"
+        android:textSize="18sp"
+        android:textColor="@color/colorPrimary"
+        android:layout_width="match_parent"
+        android:layout_height="50dp" />
+    <View
+        android:layout_width="match_parent"
+        android:background="#0f0f0f"
+        android:layout_height="0.5dp" />
+</LinearLayout>

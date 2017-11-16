@@ -1,6 +1,7 @@
 package com.whatsmode.shopify.block.main;
 
 import android.support.v4.app.FragmentManager;
+import android.view.View;
 
 import com.whatsmode.shopify.mvp.MvpPresenter;
 import com.whatsmode.shopify.mvp.MvpView;
@@ -19,6 +20,10 @@ class MainContact {
         void switch2Cart();
 
         void switch2Mine();
+
+        void showSearch();
+
+        void showAbout();
     }
 
     interface Presenter extends MvpPresenter<MainContact.View> {
@@ -26,5 +31,10 @@ class MainContact {
         void initViewPage(FragmentManager supportFragmentManager);
 
         void setPageSelected(int position);
+
+        boolean clickMenuItem(int itemId);
+
+        void onClickView(android.view.View v);
+
     }
 }

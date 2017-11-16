@@ -13,4 +13,9 @@
     <style name="AppTheme" parent="AppBaseTheme.Translucent.Statebar">
         <!--  -->
     </style>
+
+    <style name="AnimationFade">
+        <item name="android:windowEnterAnimation">@anim/inputdown</item>
+        <item name="android:windowExitAnimation">@anim/outdowntoup</item>
+    </style>
 </resources>

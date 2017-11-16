@@ -3,6 +3,8 @@ package com.whatsmode.shopify;
 import android.app.Application;
 import android.content.Context;
 
+import com.whatsmode.library.util.ToastUtil;
+
 
 public class WhatsApplication extends Application {
 
@@ -12,6 +14,7 @@ public class WhatsApplication extends Application {
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         sContext = this;
+        ToastUtil.init(this);
     }
 
     @Override

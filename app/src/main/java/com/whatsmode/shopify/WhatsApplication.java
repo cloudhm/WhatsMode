@@ -2,7 +2,6 @@ package com.whatsmode.shopify;
 
 import android.app.Application;
 import android.content.Context;
-
 import com.shopify.buy3.GraphClient;
 import com.shopify.buy3.HttpCachePolicy;
 
@@ -10,6 +9,7 @@ import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
+import com.whatsmode.library.util.ToastUtil;
 
 
 public class WhatsApplication extends Application {
@@ -42,6 +42,7 @@ public class WhatsApplication extends Application {
                 .httpCache(getCacheDir(), 1024 * 1024 * 10)
                 .defaultHttpCachePolicy(HttpCachePolicy.CACHE_FIRST.expireAfter(20, TimeUnit.MINUTES))
                 .build();
+        ToastUtil.init(this);
     }
 
     @Override

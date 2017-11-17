@@ -5,4 +5,51 @@
     <string name="tabThird">Cart</string>
     <string name="tabFourth">My</string>
     <string name="search">搜索</string>
+
+    <array name="category">
+        <item>APPAREL</item>
+        <item>ACCESSORIES</item>
+        <item>BAGS</item>
+        <item>SHOES</item>
+    </array>
+
+    <array name="subCategory_APPAREL">
+        <item>Tops</item>
+        <item>Dresses</item>
+        <item>Activewear</item>
+        <item>Coats &amp; Jackets</item>
+        <item>Plus Sizes</item>
+        <item>Pants &amp; Shorts</item>
+        <item>Hoodies</item>
+        <item>Sweaters &amp; Cardigans</item>
+        <item>Lingerie &amp; Sleepwear</item>
+        <item>Swimwear &amp; Beachwear</item>
+        <item>Jumpsuits &amp; Playsuits</item>
+        <item>Socks &amp; Tights</item>
+        <item>Skirts</item>
+    </array>
+
+    <array name="subCategory_ACCESSORIES">
+        <item>Jewelry</item>
+        <item>Hats</item>
+        <item>Hair Accessories</item>
+        <item>Scarves</item>
+        <item>Sunglasses</item>
+        <item>Beauty</item>
+        <item>Stationery &amp; Organization</item>
+    </array>
+
+    <array name="subCategory_BAGS">
+        <item>Backpacks</item>
+        <item>Tote Bags</item>
+        <item>Cross Body Bags</item>
+        <item>Shoulder Bags</item>
+    </array>
+
+    <array name="subCategory_SHOES">
+        <item>Sneakers</item>
+        <item>Pumps</item>
+        <item>Boots</item>
+        <item>Flats</item>
+    </array>
 </resources>

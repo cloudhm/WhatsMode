@@ -7,7 +7,6 @@ import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.widget.TextView;
 
 import com.whatsmode.library.util.DisplayUtil;
@@ -41,12 +40,7 @@ public class ToolbarHelper {
             if (canBack) {
                 actionBar.setDisplayHomeAsUpEnabled(true);
                 toolbar.setNavigationIcon(VectorDrawableCompat.create(activity.getResources(), R.mipmap.ic_launcher,activity.getTheme()));
-                toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        activity.onBackPressed();
-                    }
-                });
+                toolbar.setNavigationOnClickListener(v -> activity.onBackPressed());
             }
 
         }
@@ -76,12 +70,7 @@ public class ToolbarHelper {
             if (canBack) {
                 actionBar.setDisplayHomeAsUpEnabled(true);
                 toolbar.setNavigationIcon(VectorDrawableCompat.create(activity.getResources(), R.mipmap.ic_launcher,activity.getTheme()));
-                toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        activity.onBackPressed();
-                    }
-                });
+                toolbar.setNavigationOnClickListener(v -> activity.onBackPressed());
             }
 
         }

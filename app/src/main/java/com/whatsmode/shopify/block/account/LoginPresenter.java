@@ -1,9 +1,7 @@
 package com.whatsmode.shopify.block.account;
 
 import com.shopify.buy3.Storefront;
-import com.whatsmode.shopify.WhatsApplication;
 import com.whatsmode.shopify.base.BaseRxPresenter;
-import com.whatsmode.shopify.mvp.MvpBasePresenter;
 
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -11,7 +9,7 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 
 /**
- * Created by tom on 17-11-16.
+ * Created by tom on 17-11-16
  */
 
 public class LoginPresenter extends BaseRxPresenter<LoginContract.View> implements LoginContract.Presenter {

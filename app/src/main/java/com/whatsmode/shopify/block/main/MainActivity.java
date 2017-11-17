@@ -18,10 +18,9 @@ import android.widget.TextView;
 import com.innodroid.expandablerecycler.ExpandableRecyclerAdapter;
 import com.whatsmode.library.util.ScreenUtils;
 import com.whatsmode.shopify.R;
-import com.whatsmode.shopify.ui.helper.CategoryAdapter;
 import com.whatsmode.shopify.mvp.MvpActivity;
 import com.whatsmode.shopify.ui.helper.BaseFragmentAdapter;
-import com.whatsmode.shopify.ui.helper.SoftInputHandler;
+import com.whatsmode.shopify.ui.helper.CategoryAdapter;
 import com.whatsmode.shopify.ui.helper.ToolbarHelper;
 import com.whatsmode.shopify.ui.widget.BottomBar;
 import com.whatsmode.shopify.ui.widget.NoScrollViewPager;
@@ -136,13 +135,6 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
         adapter.setMode(ExpandableRecyclerAdapter.MODE_ACCORDION);
         recycler.setLayoutManager(new LinearLayoutManager(this));
         recycler.setAdapter(adapter);
-        searchContent.setOnFocusChangeListener((v, hasFocus) -> {
-            if (hasFocus) {
-                SoftInputHandler.showInputMethodForQuery(MainActivity.this,searchContent);
-            }else{
-                SoftInputHandler.hideInputMethod(MainActivity.this,searchContent);
-            }
-        });
         searchContent.setOnEditorActionListener((v, actionId, event) -> actionId == EditorInfo.IME_ACTION_GO);
         popupWindow = new PopupWindow(customView, ScreenUtils.dip2px(this,225), ScreenUtils.getScreenHeight(this));
         popupWindow.setAnimationStyle(R.style.AnimationFade);

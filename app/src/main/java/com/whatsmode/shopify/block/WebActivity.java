@@ -1,5 +1,6 @@
 package com.whatsmode.shopify.block;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
@@ -43,6 +44,7 @@ public class WebActivity extends BaseActivity {
         setContentView(R.layout.page_web);
         mWebView = (WebView) findViewById(R.id.webview);
         mWebView.getSettings().setUserAgentString("mobile");
+
         mProgressBar = (ProgressBar) findViewById(R.id.indeterminateBar);
         ToolbarHelper.initToolbarNoFix(this, R.id.toolbar, true, "");
         url = getIntent().getStringExtra(EXTRA_URL);
@@ -51,6 +53,7 @@ public class WebActivity extends BaseActivity {
         }
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     private void initWeb() {
         mWebView.setWebViewClient(new WebViewClient(){
             @Override

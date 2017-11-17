@@ -15,7 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CategoryAdapter extends ExpandableRecyclerAdapter<CategoryAdapter.CategoryItem> {
-    public static final int TYPE_PERSON = 1001;
+    private static final int TYPE_PERSON = 1001;
+    
 
     public CategoryAdapter(Context context) {
         super(context);
@@ -23,17 +24,17 @@ public class CategoryAdapter extends ExpandableRecyclerAdapter<CategoryAdapter.C
         setItems(getSampleItems());
     }
 
-    public static class CategoryItem extends ExpandableRecyclerAdapter.ListItem {
-        public String Text;
-        public String tag;
+    static class CategoryItem extends ExpandableRecyclerAdapter.ListItem {
+        String Text;
+        String tag;
 
-        public CategoryItem(String group) {
+        CategoryItem(String group) {
             super(TYPE_HEADER);
 
             Text = group;
         }
 
-        public CategoryItem(String first, String tag) {
+        CategoryItem(String first, String tag) {
             super(TYPE_PERSON);
 
             Text = first;
@@ -41,10 +42,10 @@ public class CategoryAdapter extends ExpandableRecyclerAdapter<CategoryAdapter.C
         }
     }
 
-    public class HeaderViewHolder extends ExpandableRecyclerAdapter.HeaderViewHolder {
+    private class HeaderViewHolder extends ExpandableRecyclerAdapter.HeaderViewHolder {
         TextView name;
 
-        public HeaderViewHolder(View view) {
+        HeaderViewHolder(View view) {
             super(view, (ImageView) view.findViewById(R.id.item_arrow));
 
             name = (TextView) view.findViewById(R.id.item_header_name);
@@ -72,7 +73,8 @@ public class CategoryAdapter extends ExpandableRecyclerAdapter<CategoryAdapter.C
             name.setText(visibleItems.get(position).Text);
             view.setOnClickListener(v ->
                     mContext.startActivity(WebActivity.newIntent(mContext,
-                            new StringBuilder("https://whatsmode.com").append(visibleItems.get(position).tag).toString())));
+                            new StringBuilder("https://whatsmode.com")
+                                    .append(visibleItems.get(position).tag).toString())));
         }
     }
 

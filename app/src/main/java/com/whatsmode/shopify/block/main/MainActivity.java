@@ -18,7 +18,7 @@ import android.widget.TextView;
 import com.innodroid.expandablerecycler.ExpandableRecyclerAdapter;
 import com.whatsmode.library.util.ScreenUtils;
 import com.whatsmode.shopify.R;
-import com.whatsmode.shopify.block.main.demo.PeopleAdapter;
+import com.whatsmode.shopify.ui.helper.CategoryAdapter;
 import com.whatsmode.shopify.mvp.MvpActivity;
 import com.whatsmode.shopify.ui.helper.BaseFragmentAdapter;
 import com.whatsmode.shopify.ui.helper.SoftInputHandler;
@@ -41,6 +41,7 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
         vpContent = (NoScrollViewPager) findViewById(R.id.vp_content);
         vpContent.setOffscreenPageLimit(3);
         ivSearch = (ImageView) findViewById(R.id.search);
+        ivSearch.setVisibility(View.VISIBLE);
         ivSearch.setOnClickListener(this);
         ToolbarHelper.ToolbarHolder toolbarHolder = ToolbarHelper.initToolbarNoFix(this, R.id.toolbar, false, null);
         toolbar = toolbarHolder.toolbar;
@@ -131,7 +132,7 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
         View customView = getLayoutInflater().inflate(R.layout.search_menu,null, false);
         EditText searchContent = (EditText) customView.findViewById(R.id.searchContent);
         RecyclerView recycler = (RecyclerView) customView.findViewById(R.id.recycleView);
-        PeopleAdapter adapter = new PeopleAdapter(this);
+        CategoryAdapter adapter = new CategoryAdapter(this);
         adapter.setMode(ExpandableRecyclerAdapter.MODE_ACCORDION);
         recycler.setLayoutManager(new LinearLayoutManager(this));
         recycler.setAdapter(adapter);
@@ -160,6 +161,14 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
             popupWindow.dismiss();
         }
         popupWindow = null;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (popupWindow != null && popupWindow.isShowing()) {
+            popupWindow.dismiss();
+        }
     }
 
     @Override

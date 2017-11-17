@@ -39,7 +39,7 @@ public class ToolbarHelper {
             actionBar.setDisplayShowTitleEnabled(false);
             if (canBack) {
                 actionBar.setDisplayHomeAsUpEnabled(true);
-                toolbar.setNavigationIcon(VectorDrawableCompat.create(activity.getResources(), R.mipmap.ic_launcher,activity.getTheme()));
+                toolbar.setNavigationIcon(VectorDrawableCompat.create(activity.getResources(), R.drawable.icon_back,activity.getTheme()));
                 toolbar.setNavigationOnClickListener(v -> activity.onBackPressed());
             }
 
@@ -69,7 +69,7 @@ public class ToolbarHelper {
             actionBar.setDisplayShowTitleEnabled(false);
             if (canBack) {
                 actionBar.setDisplayHomeAsUpEnabled(true);
-                toolbar.setNavigationIcon(VectorDrawableCompat.create(activity.getResources(), R.mipmap.ic_launcher,activity.getTheme()));
+                toolbar.setNavigationIcon(VectorDrawableCompat.create(activity.getResources(), R.drawable.icon_back,activity.getTheme()));
                 toolbar.setNavigationOnClickListener(v -> activity.onBackPressed());
             }
 

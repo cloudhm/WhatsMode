@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
@@ -32,6 +33,8 @@ public class BaseWebFragment extends BaseFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         WebView mWebView = (WebView) view.findViewById(R.id.webView);
+        WebSettings settings = mWebView.getSettings();
+        settings.setUserAgentString("mobile");
         mProgressBar = (ProgressBar) view.findViewById(R.id.indeterminateBar);
         mWebView.setWebViewClient(new WebViewClient() {
             @Override

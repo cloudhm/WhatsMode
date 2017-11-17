@@ -39,6 +39,10 @@
         <activity android:name=".block.address.AddEditAddressActivity"
                   android:screenOrientation="portrait"
             />
+        <activity android:name=".block.WebActivity"
+            android:screenOrientation="portrait"
+            />
+
     </application>
 
 </manifest>

@@ -3,18 +3,25 @@ package com.whatsmode.shopify.block.main;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.innodroid.expandablerecycler.ExpandableRecyclerAdapter;
 import com.whatsmode.library.util.ScreenUtils;
 import com.whatsmode.shopify.R;
+import com.whatsmode.shopify.ui.helper.CategoryAdapter;
 import com.whatsmode.shopify.mvp.MvpActivity;
 import com.whatsmode.shopify.ui.helper.BaseFragmentAdapter;
+import com.whatsmode.shopify.ui.helper.SoftInputHandler;
 import com.whatsmode.shopify.ui.helper.ToolbarHelper;
 import com.whatsmode.shopify.ui.widget.BottomBar;
 import com.whatsmode.shopify.ui.widget.NoScrollViewPager;
@@ -34,6 +41,7 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
         vpContent = (NoScrollViewPager) findViewById(R.id.vp_content);
         vpContent.setOffscreenPageLimit(3);
         ivSearch = (ImageView) findViewById(R.id.search);
+        ivSearch.setVisibility(View.VISIBLE);
         ivSearch.setOnClickListener(this);
         ToolbarHelper.ToolbarHolder toolbarHolder = ToolbarHelper.initToolbarNoFix(this, R.id.toolbar, false, null);
         toolbar = toolbarHolder.toolbar;
@@ -53,7 +61,7 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
         getMenuInflater().inflate(R.menu.main, menu);
         MenuItem menuItemSearch = menu.findItem(R.id.action_search);
         menuItemSearch.setVisible(true);
-        getPresenter().setPageSelected(0); //在这里设置最初选中页
+        getPresenter().setPageSelected(0);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -114,18 +122,32 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
             popupWindow.dismiss();
         }else {
             initPopWindowView();
-            popupWindow.showAsDropDown(ivSearch,0,5);
+            popupWindow.setFocusable(true);
+            popupWindow.showAsDropDown(toolbar,0,0);
             ivSearch.setEnabled(false);
         }
     }
 
     private void initPopWindowView() {
-        View customView = getLayoutInflater().inflate(R.layout.search_menu,
-                null, false);
-        popupWindow = new PopupWindow(customView, ScreenUtils.getScreenWidth(this), ScreenUtils.dip2px(this,225));
+        View customView = getLayoutInflater().inflate(R.layout.search_menu,null, false);
+        EditText searchContent = (EditText) customView.findViewById(R.id.searchContent);
+        RecyclerView recycler = (RecyclerView) customView.findViewById(R.id.recycleView);
+        CategoryAdapter adapter = new CategoryAdapter(this);
+        adapter.setMode(ExpandableRecyclerAdapter.MODE_ACCORDION);
+        recycler.setLayoutManager(new LinearLayoutManager(this));
+        recycler.setAdapter(adapter);
+        searchContent.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) {
+                SoftInputHandler.showInputMethodForQuery(MainActivity.this,searchContent);
+            }else{
+                SoftInputHandler.hideInputMethod(MainActivity.this,searchContent);
+            }
+        });
+        searchContent.setOnEditorActionListener((v, actionId, event) -> actionId == EditorInfo.IME_ACTION_GO);
+        popupWindow = new PopupWindow(customView, ScreenUtils.dip2px(this,225), ScreenUtils.getScreenHeight(this));
         popupWindow.setAnimationStyle(R.style.AnimationFade);
         popupWindow.setOutsideTouchable(true);
-        popupWindow.setOnDismissListener(() -> ivSearch.setEnabled(true));
+        popupWindow.setOnDismissListener(() -> ivSearch.postDelayed(() -> ivSearch.setEnabled(true),1));
     }
 
     @Override
@@ -139,6 +161,14 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
             popupWindow.dismiss();
         }
         popupWindow = null;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (popupWindow != null && popupWindow.isShowing()) {
+            popupWindow.dismiss();
+        }
     }
 
     @Override

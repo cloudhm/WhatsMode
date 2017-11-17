@@ -6,4 +6,92 @@
     <string name="tabFourth">My</string>
     <string name="search">搜索</string>
     <string name="save">保存</string>
+
+    <array name="category">
+        <item>APPAREL</item>
+        <item>ACCESSORIES</item>
+        <item>BAGS</item>
+        <item>SHOES</item>
+    </array>
+
+    <array name="subCategory_APPAREL">
+        <item>Tops</item>
+        <item>Dresses</item>
+        <item>Activewear</item>
+        <item>Coats &amp; Jackets</item>
+        <item>Plus Sizes</item>
+        <item>Pants &amp; Shorts</item>
+        <item>Hoodies</item>
+        <item>Sweaters &amp; Cardigans</item>
+        <item>Lingerie &amp; Sleepwear</item>
+        <item>Swimwear &amp; Beachwear</item>
+        <item>Jumpsuits &amp; Playsuits</item>
+        <item>Socks &amp; Tights</item>
+        <item>Skirts</item>
+    </array>
+
+    <array name="subCategory_APPAREL_LINK">
+        <item>/collections/tops-1</item>
+        <item>/collections/dresses</item>
+        <item>/collections/activewear</item>
+        <item>/collections/coats-jackets</item>
+        <item>/collections/plus-sizes</item>
+        <item>/collections/pants-shorts</item>
+        <item>/collections/hoodies</item>
+        <item>/collections/sweaters-cardigans</item>
+        <item>/collections/lingerie-sleepwear</item>
+        <item>/collections/swimwear-beachwear</item>
+        <item>/collections/jumpsuits-playsuits</item>
+        <item>/collections/socks-tights</item>
+        <item>/collections/skirts</item>
+    </array>
+
+    <array name="subCategory_ACCESSORIES">
+        <item>Jewelry</item>
+        <item>Hats</item>
+        <item>Hair Accessories</item>
+        <item>Scarves</item>
+        <item>Sunglasses</item>
+        <item>Beauty</item>
+        <item>Stationery &amp; Organization</item>
+    </array>
+
+    <array name="subCategory_ACCESSORIES_LINK">
+        <item>/collections/jewelry</item>
+        <item>/collections/hats</item>
+        <item>/collections/hair-accessories</item>
+        <item>/collections/scarves</item>
+        <item>/collections/sunglasses</item>
+        <item>/collections/beauty</item>
+        <item>/collections/stationery-organization</item>
+    </array>
+
+    <array name="subCategory_BAGS">
+        <item>Backpacks</item>
+        <item>Tote Bags</item>
+        <item>Cross Body Bags</item>
+        <item>Shoulder Bags</item>
+    </array>
+
+    <array name="subCategory_BAGS_LINK">
+        <item>/collections/backpacks</item>
+        <item>/collections/tote-bags</item>
+        <item>/collections/cross-body-bags</item>
+        <item>/collections/shoulder-bags</item>
+    </array>
+
+    <array name="subCategory_SHOES">
+        <item>Sneakers</item>
+        <item>Pumps</item>
+        <item>Boots</item>
+        <item>Flats</item>
+    </array>
+
+    <array name="subCategory_SHOES_LINK">
+        <item>/collections/sneakers</item>
+        <item>/collections/pumps</item>
+        <item>/collections/boots</item>
+        <item>/collections/shoes</item>
+    </array>
+>>>>>>> 9fb3ed027fb615960b8c89966460d7d77cffdb98
 </resources>

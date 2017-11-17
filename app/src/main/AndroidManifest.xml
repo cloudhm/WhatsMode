@@ -13,7 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme" >
 
-        <activity android:name=".block.account.LoginActivity"/>
+        <activity android:name=".block.account.LoginActivity"
+                  android:screenOrientation="portrait"
+            />
         <activity android:name="com.whatsmode.shopify.block.main.MainActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
@@ -26,6 +28,16 @@
         </activity>
 
         <activity android:name=".block.account.RegisterActivity"
+                  android:screenOrientation="portrait"
+            />
+
+        <activity android:name=".block.address.AddressListActivity"
+                  android:screenOrientation="portrait"
+            >
+        </activity>
+
+        <activity android:name=".block.address.AddEditAddressActivity"
+                  android:screenOrientation="portrait"
             />
         <activity android:name=".block.WebActivity"
             android:screenOrientation="portrait"

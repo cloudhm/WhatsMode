@@ -2,6 +2,7 @@ package com.whatsmode.shopify.block.account;
 
 import com.shopify.buy3.Storefront;
 import com.whatsmode.shopify.base.BaseRxPresenter;
+import com.whatsmode.shopify.block.account.data.AccountManager;
 
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -22,6 +23,10 @@ public class LoginPresenter extends BaseRxPresenter<LoginContract.View> implemen
                 _queryBuilder.customerAccessToken(
                         _queryBuilder1 -> _queryBuilder1.accessToken().expiresAt())
                         .userErrors(_queryBuilder2 -> _queryBuilder2.message().field()))
+                .map(t -> {
+                    AccountManager.getInstance().writeCustomerAccessToken(t != null ? t.getAccessToken() : null);
+                    return t;
+                })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new SingleObserver<Storefront.CustomerAccessToken>() {
                     @Override
@@ -38,7 +43,6 @@ public class LoginPresenter extends BaseRxPresenter<LoginContract.View> implemen
                         if (isViewAttached()) {
                             getView().loginSuccess();
                         }
-
                     }
 
                     @Override

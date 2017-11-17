@@ -8,6 +8,9 @@ import java.util.List;
 
 public class APIException extends RuntimeException {
 
+    public static final int CODE_COMMON_EXCEPTION = 0;
+    public static final int CODE_SESSION_EXPIRE = 2;
+
     private int code;
 
     private String message;
@@ -32,7 +35,9 @@ public class APIException extends RuntimeException {
         return builder.toString();
     }
 
-
+    public int getCode(){
+        return code;
+    }
 
     @Override
     public String getMessage() {

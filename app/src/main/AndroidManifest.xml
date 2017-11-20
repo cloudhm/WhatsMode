@@ -34,6 +34,7 @@
         <activity android:name=".block.address.AddressListActivity"
                   android:screenOrientation="portrait"
             >
+
         </activity>
 
         <activity android:name=".block.address.AddEditAddressActivity"

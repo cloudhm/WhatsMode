@@ -15,9 +15,11 @@ public interface AddressListContract {
     interface View extends MvpView{
         void showContent(@LoadType.checker int type,@NonNull List<Address> addresses);
         void onError(int code ,String msg);
+        void deleteSuccess();
     }
     interface Presenter extends MvpPresenter<View>{
         void refreshAddressList();
         void loadModeAddressList();
+        void deleteAddress(String id);
     }
 }

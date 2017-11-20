@@ -77,10 +77,21 @@ public class AddressListActivity extends MvpActivity<AddressListPresenter> imple
         mAddressListAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                Intent intent = new Intent(AddressListActivity.this,AddEditAddressActivity.class);
-                intent.putExtra(KeyConstant.KEY_ADDRESS,mList.get(position));
-                intent.putExtra(KeyConstant.KEY_ADD_EDIT_ADDRESS, AddEditAddressActivity.TYPE_EDIT_ADDRESS);
-                startActivity(intent);
+
+            }
+        });
+        mAddressListAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                if (view.getId() == R.id.delete) {
+                    String id = mList.get(position).getId();
+                    mPresenter.deleteAddress(id);
+                } else if (view.getId() == R.id.update) {
+                    Intent intent = new Intent(AddressListActivity.this,AddEditAddressActivity.class);
+                    intent.putExtra(KeyConstant.KEY_ADDRESS,mList.get(position));
+                    intent.putExtra(KeyConstant.KEY_ADD_EDIT_ADDRESS, AddEditAddressActivity.TYPE_EDIT_ADDRESS);
+                    startActivity(intent);
+                }
             }
         });
         mSwipe.setOnRefreshListener(() -> {
@@ -130,6 +141,12 @@ public class AddressListActivity extends MvpActivity<AddressListPresenter> imple
             startActivity(new Intent(this, LoginActivity.class));
         }
         SnackUtil.toastShow(this,msg);
+    }
+
+    @Override
+    public void deleteSuccess() {
+        SnackUtil.toastShow(this,"delete success");
+        mPresenter.refreshAddressList();
     }
 
     @Override

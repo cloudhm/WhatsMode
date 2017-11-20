@@ -26,7 +26,9 @@ public class AddressListAdapter extends CommonAdapter<Address> {
                 .append(item.getCountry());
         helper.setText(R.id.name,item.getName())
                 .setText(R.id.phone,item.getPhone())
-                .setText(R.id.address,buffer.toString());
+                .setText(R.id.address,buffer.toString())
+                .addOnClickListener(R.id.delete)
+                .addOnClickListener(R.id.update);
     }
 
     public void refresh(List<Address> list) {

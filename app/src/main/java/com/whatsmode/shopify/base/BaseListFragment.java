@@ -13,14 +13,13 @@ import com.whatsmode.shopify.ui.helper.OnLoadMoreListener;
 import com.whatsmode.shopify.ui.helper.OnRefreshListener;
 import com.whatsmode.shopify.ui.helper.RecycleViewDivider;
 import com.whatsmode.shopify.ui.widget.SwipeToLoadLayout;
+import com.zchu.log.Logger;
 
 
 public abstract  class BaseListFragment<P extends BaseListContract.Presenter> extends MvpFragment<P> implements OnRefreshListener,OnLoadMoreListener, BaseListContract.View {
 
     private SwipeToLoadLayout mSwipeToLoadLayout;
     private RecyclerView recyclerView;
-//    private LoadErrorView loadErrorView;
-//    private LoadMoreView loadMoreView;
 
     @Override
     public int getLayoutId() {
@@ -31,17 +30,9 @@ public abstract  class BaseListFragment<P extends BaseListContract.Presenter> ex
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mSwipeToLoadLayout = (SwipeToLoadLayout) view.findViewById(R.id.swipeToLoadLayout);
+        mSwipeToLoadLayout.setOnRefreshListener(this);
+        mSwipeToLoadLayout.setOnLoadMoreListener(this);
         recyclerView = (RecyclerView) view.findViewById(R.id.swipe_target);
-//        loadErrorView = (LoadErrorView) view.findViewById(R.id.load_error_view);
-//        contentView.setColorSchemeColors(ContextCompat.getColor(getActivity(), R.color.red));
-//        loadErrorView.setOnRetryListener(this);
-//        contentView.setOnRefreshListener(this);
-//        recyclerView.addOnScrollListener(new OnLoadMoreScrollListener() {
-//            @Override
-//            public void onLoadMore(RecyclerView var1) {
-//                loadMoreData();
-//            }
-//        });
         setRecyclerView(recyclerView);
     }
 
@@ -62,25 +53,12 @@ public abstract  class BaseListFragment<P extends BaseListContract.Presenter> ex
         loadData(true);
     }
 
-//    @Override
-//    public void onRetry(View view) {
-//        loadData(false);
-//    }
-
     @Override
     public void showLoading(boolean isRefresh) {
-//        if (isRefresh) {
-//            contentView.post(new Runnable() {
-//                @Override
-//                public void run() {
-//                    contentView.setRefreshing(true);
-//                }
-//            });
-//        } else {
-//            contentView.setVisibility(View.GONE);
-//            loadErrorView.makeLoading();
-//        }
-
+        mSwipeToLoadLayout.post(() -> {
+            mSwipeToLoadLayout.setLoadingMore(false);
+            mSwipeToLoadLayout.setRefreshing(isRefresh);
+        });
     }
 
     @Override
@@ -96,63 +74,64 @@ public abstract  class BaseListFragment<P extends BaseListContract.Presenter> ex
 //            });
 //            loadErrorView.makeError();
 //        }
-
     }
 
     @Override
     public void setAdapter(BaseQuickAdapter adapter) {
-//        loadMoreView = new LoadMoreView(getActivity());
-//        loadMoreView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, DensityUtil.dp2px(getContext(), 64)));
-//        adapter.addFooterView(loadMoreView);
-//        recyclerView.setAdapter(adapter);
+        recyclerView.setAdapter(adapter);
     }
 
     @Override
     public void showContent(boolean isRefresh) {
-//        if(!isRefresh){
-//            InContentAnim inContentAnim = new InContentAnim(contentView, loadErrorView);
-//            inContentAnim.start();
-//        }
-//        contentView.post(new Runnable() {
-//            @Override
-//            public void run() {
-//                contentView.setRefreshing(false);
-//            }
-//        });
+        mSwipeToLoadLayout.setRefreshing(false);
     }
-
-//    @Override
-//    public void showMoreLoading() {
-//        if (loadMoreView != null)
-//            loadMoreView.makeMoreLoading();
-//    }
-//
-//    @Override
-//    public void showMoreError() {
-//        if (loadMoreView != null)
-//            loadMoreView.makeMoreError();
-//    }
-//
-//    @Override
-//    public void showTheEnd() {
-//        if (loadMoreView != null)
-//            loadMoreView.makeTheEnd();
-//    }
-//
-//    @Override
-//    public void showMoreFrom() {
-//        if (loadMoreView != null)
-//            loadMoreView.makeMoreLoading();
-//    }
 
     private void loadData(boolean isRefresh) {
         getPresenter().doLoadData(isRefresh);
-
     }
 
     private void loadMoreData() {
         getPresenter().doLoadMoreData();
     }
 
+    private void setRefreshOrLoadingMore(final boolean isLoadMore, final boolean flag){
+        mSwipeToLoadLayout.post(() -> {
+            if(isLoadMore) {
+                mSwipeToLoadLayout.setLoadingMore(flag);
+            }
+            else {
+                mSwipeToLoadLayout.setRefreshing(flag);
+            }
+        });
+    }
 
+    @Override
+    public void showMoreLoading() {
+
+    }
+
+    @Override
+    public void showMoreError() {
+
+    }
+
+    @Override
+    public void showTheEnd() {
+
+    }
+
+    @Override
+    public void showMoreFrom() {
+
+    }
+
+    private boolean hasNext;
+    @Override
+    public void onLoadMore() {
+        if(hasNext){
+            loadMoreData();
+        }else {
+            setRefreshOrLoadingMore(true,false);
+        }
+    }
 }

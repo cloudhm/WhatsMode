@@ -6,6 +6,7 @@ import android.view.View;
 
 import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.base.BaseWebFragment;
+import com.whatsmode.shopify.block.cart.CartFragment;
 import com.whatsmode.shopify.mvp.MvpBasePresenter;
 import com.whatsmode.shopify.ui.helper.BaseFragmentAdapter;
 
@@ -21,8 +22,8 @@ class MainPresenter extends MvpBasePresenter<MainContact.View> implements MainCo
         final BaseFragmentAdapter fragmentAdapter = new BaseFragmentAdapter(supportFragmentManager);
         ArrayList<Fragment> fragments = new ArrayList<>();
         fragments.add(BaseWebFragment.newInstance("https://www.shopify.com/domains"));
-        fragments.add(BaseWebFragment.newInstance("https://whatsmode.com/"));
-        fragments.add(BaseWebFragment.newInstance("http://baidu.com"));
+        fragments.add(BaseWebFragment.newInstance("https://github.com"));
+        fragments.add(CartFragment.newInstance());
         fragments.add(BaseWebFragment.newInstance("http://sougou.com"));
         fragmentAdapter.setFragmentPages(fragments);
         fragmentAdapter.setPageTitleArray(mPageTitles);

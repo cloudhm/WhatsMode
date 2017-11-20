@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.whatsmodestore.platform.refreshlayout.ClassicLoadingView
+<com.whatsmode.shopify.ui.helper.ClassicLoadingView
 
     xmlns:android="http://schemas.android.com/apk/res/android"
 
@@ -8,7 +8,7 @@
 
     android:orientation="vertical">
 
-    <com.whatsmodestore.platform.progress.ProgressBarCircularIndeterminate
+    <com.whatsmode.shopify.ui.widget.ProgressBarCircularIndeterminate
         android:id="@+id/progressbar"
         android:layout_width="40dp"
         android:layout_height="40dp"
@@ -17,4 +17,4 @@
 
 
 
-</com.whatsmodestore.platform.refreshlayout.ClassicLoadingView>
+</com.whatsmode.shopify.ui.helper.ClassicLoadingView>

@@ -24,6 +24,7 @@ public abstract  class BaseListFragment<P extends BaseListContract.Presenter> ex
 
     private SwipeToLoadLayout mSwipeToLoadLayout;
     private RecyclerView recyclerView;
+    protected  int pageNum = 0;
 
     @Override
     public int getLayoutId() {
@@ -96,10 +97,13 @@ public abstract  class BaseListFragment<P extends BaseListContract.Presenter> ex
     }
 
     private void loadData(boolean isRefresh) {
+        if(isRefresh)
+        pageNum = 0;
         getPresenter().doLoadData(isRefresh);
     }
 
     private void loadMoreData() {
+        pageNum++;
         getPresenter().doLoadMoreData();
     }
 

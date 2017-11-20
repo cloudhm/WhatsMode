@@ -13,6 +13,7 @@ import com.whatsmode.shopify.WhatsApplication;
 
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Function;
@@ -43,6 +44,23 @@ public class AddressRepository {
                         return Single.error(new APIException(APIException.CODE_SESSION_EXPIRE,"token expire"));
                     }else{
                         return Single.just(m);
+                    }
+                })
+                .map(Storefront.QueryRoot::getCustomer)
+                .map(Storefront.Customer::getAddresses)
+                .subscribeOn(Schedulers.io());
+    }
+
+    public Observable<Storefront.MailingAddressConnection> getAddressListObservable(String customerAccessToken, Storefront.CustomerQueryDefinition queryDef){
+        QueryGraphCall call = mGraphClient.queryGraph(Storefront.query(q ->  q.customer(customerAccessToken, queryDef)))
+                .cachePolicy(HttpCachePolicy.NETWORK_FIRST.expireAfter(20, TimeUnit.MINUTES));
+
+        return RxUtil.rxGraphQueryCallObservable(call)
+                .flatMap(m -> {
+                    if(m.getCustomer() == null){
+                        return Observable.error(new APIException(APIException.CODE_SESSION_EXPIRE,"token expire"));
+                    }else{
+                        return Observable.just(m);
                     }
                 })
                 .map(Storefront.QueryRoot::getCustomer)

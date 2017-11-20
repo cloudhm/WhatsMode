@@ -32,6 +32,8 @@ import com.shopify.graphql.support.AbstractResponse;
 import io.reactivex.Flowable;
 import io.reactivex.FlowableTransformer;
 import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.ObservableSource;
 import io.reactivex.ObservableTransformer;
 import io.reactivex.Single;
@@ -53,9 +55,23 @@ public final class RxUtil {
         emitter.onSuccess(call.execute());
       } catch (Exception e) {
         Exceptions.throwIfFatal(e);
+        if(!emitter.isDisposed())
         emitter.onError(e);
       }
     }).compose(queryResponseDataTransformer());
+  }
+
+  public static Observable<Storefront.QueryRoot> rxGraphQueryCallObservable(final GraphCall<Storefront.QueryRoot> call){
+    return Observable.<GraphResponse<Storefront.QueryRoot>>create(e -> {
+      e.setCancellable(call::cancel);
+      try {
+        e.onNext(call.execute());
+      } catch (Exception t) {
+        Exceptions.throwIfFatal(t);
+        if(!e.isDisposed())
+          e.onError(t);
+      }
+    }).compose(queryResponseDataTransformerObservable());
   }
 
   public static Single<Storefront.Mutation> rxGraphMutationCall(final GraphCall<Storefront.Mutation> call) {
@@ -65,6 +81,7 @@ public final class RxUtil {
         emitter.onSuccess(call.execute());
       } catch (Exception e) {
         Exceptions.throwIfFatal(e);
+        if(!emitter.isDisposed())
         emitter.onError(e);
       }
     }).compose(queryResponseDataTransformer());
@@ -78,6 +95,18 @@ public final class RxUtil {
         String errorMessage = fold(new StringBuilder(), response.errors(),
           (builder, error) -> builder.append(error.message()).append("\n")).toString();
         return Single.error(new RuntimeException(errorMessage));
+      }
+    });
+  }
+
+  private static <T extends AbstractResponse<T>> ObservableTransformer<GraphResponse<T>, T> queryResponseDataTransformerObservable() {
+    return upstream -> upstream.flatMap(response -> {
+      if (response.errors().isEmpty()) {
+        return Observable.just(response.data());
+      } else {
+        String errorMessage = fold(new StringBuilder(), response.errors(),
+                (builder, error) -> builder.append(error.message()).append("\n")).toString();
+        return Observable.error(new RuntimeException(errorMessage));
       }
     });
   }

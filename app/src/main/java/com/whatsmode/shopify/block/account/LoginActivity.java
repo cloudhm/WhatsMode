@@ -17,7 +17,7 @@ import com.whatsmode.shopify.mvp.MvpActivity;
  * Created by tom on 17-11-16.
  */
 
-public class LoginActivity extends MvpActivity<LoginPresenter> implements LoginContract.View {
+public class LoginActivity extends MvpActivity<LoginPresenter> implements LoginContract.View, View.OnClickListener {
 
 
     private EditText mEmail;
@@ -31,6 +31,7 @@ public class LoginActivity extends MvpActivity<LoginPresenter> implements LoginC
         mEmail = (EditText) findViewById(R.id.email);
         mPwd = (EditText) findViewById(R.id.pwd);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        findViewById(R.id.forgot_pwd).setOnClickListener(this);
         init();
     }
 
@@ -70,6 +71,15 @@ public class LoginActivity extends MvpActivity<LoginPresenter> implements LoginC
             startActivity(new Intent(this,RegisterActivity.class));
         }else {
             SnackUtil.toastShow(this, msg);
+        }
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.forgot_pwd:
+                startActivity(new Intent(this,ForgotPwdActivity.class));
+                break;
         }
     }
 }

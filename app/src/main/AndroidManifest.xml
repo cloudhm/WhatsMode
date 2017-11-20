@@ -15,7 +15,9 @@
 
         <activity android:name=".block.account.LoginActivity"
                   android:screenOrientation="portrait"
-            />
+            >
+
+        </activity>
         <activity android:name="com.whatsmode.shopify.block.main.MainActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
@@ -42,6 +44,14 @@
             />
         <activity android:name=".block.WebActivity"
             android:screenOrientation="portrait"
+            />
+
+        <activity android:name=".block.account.ForgotPwdActivity"
+                  android:screenOrientation="portrait"
+            />
+
+        <activity android:name=".block.account.CheckEmailActivity"
+                  android:screenOrientation="portrait"
             />
 
     </application>

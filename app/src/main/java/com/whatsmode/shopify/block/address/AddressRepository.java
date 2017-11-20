@@ -79,4 +79,19 @@ public class AddressRepository {
                 }).map(Storefront.CustomerAddressUpdatePayload::getCustomerAddress)
                 .subscribeOn(Schedulers.io());
     }
+
+    public Single<String> deleteAddress(String id, String customerAccessToken, Storefront.CustomerAddressDeletePayloadQueryDefinition queryDef){
+        MutationGraphCall call = mGraphClient.mutateGraph(Storefront.mutation(root -> root.customerAddressDelete(new ID(id), customerAccessToken, queryDef)));
+
+        return RxUtil.rxGraphMutationCall(call)
+                .map(Storefront.Mutation::getCustomerAddressDelete)
+                .flatMap(t -> {
+                    if (t.getUserErrors().isEmpty()) {
+                        return Single.just(t);
+                    }else{
+                        return Single.error(new APIException(APIException.CODE_COMMON_EXCEPTION, Util.mapItems(t.getUserErrors(),Storefront.UserError::getMessage)));
+                    }
+                }).map(Storefront.CustomerAddressDeletePayload::getDeletedCustomerAddressId)
+                .subscribeOn(Schedulers.io());
+    }
 }

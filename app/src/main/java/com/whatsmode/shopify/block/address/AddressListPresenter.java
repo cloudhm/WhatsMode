@@ -1,5 +1,7 @@
 package com.whatsmode.shopify.block.address;
 
+import android.text.TextUtils;
+
 import com.shopify.buy3.Storefront;
 import com.whatsmode.library.exception.APIException;
 import com.whatsmode.shopify.base.BaseRxPresenter;
@@ -124,6 +126,39 @@ public class AddressListPresenter extends BaseRxPresenter<AddressListContract.Vi
                     }
                 });
 
+    }
+
+    @Override
+    public void deleteAddress(String id) {
+        if(TextUtils.isEmpty(id)) return;
+        AddressRepository.create().deleteAddress(id,AccountManager.getCustomerAccessToken(),c ->
+                c.userErrors(e -> e.message().field()).deletedCustomerAddressId())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new SingleObserver<String>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        addSubscribe(d);
+                    }
+
+                    @Override
+                    public void onSuccess(@NonNull String s) {
+                        if (isViewAttached()) {
+                            getView().deleteSuccess();
+                        }
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        if (isViewAttached()) {
+                            if (e instanceof APIException) {
+                                APIException t = (APIException) e;
+                                getView().onError(t.getCode(),t.getMessage());
+                            }else{
+                                getView().onError(APIException.CODE_COMMON_EXCEPTION,e.getMessage());
+                            }
+                        }
+                    }
+                });
     }
 
     public class AddressQuery implements Storefront.CustomerQueryDefinition{

@@ -6,6 +6,7 @@
     <string name="tabFourth">My</string>
     <string name="search">搜索</string>
     <string name="save">保存</string>
+    <string name="no_more">已無更多</string>
 
     <array name="category">
         <item>APPAREL</item>

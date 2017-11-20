@@ -55,7 +55,7 @@ public class SwipeToLoadLayout extends ViewGroup {
     /**
      * how hard to drag
      */
-    private static final float DEFAULT_DRAG_RATIO = 0.5f;
+    private static final float DEFAULT_DRAG_RATIO = 0.3f;
 
     private static final int INVALID_POINTER = -1;
 

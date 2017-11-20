@@ -27,7 +27,14 @@ android {
         sourceCompatibility 1.8
         targetCompatibility 1.8
     }
-
+    signingConfigs{
+        signingConfig{
+            storeFile file("whatsmode.jks")
+            storePassword "mode2017"
+            keyAlias "whatsmode"
+            keyPassword "mode2017"
+        }
+    }
 }
 
 dependencies {

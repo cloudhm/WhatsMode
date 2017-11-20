@@ -7,9 +7,6 @@ import android.view.View;
 
 import com.whatsmode.shopify.base.BaseListFragment;
 
-/**
- * Created by Administrator on 2017/11/20.
- */
 
 public class CartFragment extends BaseListFragment<CartContact.Presenter> implements CartContact.View {
 
@@ -23,7 +20,6 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
         recyclerView.setClipToPadding(false);
         recyclerView.setClipChildren(false);
         recyclerView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
-
     }
 
     @NonNull

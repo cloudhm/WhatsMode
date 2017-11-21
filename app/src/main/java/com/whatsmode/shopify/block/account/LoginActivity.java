@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.whatsmode.library.util.SnackUtil;
 import com.whatsmode.shopify.R;
+import com.whatsmode.shopify.block.me.MyFragment;
 import com.whatsmode.shopify.mvp.MvpActivity;
 
 /**
@@ -34,6 +35,7 @@ public class LoginActivity extends MvpActivity<LoginPresenter> implements LoginC
         findViewById(R.id.forgot_pwd).setOnClickListener(this);
         init();
     }
+
 
     private void init(){
         setSupportActionBar(mToolbar);

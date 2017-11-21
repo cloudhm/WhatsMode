@@ -15,16 +15,23 @@ public class AddressListDiff extends BaseDiff<Address> {
 
     @Override
     public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-        if (mOldData.get(oldItemPosition).getId().hashCode() == mNewData.get(newItemPosition).getId().hashCode() &&
-        mOldData.get(oldItemPosition).getAddress1().hashCode() == mNewData.get(newItemPosition).getAddress1().hashCode()&&
-                mOldData.get(oldItemPosition).getAddress2().hashCode() == mNewData.get(newItemPosition).getAddress2().hashCode()&&
-                mOldData.get(oldItemPosition).getCity().hashCode() == mNewData.get(newItemPosition).getCity().hashCode()&&
-                mOldData.get(oldItemPosition).getProvince().hashCode() == mNewData.get(newItemPosition).getProvince().hashCode()&&
-                mOldData.get(oldItemPosition).getCountry().hashCode() == mNewData.get(newItemPosition).getCountry().hashCode()
+        if (getHashCode(mOldData.get(oldItemPosition).getId()) == getHashCode(mNewData.get(newItemPosition).getId()) &&
+                getHashCode(mOldData.get(oldItemPosition).getAddress1()) == getHashCode(mNewData.get(newItemPosition).getAddress1())&&
+                        getHashCode(mOldData.get(oldItemPosition).getAddress2()) == getHashCode(mNewData.get(newItemPosition).getAddress2())&&
+                                getHashCode(mOldData.get(oldItemPosition).getCity()) == getHashCode(mNewData.get(newItemPosition).getCity())&&
+                                        getHashCode(mOldData.get(oldItemPosition).getProvince()) == getHashCode(mNewData.get(newItemPosition).getProvince())&&
+                                                getHashCode(mOldData.get(oldItemPosition).getCountry()) == getHashCode(mNewData.get(newItemPosition).getCountry())
                 ) {
             return true;
         }
         return false;
+    }
+
+    private int getHashCode(Object o) {
+        if (o != null) {
+            return o.hashCode();
+        }
+        return 0;
     }
 
     @Override

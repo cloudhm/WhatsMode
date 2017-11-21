@@ -1,5 +1,6 @@
 package com.whatsmode.shopify.block.cart;
 
+import android.view.View;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -31,7 +32,6 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
                 List<CartItem> cartItemList = (List<CartItem>) PreferencesUtil.getObject(WhatsApplication.getContext(), AccountManager.getUsername());
                 if (ListUtils.isEmpty(cartItemList)) {
                     cartItemList = new ArrayList<>();
-                    Logger.e("==cartMap==" + cartItemList.size());
                 }
                 e.onNext(cartItemList);
             } catch (Exception ioe) {
@@ -72,6 +72,9 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
                     item.quality = quality;
                     tvQuality.setText(String.valueOf(quality));
                 });
+                helper.itemView.setOnClickListener(v -> {
+                    // TODO: 2017/11/21                
+                });
             }
         };
         return mAdapter;
@@ -97,12 +100,22 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
 
     @Override
     public void saveCart(List<CartItem> data) {
-        Logger.e(data.size() + "====size===");
         try {
             PreferencesUtil.putObject(WhatsApplication.getContext(), AccountManager.getUsername(), data);
-        } catch (IOException e) {
+        }   catch (IOException e) {
             Logger.e(e);
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onClickView(View v) {
+        switch (v.getId()) {
+            case R.id.checkOut:
+                if (isViewAttached()) {
+                    getView().checkOut();
+                }
+                break;
         }
     }
 }

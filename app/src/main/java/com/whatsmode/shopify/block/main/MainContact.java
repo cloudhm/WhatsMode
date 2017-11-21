@@ -24,6 +24,7 @@ class MainContact {
         void showSearch();
 
         void showAbout();
+
     }
 
     interface Presenter extends MvpPresenter<MainContact.View> {

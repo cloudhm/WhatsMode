@@ -10,9 +10,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.innodroid.expandablerecycler.ExpandableRecyclerAdapter;
@@ -101,17 +103,14 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
 
     @Override
     public void switch2Influence() {
-
     }
 
     @Override
     public void switch2Cart() {
-
     }
 
     @Override
     public void switch2Mine() {
-
     }
 
     private PopupWindow popupWindow;

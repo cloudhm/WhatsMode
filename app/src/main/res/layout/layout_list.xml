@@ -1,21 +1,30 @@
-<com.whatsmode.shopify.ui.widget.SwipeToLoadLayout
-    android:id="@+id/swipeToLoadLayout"
-    app:swipe_style="classic"
+<RelativeLayout android:layout_height="match_parent"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-    <include
-        android:id="@id/swipe_refresh_header"
-        layout="@layout/vw_header_swipe" />
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/swipe_target"
-        android:layout_below="@+id/title_bar"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <com.whatsmode.shopify.ui.widget.SwipeToLoadLayout
+        android:id="@+id/swipeToLoadLayout"
+        app:swipe_style="classic"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:scrollbars="none" />
+        android:layout_height="match_parent">
+        <include
+            android:id="@id/swipe_refresh_header"
+            layout="@layout/vw_header_swipe" />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/swipe_target"
+            android:layout_below="@+id/title_bar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:scrollbars="none" />
+        <include
+            android:id="@id/swipe_load_more_footer"
+            layout="@layout/vw_footer_swipe" />
+    </com.whatsmode.shopify.ui.widget.SwipeToLoadLayout>
+
     <include
-        android:id="@id/swipe_load_more_footer"
-        layout="@layout/vw_footer_swipe" />
-</com.whatsmode.shopify.ui.widget.SwipeToLoadLayout>
+        android:id="@+id/spanner_layout"
+        android:visibility="gone"
+        layout="@layout/layout_cart_spanner" />
+</RelativeLayout>
+

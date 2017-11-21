@@ -292,4 +292,25 @@ public class Address implements Parcelable{
         parcel.writeString(zip);
         parcel.writeString(cursor);
     }
+
+    @Override
+    public String toString() {
+        return "Address{" +
+                "id='" + id + '\'' +
+                ", address1='" + address1 + '\'' +
+                ", address2='" + address2 + '\'' +
+                ", city='" + city + '\'' +
+                ", province='" + province + '\'' +
+                ", provinceCode='" + provinceCode + '\'' +
+                ", country='" + country + '\'' +
+                ", countryCode='" + countryCode + '\'' +
+                ", company='" + company + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", name='" + name + '\'' +
+                ", phone='" + phone + '\'' +
+                ", zip='" + zip + '\'' +
+                ", cursor='" + cursor + '\'' +
+                '}';
+    }
 }

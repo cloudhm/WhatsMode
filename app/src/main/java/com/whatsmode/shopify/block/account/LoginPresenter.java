@@ -3,6 +3,7 @@ package com.whatsmode.shopify.block.account;
 import com.shopify.buy3.Storefront;
 import com.whatsmode.shopify.base.BaseRxPresenter;
 import com.whatsmode.shopify.block.account.data.AccountManager;
+import com.whatsmode.shopify.block.account.data.UserInfo;
 
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -25,6 +26,7 @@ public class LoginPresenter extends BaseRxPresenter<LoginContract.View> implemen
                         .userErrors(_queryBuilder2 -> _queryBuilder2.message().field()))
                 .map(t -> {
                     AccountManager.getInstance().writeCustomerAccessToken(t != null ? t.getAccessToken() : null);
+                    AccountManager.getInstance().writeCustomerUserInfo(new UserInfo(email));
                     return t;
                 })
                 .observeOn(AndroidSchedulers.mainThread())

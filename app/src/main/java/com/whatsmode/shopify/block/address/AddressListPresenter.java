@@ -15,6 +15,7 @@ import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.observers.DisposableObserver;
 
 /**
  * Created by tom on 17-11-16.
@@ -28,7 +29,7 @@ public class AddressListPresenter extends BaseRxPresenter<AddressListContract.Vi
     @Override
     public void refreshAddressList() {
         AddressQuery query = new AddressQuery(true, pageSize,null);
-        AddressRepository.create().getAddressList(AccountManager.getCustomerAccessToken(),query)
+        addSubscribe(AddressRepository.create().getAddressListObservable(AccountManager.getCustomerAccessToken(),query)
                 .map(m -> {
                     Address.sHasNextPage = m.getPageInfo().getHasNextPage();
                     List<Storefront.MailingAddressEdge> edges = m.getEdges();
@@ -44,15 +45,11 @@ public class AddressListPresenter extends BaseRxPresenter<AddressListContract.Vi
                         }
                     }
                     return addressList;
-                }).observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new SingleObserver<List<Address>>() {
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableObserver<List<Address>>() {
                     @Override
-                    public void onSubscribe(@NonNull Disposable d) {
-                        addSubscribe(d);
-                    }
-
-                    @Override
-                    public void onSuccess(@NonNull List<Address> addresses) {
+                    public void onNext(List<Address> addresses) {
                         if (isViewAttached()) {
                             if (!addresses.isEmpty()) {
                                 cursor = addresses.get(addresses.size() - 1).getCursor();
@@ -62,7 +59,7 @@ public class AddressListPresenter extends BaseRxPresenter<AddressListContract.Vi
                     }
 
                     @Override
-                    public void onError(@NonNull Throwable e) {
+                    public void onError(Throwable e) {
                         if (isViewAttached()) {
                             if (e instanceof APIException) {
                                 APIException t = (APIException) e;
@@ -71,8 +68,14 @@ public class AddressListPresenter extends BaseRxPresenter<AddressListContract.Vi
                                 getView().onError(APIException.CODE_COMMON_EXCEPTION,e.getMessage());
                             }
                         }
+
                     }
-                });
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                }));
 
     }
 

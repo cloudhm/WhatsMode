@@ -9,13 +9,16 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:hardwareAccelerated="false"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme" >
 
         <activity android:name=".block.account.LoginActivity"
                   android:screenOrientation="portrait"
-            />
+            >
+
+        </activity>
         <activity android:name="com.whatsmode.shopify.block.main.MainActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
@@ -42,6 +45,14 @@
             />
         <activity android:name=".block.WebActivity"
             android:screenOrientation="portrait"
+            />
+
+        <activity android:name=".block.account.ForgotPwdActivity"
+                  android:screenOrientation="portrait"
+            />
+
+        <activity android:name=".block.account.CheckEmailActivity"
+                  android:screenOrientation="portrait"
             />
 
     </application>

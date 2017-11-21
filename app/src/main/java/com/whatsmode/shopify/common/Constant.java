@@ -6,4 +6,5 @@ package com.whatsmode.shopify.common;
 
 public class Constant {
     public static final int PAGE_SIZE_LOAD_DATA = 10;
+    public static final String WEB_PREFIX = "https://whatsmode.com";
 }

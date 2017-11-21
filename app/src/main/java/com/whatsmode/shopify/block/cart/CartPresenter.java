@@ -1,5 +1,7 @@
 package com.whatsmode.shopify.block.cart;
 
+import android.widget.TextView;
+
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.base.BaseRxPresenter;
@@ -12,9 +14,6 @@ import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-/**
- * Created by Administrator on 2017/11/20.
- */
 
 public class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartContact.Presenter{
 
@@ -38,6 +37,12 @@ public class CartPresenter extends BaseRxPresenter<CartContact.View> implements 
             protected void convert(CommonViewHolder helper, CartItem item) {
                 helper.setText(R.id.name, item.name)
                         .setText(R.id.quality, String.valueOf(item.quality));
+                TextView tvQuality = helper.getView(R.id.quality);
+                helper.getView(R.id.tv_descrease).setOnClickListener(v ->
+                        tvQuality.setText(String.valueOf((Integer.parseInt(tvQuality.getText().toString())-1)<0?0
+                                :Integer.parseInt(tvQuality.getText().toString())-1)));
+                helper.getView(R.id.tv_increase).setOnClickListener(v->
+                        tvQuality.setText(String.valueOf(Integer.parseInt(tvQuality.getText().toString())+1)));
             }
         };
         return mAdapter;

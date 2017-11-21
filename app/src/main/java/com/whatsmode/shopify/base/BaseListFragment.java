@@ -11,7 +11,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.whatsmode.library.util.ToastUtil;
+import com.whatsmode.library.util.ScreenUtils;
 import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.WhatsApplication;
 import com.whatsmode.shopify.mvp.MvpFragment;
@@ -24,7 +24,7 @@ import com.whatsmode.shopify.ui.widget.SwipeToLoadLayout;
 public abstract  class BaseListFragment<P extends BaseListContract.Presenter> extends MvpFragment<P> implements OnRefreshListener,OnLoadMoreListener, BaseListContract.View {
 
     private SwipeToLoadLayout mSwipeToLoadLayout;
-    private RecyclerView recyclerView;
+    protected RecyclerView recyclerView;
     protected  int pageNum = 0;
 
     @Override
@@ -137,6 +137,10 @@ public abstract  class BaseListFragment<P extends BaseListContract.Presenter> ex
             textView.setText(WhatsApplication.getContext().getString(R.string.no_more));
             textView.setGravity(Gravity.CENTER);
             textView.setTextSize(TypedValue.COMPLEX_UNIT_SP,16);
+            textView.setPadding(ScreenUtils.dip2px(getActivity(),5)
+                                ,ScreenUtils.dip2px(getActivity(),5)
+                                ,ScreenUtils.dip2px(getActivity(),5)
+                                ,ScreenUtils.dip2px(getActivity(),5));
             textView.setTextColor(Color.BLUE);
             mAdapter.addFooterView(textView);
         }

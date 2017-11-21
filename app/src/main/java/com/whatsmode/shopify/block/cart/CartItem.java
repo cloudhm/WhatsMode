@@ -1,13 +1,12 @@
 package com.whatsmode.shopify.block.cart;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Administrator on 2017/11/20.
- */
+class CartItem implements Serializable{
 
-public class CartItem {
+    private static final long serialVersionUID = 1L;
     String name;
     int quality;
     String url;
@@ -20,7 +19,7 @@ public class CartItem {
         this.id = id;
     }
 
-    public static List<CartItem> mockItem(){
+    static List<CartItem> mockItem(){
         List<CartItem> cartItems = new ArrayList<>();
         cartItems.add(new CartItem("a",11,"aaa","s"));
         cartItems.add(new CartItem("b",12,"bbb","s"));
@@ -28,4 +27,6 @@ public class CartItem {
         cartItems.add(new CartItem("d",14,"ddd","s"));
         return cartItems;
     }
+
+
  }

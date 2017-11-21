@@ -2,7 +2,14 @@ package com.whatsmode.library.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.text.TextUtils;
+import android.util.Base64;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Set;
 
 /**
@@ -258,5 +265,51 @@ public class PreferencesUtil {
     public static boolean getBoolean(Context context, String key, boolean defaultValue) {
         SharedPreferences settings = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
         return settings.getBoolean(key, defaultValue);
+    }
+
+    /**
+     *  save objects
+     * @param context
+     * @param key
+     * @param obj
+     * @throws IOException
+     */
+    private static void put(Context context, String key, Object obj)throws IOException{
+        if (obj == null) {
+            return;
+        }
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ObjectOutputStream oos;
+        oos = new ObjectOutputStream(baos);
+        oos.writeObject(obj);
+        String objectStr = new String(Base64.encode(baos.toByteArray(), Base64.DEFAULT));
+        baos.close();
+        oos.close();
+
+        putString(context, key, objectStr);
+    }
+
+    /**
+     *  get object
+     * @param context
+     * @param key
+     * @return
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    private static Object get(Context context, String key)
+            throws IOException, ClassNotFoundException
+    {
+        String wordBase64 = getString(context, key);
+        if (TextUtils.isEmpty(wordBase64)) {
+            return null;
+        }
+        byte[]               objBytes = Base64.decode(wordBase64.getBytes(), Base64.DEFAULT);
+        ByteArrayInputStream bais     = new ByteArrayInputStream(objBytes);
+        ObjectInputStream ois      = new ObjectInputStream(bais);
+        Object obj = ois.readObject();
+        bais.close();
+        ois.close();
+        return obj;
     }
 }

@@ -14,12 +14,49 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <TextView
-        android:id="@+id/quality"
-        android:textSize="14sp"
-        android:textColor="#000000"
+    <LinearLayout
+        android:layout_width="128dp"
+        android:layout_height="30dp"
         android:layout_alignParentRight="true"
-        android:layout_margin="13dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/black_boarder"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_descrease"
+            android:layout_width="45dp"
+            android:padding="8dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="一"
+            android:textSize="14sp" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="#000000" />
+
+        <TextView
+            android:id="@+id/quality"
+            android:layout_width="35dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="1"
+            android:textSize="14sp" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="#000000" />
+
+        <TextView
+            android:id="@+id/tv_increase"
+            android:padding="5dp"
+            android:layout_width="45dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="+"
+            android:textSize="14sp" />
+    </LinearLayout>
 </RelativeLayout>

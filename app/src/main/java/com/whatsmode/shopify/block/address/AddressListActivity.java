@@ -64,7 +64,6 @@ public class AddressListActivity extends MvpActivity<AddressListPresenter> imple
         );
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setAdapter(mAddressListAdapter);
         mAddressListAdapter.setOnLoadMoreListener(new BaseQuickAdapter.RequestLoadMoreListener() {
             @Override
@@ -114,7 +113,7 @@ public class AddressListActivity extends MvpActivity<AddressListPresenter> imple
 
     @Override
     public void showContent(@LoadType.checker int type, @NonNull List<Address> addresses) {
-        if(mAddressListAdapter == null) return;
+        if(mAddressListAdapter == null || isDestroyed()) return;
         completeRefresh();
         switch (type) {
             case LoadType.TYPE_REFRESH_SUCCESS:

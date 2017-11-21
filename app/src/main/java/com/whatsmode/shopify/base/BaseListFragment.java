@@ -54,6 +54,7 @@ public abstract  class BaseListFragment<P extends BaseListContract.Presenter> ex
         }
     }
 
+
     @Override
     public void onRefresh() {
         loadData(true);
@@ -98,25 +99,18 @@ public abstract  class BaseListFragment<P extends BaseListContract.Presenter> ex
     }
 
     private void loadData(boolean isRefresh) {
-        if(isRefresh)
-        pageNum = 0;
+        if (isRefresh) {
+            pageNum = 0;
+            if (mAdapter != null) {
+                mAdapter.removeAllFooterView();
+            }
+        }
         getPresenter().doLoadData(isRefresh);
     }
 
     private void loadMoreData() {
         pageNum++;
         getPresenter().doLoadMoreData();
-    }
-
-    private void setRefreshOrLoadingMore(final boolean isLoadMore, final boolean flag){
-        mSwipeToLoadLayout.post(() -> {
-            if(isLoadMore) {
-                mSwipeToLoadLayout.setLoadingMore(flag);
-            }
-            else {
-                mSwipeToLoadLayout.setRefreshing(flag);
-            }
-        });
     }
 
     @Override
@@ -145,7 +139,8 @@ public abstract  class BaseListFragment<P extends BaseListContract.Presenter> ex
             mAdapter.addFooterView(textView);
         }
         mSwipeToLoadLayout.postDelayed(() -> mSwipeToLoadLayout.setLoadMoreEnabled(false),100);
-        setRefreshOrLoadingMore(true,false);
+        mSwipeToLoadLayout.setRefreshing(false);
+        mSwipeToLoadLayout.setLoadingMore(false);
     }
 
     @Override

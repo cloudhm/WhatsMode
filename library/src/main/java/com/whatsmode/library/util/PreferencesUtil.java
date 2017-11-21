@@ -274,7 +274,7 @@ public class PreferencesUtil {
      * @param obj
      * @throws IOException
      */
-    private static void put(Context context, String key, Object obj)throws IOException{
+    public static void putObject(Context context, String key, Object obj)throws IOException{
         if (obj == null) {
             return;
         }
@@ -297,7 +297,7 @@ public class PreferencesUtil {
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    private static Object get(Context context, String key)
+    public static Object getObject(Context context, String key)
             throws IOException, ClassNotFoundException
     {
         String wordBase64 = getString(context, key);

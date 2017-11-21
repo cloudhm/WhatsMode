@@ -1,6 +1,7 @@
 package com.whatsmode.shopify.block.cart;
 
 import android.support.annotation.NonNull;
+import android.support.v4.app.NavUtils;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.view.View;
 import com.whatsmode.library.util.ListUtils;
 import com.whatsmode.shopify.base.BaseListFragment;
 import com.whatsmode.shopify.block.account.data.AccountManager;
+import com.zchu.log.Logger;
 
 
 public class CartFragment extends BaseListFragment<CartContact.Presenter> implements CartContact.View {
@@ -31,7 +33,18 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (!isVisibleToUser) {
+            Logger.e("========");
+            if (mPresenter == null) {
+                return;
+            }
+            if (mAdapter != null && !ListUtils.isEmpty(mAdapter.getData()) && !AccountManager.getUsername().isEmpty()) {
+                mPresenter.saveCart(mAdapter.getData());
+            }else{
+                mPresenter.saveCart(CartItem.mockItem());
+            }
+        }
     }
 }

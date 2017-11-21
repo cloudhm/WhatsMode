@@ -64,8 +64,8 @@ public class AccountManager {
     public static UserInfo getUserInfo(){
         return getInstance().getUserInfoInner();
     }
-    
+
     public static String getUsername(){
-        return getUserInfo().getUsername();
+        return getUserInfo() == null ? null : getUserInfo().getUsername();
     }
 }

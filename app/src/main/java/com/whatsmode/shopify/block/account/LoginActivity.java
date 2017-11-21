@@ -68,6 +68,7 @@ public class LoginActivity extends MvpActivity<LoginPresenter> implements LoginC
     @Override
     public void loginFail(String msg) {
         if ("Unidentified customer".equals(msg)) {
+            SnackUtil.toastShow(this, msg);
             startActivity(new Intent(this,RegisterActivity.class));
         }else {
             SnackUtil.toastShow(this, msg);

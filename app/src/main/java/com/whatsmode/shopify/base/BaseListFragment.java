@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.whatsmode.library.util.ToastUtil;
 import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.WhatsApplication;
 import com.whatsmode.shopify.mvp.MvpFragment;
@@ -81,7 +82,7 @@ public abstract  class BaseListFragment<P extends BaseListContract.Presenter> ex
 //        }
     }
 
-    private BaseQuickAdapter mAdapter;
+    protected BaseQuickAdapter mAdapter;
     @Override
     public void setAdapter(BaseQuickAdapter adapter) {
         this.mAdapter = adapter;

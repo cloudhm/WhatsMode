@@ -1,8 +1,13 @@
 package com.whatsmode.shopify.block.main;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.view.menu.MenuItemImpl;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -20,6 +25,8 @@ import android.widget.TextView;
 import com.innodroid.expandablerecycler.ExpandableRecyclerAdapter;
 import com.whatsmode.library.util.ScreenUtils;
 import com.whatsmode.shopify.R;
+import com.whatsmode.shopify.block.WebActivity;
+import com.whatsmode.shopify.block.cart.CartFragment;
 import com.whatsmode.shopify.mvp.MvpActivity;
 import com.whatsmode.shopify.ui.helper.BaseFragmentAdapter;
 import com.whatsmode.shopify.ui.helper.CategoryAdapter;
@@ -34,6 +41,10 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
     private TextView toolbarTitle;
     private BottomBar bottomBar;
     private ImageView ivSearch;
+    private MenuItem menuItemSearch;
+    private MenuItem menuItemDelete;
+    private MenuItem mTempMenu;
+    private BaseFragmentAdapter fragmentAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,8 +71,9 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
-        MenuItem menuItemSearch = menu.findItem(R.id.action_search);
+        menuItemSearch = menu.findItem(R.id.action_search);
         menuItemSearch.setVisible(true);
+        menuItemDelete = menu.findItem(R.id.action_delete);
         getPresenter().setPageSelected(0);
         return super.onCreateOptionsMenu(menu);
     }
@@ -73,6 +85,7 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
 
     @Override
     public void setViewPage(BaseFragmentAdapter fragmentAdapter) {
+        this.fragmentAdapter = fragmentAdapter;
         vpContent.setAdapter(fragmentAdapter);
         toolbarTitle.setText(fragmentAdapter.getPageTitle(vpContent.getCurrentItem()));
         vpContent.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
@@ -94,23 +107,36 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
 
     @Override
     public void switch2Mode() {
-        //switchMenu(menuItemSearch);
+        switchMenu(menuItemSearch);
         if (toolbarTitle.getVisibility() != View.VISIBLE) {
             toolbarTitle.setVisibility(View.VISIBLE);
         }
         toolbar.setVisibility(View.VISIBLE);
     }
 
+    private void switchMenu(MenuItem menuItem) {
+        if (mTempMenu != null) {
+            mTempMenu.setVisible(false);
+        }
+        if (menuItem != null) {
+            menuItem.setVisible(true);
+            mTempMenu = menuItem;
+        }
+    }
+
     @Override
     public void switch2Influence() {
+        switchMenu(menuItemSearch);
     }
 
     @Override
     public void switch2Cart() {
+        switchMenu(menuItemDelete);
     }
 
     @Override
     public void switch2Mine() {
+        switchMenu(null);
     }
 
     private PopupWindow popupWindow;
@@ -146,6 +172,12 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
     }
 
     @Override
+    public void deleteCart() {
+        CartFragment item = (CartFragment) fragmentAdapter.getItem(2);
+        item.deleteCartItems();
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         if (popupWindow != null && popupWindow.isShowing()) {
@@ -165,5 +197,10 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
     @Override
     public void onClick(View v) {
         getPresenter().onClickView(v);
+    }
+
+    public static Intent newIntent(Context context) {
+        Intent intent = new Intent(context, MainActivity.class);
+        return intent;
     }
 }

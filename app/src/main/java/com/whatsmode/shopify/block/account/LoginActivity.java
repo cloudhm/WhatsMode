@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.whatsmode.library.util.SnackUtil;
 import com.whatsmode.library.util.Util;
+import com.whatsmode.shopify.AppNavigator;
 import com.whatsmode.shopify.BuildConfig;
 import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.block.me.MyFragment;
@@ -88,6 +89,7 @@ public class LoginActivity extends MvpActivity<LoginPresenter> implements LoginC
     @Override
     public void loginSuccess() {
         SnackUtil.toastShow(this,"登录成功");
+        AppNavigator.jumpToMain(this);
     }
 
     @Override

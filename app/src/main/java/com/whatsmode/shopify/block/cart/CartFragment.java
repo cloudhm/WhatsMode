@@ -3,6 +3,7 @@ package com.whatsmode.shopify.block.cart;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -11,6 +12,7 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.whatsmode.library.rx.RxBus;
 import com.whatsmode.library.rx.Util;
 import com.whatsmode.library.util.ListUtils;
 import com.whatsmode.library.util.ToastUtil;
@@ -25,7 +27,8 @@ import java.util.List;
 
 public class CartFragment extends BaseListFragment<CartContact.Presenter> implements CartContact.View, View.OnClickListener {
 
-    private TextView tvTotal;
+    private TextView tvTotal,all_text;
+    private AlertDialog alertDialog;
 
     public static CartFragment newInstance() {
         return new CartFragment();
@@ -37,8 +40,11 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
         RelativeLayout rlSpanner = (RelativeLayout) view.findViewById(R.id.spanner_layout);
         Button btnCheckout = (Button) view.findViewById(R.id.checkOut);
         tvTotal = (TextView) view.findViewById(R.id.total_count);
+        all_text = (TextView) view.findViewById(R.id.all_text);
         rlSpanner.setVisibility(View.VISIBLE);
         btnCheckout.setOnClickListener(this);
+        all_text.setOnClickListener(this);
+        RxBus.getInstance().register(RxRefreshCartList.class);
     }
 
     @Override
@@ -104,5 +110,53 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
     @Override
     public List<CartItem> getCheckedCartItem() {
         return checkItem;
+    }
+
+    @Override
+    public void checkTotal() {
+        double total = 0.0;
+        for (CartItem cartItem : checkItem) {
+            total += cartItem.getPrice() * cartItem.quality;
+        }
+        tvTotal.setText(Util.getFormatDouble(Math.max(0.0, total)));
+    }
+
+    @Override
+    public void selectAll(boolean selectAll) {
+        Double total = 0.0;
+        if (!ListUtils.isEmpty(mAdapter.getData()) && selectAll) {
+            checkItem.clear();
+            checkItem.addAll(mAdapter.getData());
+            for (CartItem cartItem : checkItem) {
+                total += cartItem.getPrice() * cartItem.quality;
+            }
+        }else{
+            checkItem.clear();
+        }
+        tvTotal.setText(Util.getFormatDouble(Math.max(0.0,total)));
+    }
+
+    public void deleteCartItems() {
+        if (!ListUtils.isEmpty(checkItem) && mAdapter != null) {
+            if(alertDialog == null)
+            alertDialog = new AlertDialog.Builder(getActivity())
+                    .setNegativeButton("取消", null)
+                    .setPositiveButton("確認", (dialog, which) -> {
+                        mAdapter.getData().removeAll(checkItem);
+                        mAdapter.notifyDataSetChanged();
+                        mPresenter.saveCart(mAdapter.getData());
+                        tvTotal.setText("0.0");
+                        checkItem.clear();
+                    }).setMessage("確認刪除商品條目？")
+                    .setTitle("刪除")
+                    .create();
+            alertDialog.show();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        RxBus.getInstance().unregisterAll();
     }
 }

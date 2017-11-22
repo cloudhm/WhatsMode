@@ -15,6 +15,10 @@ public class CartContact{
         void showError(String message);
 
         List<CartItem> getCheckedCartItem();
+
+        void checkTotal();
+
+        void selectAll(boolean selectAll);
     }
 
     interface Presenter extends BaseListContract.Presenter<View> {

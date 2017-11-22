@@ -1,15 +1,9 @@
 package com.whatsmode.shopify.block.cart;
 
-import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.shopify.buy3.Storefront;
-import com.shopify.graphql.support.ID;
-import com.shopify.graphql.support.Input;
 import com.whatsmode.library.util.ListUtils;
 import com.whatsmode.library.util.PreferencesUtil;
 import com.whatsmode.shopify.R;
@@ -22,9 +16,7 @@ import com.zchu.log.Logger;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableOnSubscribe;
@@ -52,7 +44,7 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
                         getView().setAdapter(createAdapter(cartItems));
                         if (!ListUtils.isEmpty(cartItems)) {
                             getView().showContent(true);
-                        }else{
+                        } else {
                             getView().showTheEnd();
                         }
                     }
@@ -73,8 +65,12 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
                             : Integer.parseInt(tvQuality.getText().toString()) - 1;
                     item.quality = quality;
                     tvQuality.setText(String.valueOf(quality));
+                    if (isViewAttached()) {
+                        getView().checkTotal();
+                    }
                 });
-                ImageView ivCheck = helper.getView(R.id.iv_radio);
+                View ivCheck = helper.getView(R.id.iv_radio);
+                ivCheck.setSelected(selectAll);
                 ivCheck.setOnClickListener(v -> {
                     if (isViewAttached()) {
                         ivCheck.setSelected(!ivCheck.isSelected());
@@ -86,9 +82,12 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
                     int quality = Integer.parseInt(tvQuality.getText().toString()) + 1;
                     item.quality = quality;
                     tvQuality.setText(String.valueOf(quality));
+                    if (isViewAttached()) {
+                        getView().checkTotal();
+                    }
                 });
                 helper.itemView.setOnClickListener(v -> {
-                    // TODO: 2017/11/21                
+                    // TODO: 2017/11/21
                 });
             }
         };
@@ -117,13 +116,14 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
     public void saveCart(List<CartItem> data) {
         try {
             PreferencesUtil.putObject(WhatsApplication.getContext(), AccountManager.getUsername(), data);
-        }   catch (IOException e) {
+        } catch (IOException e) {
             Logger.e(e);
             e.printStackTrace();
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
+    private boolean selectAll;
+
     @Override
     public void onClickView(View v) {
         switch (v.getId()) {
@@ -132,10 +132,18 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
                     checkOut(getView().getCheckedCartItem());
                 }
                 break;
+            case R.id.all_text:
+                if (isViewAttached()) {
+                    if (mAdapter != null) {
+                        selectAll = !selectAll;
+                        getView().selectAll(selectAll);
+                        mAdapter.notifyDataSetChanged();
+                    }
+                }
+                break;
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     private void checkOut(List<CartItem> data) {
         if (!ListUtils.isEmpty(data)) {
             if (isViewAttached()) {
@@ -146,7 +154,6 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
                 public void onSuccess(String webUrl) {
                     if (isViewAttached()) {
                         getView().hideLoading();
-                        Logger.e(webUrl);
                         getView().showSuccess(webUrl);
                     }
                 }
@@ -159,7 +166,7 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
                     }
                 }
             }).execute();
-        }else{
+        } else {
             getView().showError("請選擇商品");
         }
     }

@@ -27,6 +27,7 @@ package com.whatsmode.library.rx;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -134,7 +135,12 @@ public final class Util {
     return acc;
   }
 
-  public interface ReduceCallback<T, R> {
+  public static String getFormatDouble(double v) {
+    DecimalFormat df = new DecimalFormat(".##");
+    return df.format(v);
+  }
+
+    public interface ReduceCallback<T, R> {
 
     R reduce(R acc, T val);
   }

@@ -21,9 +21,6 @@ import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.base.BaseActivity;
 import com.whatsmode.shopify.ui.helper.ToolbarHelper;
 
-/**
- * Created by Administrator on 2017/11/17
- */
 
 public class WebActivity extends BaseActivity {
 

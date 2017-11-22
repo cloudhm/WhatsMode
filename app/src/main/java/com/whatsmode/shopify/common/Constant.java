@@ -10,6 +10,7 @@ import java.io.File;
 
 public class Constant {
     public static final int PAGE_SIZE_LOAD_DATA = 10;
+    public static final String WEB_PREFIX = "https://whatsmode.com";
 
     public static final String ROOTPATH_CUSTOMER_USERINFO;
     public static final String USERINFO = "userinfo";

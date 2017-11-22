@@ -46,7 +46,7 @@ public interface BaseListContract {
          */
         void showTheEnd();
 
-
+        void hideLoading();
         /**
          * 设置回最初状态，显示加载的数据
          */

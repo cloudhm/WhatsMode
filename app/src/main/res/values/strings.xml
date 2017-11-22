@@ -22,6 +22,7 @@
     <string name="we_well_send_you_an_email_to_reset_your_password">We well send you an email to reset your password.</string>
     <string name="continue_text">Continue</string>
     <string name="back">Back</string>
+    <string name="all">全選</string>
 
     <array name="category">
         <item>APPAREL</item>

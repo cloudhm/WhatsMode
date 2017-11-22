@@ -32,7 +32,7 @@ public class WhatsApplication extends Application {
 
     private void initGraphClient() {
         OkHttpClient httpClient = new OkHttpClient.Builder()
-                .addNetworkInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC))
+                .addNetworkInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
                 .build();
 
         sGraphClient = GraphClient.builder(this)

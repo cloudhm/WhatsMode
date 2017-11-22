@@ -4,11 +4,22 @@
     android:layout_width="match_parent"
     android:layout_height="48dp">
 
+    <ImageView
+        android:id="@+id/iv_radio"
+        android:padding="13dp"
+        android:background="@drawable/radio_select"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="11dp" />
     <TextView
         android:id="@+id/name"
         android:textSize="18sp"
         android:textColor="@color/colorPrimary"
         android:layout_gravity="center_vertical"
+        android:layout_toRightOf="@+id/iv_radio"
+        android:layout_marginLeft="13dp"
         android:layout_margin="13dp"
         android:text="wafawfwa"
         android:layout_width="wrap_content"
@@ -16,7 +27,9 @@
 
     <LinearLayout
         android:layout_width="128dp"
-        android:layout_height="30dp"
+        android:layout_height="match_parent"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="10dp"

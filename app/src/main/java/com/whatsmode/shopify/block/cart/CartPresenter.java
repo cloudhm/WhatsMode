@@ -1,9 +1,15 @@
 package com.whatsmode.shopify.block.cart;
 
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.shopify.buy3.Storefront;
+import com.shopify.graphql.support.ID;
+import com.shopify.graphql.support.Input;
 import com.whatsmode.library.util.ListUtils;
 import com.whatsmode.library.util.PreferencesUtil;
 import com.whatsmode.shopify.R;
@@ -16,7 +22,9 @@ import com.zchu.log.Logger;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableOnSubscribe;
@@ -66,6 +74,13 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
                     item.quality = quality;
                     tvQuality.setText(String.valueOf(quality));
                 });
+                ImageView ivCheck = helper.getView(R.id.iv_radio);
+                ivCheck.setOnClickListener(v -> {
+                    if (isViewAttached()) {
+                        ivCheck.setSelected(!ivCheck.isSelected());
+                        getView().onCheckSelect(ivCheck.isSelected(), item);
+                    }
+                });
 
                 helper.getView(R.id.tv_increase).setOnClickListener(v -> {
                     int quality = Integer.parseInt(tvQuality.getText().toString()) + 1;
@@ -108,14 +123,44 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onClickView(View v) {
         switch (v.getId()) {
             case R.id.checkOut:
                 if (isViewAttached()) {
-                    getView().checkOut();
+                    checkOut(getView().getCheckedCartItem());
                 }
                 break;
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void checkOut(List<CartItem> data) {
+        if (!ListUtils.isEmpty(data)) {
+            if (isViewAttached()) {
+                getView().showLoading(false);
+            }
+            CartRepository.create().parameter(data).listener(new CartRepository.QueryListener() {
+                @Override
+                public void onSuccess(String webUrl) {
+                    if (isViewAttached()) {
+                        getView().hideLoading();
+                        Logger.e(webUrl);
+                        getView().showSuccess(webUrl);
+                    }
+                }
+
+                @Override
+                public void onError(String message) {
+                    if (isViewAttached()) {
+                        getView().hideLoading();
+                        getView().showError(message);
+                    }
+                }
+            }).execute();
+        }else{
+            getView().showError("請選擇商品");
         }
     }
 }

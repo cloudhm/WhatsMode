@@ -8,7 +8,13 @@ import java.util.List;
 public class CartContact{
     interface View extends BaseListContract.View {
 
-        void checkOut();
+        void onCheckSelect(boolean selected, CartItem cartItems);
+
+        void showSuccess(String webUrl);
+
+        void showError(String message);
+
+        List<CartItem> getCheckedCartItem();
     }
 
     interface Presenter extends BaseListContract.Presenter<View> {

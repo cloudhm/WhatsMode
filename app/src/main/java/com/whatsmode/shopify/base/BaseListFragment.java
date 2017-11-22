@@ -15,17 +15,19 @@ import com.whatsmode.library.util.ScreenUtils;
 import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.WhatsApplication;
 import com.whatsmode.shopify.mvp.MvpFragment;
+import com.whatsmode.shopify.ui.helper.LoadingDialog;
 import com.whatsmode.shopify.ui.helper.OnLoadMoreListener;
 import com.whatsmode.shopify.ui.helper.OnRefreshListener;
 import com.whatsmode.shopify.ui.helper.RecycleViewDivider;
 import com.whatsmode.shopify.ui.widget.SwipeToLoadLayout;
 
 
-public abstract  class BaseListFragment<P extends BaseListContract.Presenter> extends MvpFragment<P> implements OnRefreshListener,OnLoadMoreListener, BaseListContract.View {
+public abstract class BaseListFragment<P extends BaseListContract.Presenter> extends MvpFragment<P> implements OnRefreshListener, OnLoadMoreListener, BaseListContract.View {
 
     private SwipeToLoadLayout mSwipeToLoadLayout;
     protected RecyclerView recyclerView;
-    protected  int pageNum = 0;
+    protected int pageNum = 0;
+    private LoadingDialog mLoadingDialog;
 
     @Override
     public int getLayoutId() {
@@ -46,6 +48,7 @@ public abstract  class BaseListFragment<P extends BaseListContract.Presenter> ex
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.addItemDecoration(new RecycleViewDivider(getActivity(), LinearLayoutManager.VERTICAL));
     }
+
     @Override
     public void onShow(boolean isFirstShow) {
         super.onShow(isFirstShow);
@@ -62,10 +65,17 @@ public abstract  class BaseListFragment<P extends BaseListContract.Presenter> ex
 
     @Override
     public void showLoading(boolean isRefresh) {
-        mSwipeToLoadLayout.post(() -> {
-            mSwipeToLoadLayout.setLoadingMore(false);
-            mSwipeToLoadLayout.setRefreshing(isRefresh);
-        });
+        if (isRefresh) {
+            mSwipeToLoadLayout.post(() -> {
+                mSwipeToLoadLayout.setLoadingMore(false);
+                mSwipeToLoadLayout.setRefreshing(isRefresh);
+            });
+        }else{
+            if (mLoadingDialog == null) {
+                mLoadingDialog = new LoadingDialog(getActivity());
+            }
+            mLoadingDialog.show();
+        }
     }
 
     @Override
@@ -84,10 +94,18 @@ public abstract  class BaseListFragment<P extends BaseListContract.Presenter> ex
     }
 
     protected BaseQuickAdapter mAdapter;
+
     @Override
     public void setAdapter(BaseQuickAdapter adapter) {
         this.mAdapter = adapter;
         recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public void hideLoading() {
+        if (mLoadingDialog != null && mLoadingDialog.isShowing()) {
+            mLoadingDialog.dismiss();
+        }
     }
 
     @Override
@@ -130,15 +148,15 @@ public abstract  class BaseListFragment<P extends BaseListContract.Presenter> ex
             TextView textView = new TextView(WhatsApplication.getContext());
             textView.setText(WhatsApplication.getContext().getString(R.string.no_more));
             textView.setGravity(Gravity.CENTER);
-            textView.setTextSize(TypedValue.COMPLEX_UNIT_SP,16);
-            textView.setPadding(ScreenUtils.dip2px(getActivity(),5)
-                                ,ScreenUtils.dip2px(getActivity(),5)
-                                ,ScreenUtils.dip2px(getActivity(),5)
-                                ,ScreenUtils.dip2px(getActivity(),5));
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+            textView.setPadding(ScreenUtils.dip2px(getActivity(), 5)
+                    , ScreenUtils.dip2px(getActivity(), 5)
+                    , ScreenUtils.dip2px(getActivity(), 5)
+                    , ScreenUtils.dip2px(getActivity(), 5));
             textView.setTextColor(Color.BLUE);
             mAdapter.addFooterView(textView);
         }
-        mSwipeToLoadLayout.postDelayed(() -> mSwipeToLoadLayout.setLoadMoreEnabled(false),100);
+        mSwipeToLoadLayout.postDelayed(() -> mSwipeToLoadLayout.setLoadMoreEnabled(false), 100);
         mSwipeToLoadLayout.setRefreshing(false);
         mSwipeToLoadLayout.setLoadingMore(false);
     }
@@ -149,9 +167,10 @@ public abstract  class BaseListFragment<P extends BaseListContract.Presenter> ex
     }
 
     protected boolean hasNext = true;
+
     @Override
     public void onLoadMore() {
-        if(hasNext){
+        if (hasNext) {
             loadMoreData();
         }
     }

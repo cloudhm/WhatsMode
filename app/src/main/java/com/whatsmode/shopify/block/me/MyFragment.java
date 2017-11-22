@@ -71,14 +71,9 @@ public class MyFragment extends MvpFragment<MyContract.Presenter> implements MyC
                 startActivity(new Intent(getActivity(), AddressListActivity.class));
                 break;
             case R.id.order_history:
-                mPresenter.refreshOrderList();
+
                 break;
         }
-    }
-
-    @Override
-    public void showContent(@LoadType.checker int type, @NonNull List<Order> orders) {
-        SnackUtil.toastShow(getContext(),orders.toString());
     }
 
     @Override
@@ -159,8 +154,6 @@ public class MyFragment extends MvpFragment<MyContract.Presenter> implements MyC
         }
     }
 
-    ;
-
     public class MyOnPageChangeListener implements ViewPager.OnPageChangeListener {
 
         @Override
@@ -168,7 +161,6 @@ public class MyFragment extends MvpFragment<MyContract.Presenter> implements MyC
 
             switch (arg0) {
                 case 0:
-
 
                     break;
                 case 1:

@@ -1,47 +1,58 @@
 package com.whatsmode.shopify.block.account;
 
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.whatsmode.library.util.SnackUtil;
+import com.whatsmode.library.util.Util;
 import com.whatsmode.shopify.R;
+import com.whatsmode.shopify.block.me.StatusBarUtil;
 import com.whatsmode.shopify.mvp.MvpActivity;
 
 /**
  * Created by tom on 17-11-16.
  */
 
-public class RegisterActivity extends MvpActivity<RegisterPresenter> implements RegisterContract.View {
+public class RegisterActivity extends MvpActivity<RegisterPresenter> implements RegisterContract.View, View.OnFocusChangeListener, View.OnClickListener {
 
 
     private Toolbar mToolbar;
-    private EditText mEmail;
-    private EditText mPwd;
-    private EditText mFirstName;
-    private EditText mLastName;
+    private TextInputEditText mEmail;
+    private TextInputEditText mPwd;
+    private TextInputEditText mFirstName;
+    private TextInputEditText mLastName;
+    private TextInputLayout mEmailL;
+    private TextInputLayout mPwdL;
+    private TextInputLayout mFirstNameL;
+    private TextInputLayout mLastNameL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        mEmail = (EditText) findViewById(R.id.email);
-        mPwd = (EditText) findViewById(R.id.pwd);
-        mFirstName = (EditText) findViewById(R.id.first_name);
-        mLastName = (EditText) findViewById(R.id.last_name);
-        init();
-    }
-
-    private void init(){
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setTitle("注册");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        StatusBarUtil.StatusBarLightMode(this);
+        mEmail = (TextInputEditText) findViewById(R.id.email);
+        mPwd = (TextInputEditText) findViewById(R.id.pwd);
+        mFirstName = (TextInputEditText) findViewById(R.id.first_name);
+        mLastName = (TextInputEditText) findViewById(R.id.last_name);
+        mEmailL = (TextInputLayout) findViewById(R.id.email_l);
+        mPwdL = (TextInputLayout) findViewById(R.id.pwd_l);
+        mFirstNameL = (TextInputLayout) findViewById(R.id.first_name_l);
+        mLastNameL = (TextInputLayout) findViewById(R.id.last_name_l);
+        TextView signIn = (TextView) findViewById(R.id.sign_in);
+        signIn.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG );
+        signIn.setOnClickListener(this);
+        mEmail.setOnFocusChangeListener(this);
     }
 
     public void register(View view) {
@@ -50,14 +61,26 @@ public class RegisterActivity extends MvpActivity<RegisterPresenter> implements 
         String firstName = mFirstName.getText().toString();
         String lastName = mLastName.getText().toString();
         if (TextUtils.isEmpty(email)) {
-            Toast.makeText(this,"请输入邮箱",Toast.LENGTH_SHORT).show();
+            mEmailL.setError(getString(R.string.please_enter_the_email));
             return;
+        }else{
+            if(!Util.isEmail(email)){
+                mEmailL.setError(getString(R.string.please_enter_a_valid_email));
+                return;
+            }else{
+                mEmailL.setError(null);
+            }
         }
         if (TextUtils.isEmpty(pwd)) {
-            Toast.makeText(this,"请输入密码",Toast.LENGTH_SHORT).show();
+            mPwdL.setError(getString(R.string.please_input_a_password));
             return;
+        }else{
+            mPwdL.setError(null);
         }
-        mPresenter.register(email,pwd,firstName,lastName);
+        if (TextUtils.isEmpty(mEmailL.getError())) {
+
+            mPresenter.register(email,pwd,firstName,lastName);
+        }
     }
 
     @Override
@@ -84,5 +107,28 @@ public class RegisterActivity extends MvpActivity<RegisterPresenter> implements 
     @Override
     public void registerFail(String msg) {
         SnackUtil.toastShow(this,msg);
+    }
+
+    @Override
+    public void onFocusChange(View view, boolean b) {
+        if (view.getId() == R.id.email) {
+            if (!b) {
+                String email = mEmail.getText().toString();
+                if(!Util.isEmail(email)){
+                    mEmailL.setError(getString(R.string.please_enter_a_valid_email));
+                }else{
+                    mEmailL.setError(null);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.sign_in:
+                finish();
+                break;
+        }
     }
 }

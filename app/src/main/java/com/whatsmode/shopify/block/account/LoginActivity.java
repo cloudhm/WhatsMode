@@ -1,57 +1,80 @@
 package com.whatsmode.shopify.block.account;
 
 import android.content.Intent;
+import android.graphics.Paint;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.whatsmode.library.util.SnackUtil;
+import com.whatsmode.library.util.Util;
+import com.whatsmode.shopify.BuildConfig;
 import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.block.me.MyFragment;
+import com.whatsmode.shopify.block.me.StatusBarUtil;
 import com.whatsmode.shopify.mvp.MvpActivity;
 
 /**
  * Created by tom on 17-11-16.
  */
 
-public class LoginActivity extends MvpActivity<LoginPresenter> implements LoginContract.View, View.OnClickListener {
+public class LoginActivity extends MvpActivity<LoginPresenter> implements LoginContract.View, View.OnClickListener, View.OnFocusChangeListener {
 
 
-    private EditText mEmail;
-    private EditText mPwd;
-    private Toolbar mToolbar;
+    private TextInputEditText mEmail;
+    private TextInputEditText mPwd;
+    private TextInputLayout mEmailL;
+    private TextInputLayout mPwdL;
+    private TextView mForgotPwd;
+    private TextView mCreateAccount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        mEmail = (EditText) findViewById(R.id.email);
-        mPwd = (EditText) findViewById(R.id.pwd);
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        StatusBarUtil.StatusBarLightMode(this);
+        mEmail = (TextInputEditText) findViewById(R.id.email);
+        mEmailL = (TextInputLayout)findViewById(R.id.email_l);
+        mPwdL = (TextInputLayout)findViewById(R.id.pwd_l);
+        mPwd = (TextInputEditText) findViewById(R.id.pwd);
         findViewById(R.id.forgot_pwd).setOnClickListener(this);
-        init();
+        mForgotPwd = (TextView) findViewById(R.id.forgot_pwd);
+        mForgotPwd.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG );
+        mCreateAccount = (TextView) findViewById(R.id.create_account);
+        mCreateAccount.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG );
+        mCreateAccount.setOnClickListener(this);
+        mEmail.setOnFocusChangeListener(this);
+
     }
 
-
-    private void init(){
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setTitle("登录");
-    }
 
     public void login(View view) {
         String email = mEmail.getText().toString();
         String pwd = mPwd.getText().toString();
         if (TextUtils.isEmpty(email)) {
-            Toast.makeText(this,"请输入邮箱",Toast.LENGTH_SHORT).show();
+            mEmailL.setError(getString(R.string.please_enter_the_email));
             return;
+        }else{
+            if(!Util.isEmail(email)){
+                mEmailL.setError(getString(R.string.please_enter_a_valid_email));
+                return;
+            }else{
+                mEmailL.setError(null);
+            }
         }
         if (TextUtils.isEmpty(pwd)) {
-            Toast.makeText(this,"请输入密码",Toast.LENGTH_SHORT).show();
+            mPwdL.setError(getString(R.string.please_input_a_password));
             return;
+        }else{
+            mPwdL.setError(null);
         }
         mPresenter.login(email,pwd);
     }
@@ -69,12 +92,11 @@ public class LoginActivity extends MvpActivity<LoginPresenter> implements LoginC
 
     @Override
     public void loginFail(String msg) {
-        if ("Unidentified customer".equals(msg)) {
+        /*if ("Unidentified customer".equals(msg)) {
             SnackUtil.toastShow(this, msg);
             startActivity(new Intent(this,RegisterActivity.class));
-        }else {
-            SnackUtil.toastShow(this, msg);
-        }
+        }*/
+        SnackUtil.toastShow(this, msg);
     }
 
     @Override
@@ -83,6 +105,23 @@ public class LoginActivity extends MvpActivity<LoginPresenter> implements LoginC
             case R.id.forgot_pwd:
                 startActivity(new Intent(this,ForgotPwdActivity.class));
                 break;
+            case R.id.create_account:
+                startActivity(new Intent(this,RegisterActivity.class));
+                break;
+        }
+    }
+
+    @Override
+    public void onFocusChange(View view, boolean b) {
+        if (view.getId() == R.id.email) {
+            if (!b) {
+                String email = mEmail.getText().toString();
+                if(!Util.isEmail(email)){
+                    mEmailL.setError(getString(R.string.please_enter_a_valid_email));
+                }else{
+                    mEmailL.setError(null);
+                }
+            }
         }
     }
 }

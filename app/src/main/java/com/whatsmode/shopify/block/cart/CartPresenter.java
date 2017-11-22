@@ -73,6 +73,7 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
                     }
                 });
                 View ivCheck = helper.getView(R.id.iv_radio);
+                ivCheck.setSelected(selectAll);
                 ivCheck.setOnClickListener(v -> {
                     if (isViewAttached()) {
                         ivCheck.setSelected(!ivCheck.isSelected());
@@ -90,6 +91,7 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
                 });
                 helper.itemView.setOnClickListener(v -> {
                     // TODO: 2017/11/21
+                    Logger.e("---item----");
                 });
             }
         };
@@ -124,6 +126,8 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
         }
     }
 
+    private boolean selectAll;
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onClickView(View v) {
@@ -131,6 +135,15 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
             case R.id.checkOut:
                 if (isViewAttached()) {
                     checkOut(getView().getCheckedCartItem());
+                }
+                break;
+            case R.id.all_text:
+                if (isViewAttached()) {
+                    if (mAdapter != null) {
+                        selectAll = !selectAll;
+                        getView().selectAll(selectAll);
+                        mAdapter.notifyDataSetChanged();
+                    }
                 }
                 break;
         }

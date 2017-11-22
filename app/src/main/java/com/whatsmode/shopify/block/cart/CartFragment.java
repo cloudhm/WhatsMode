@@ -27,7 +27,7 @@ import java.util.List;
 
 public class CartFragment extends BaseListFragment<CartContact.Presenter> implements CartContact.View, View.OnClickListener {
 
-    private TextView tvTotal;
+    private TextView tvTotal,all_text;
     private AlertDialog alertDialog;
 
     public static CartFragment newInstance() {
@@ -40,8 +40,10 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
         RelativeLayout rlSpanner = (RelativeLayout) view.findViewById(R.id.spanner_layout);
         Button btnCheckout = (Button) view.findViewById(R.id.checkOut);
         tvTotal = (TextView) view.findViewById(R.id.total_count);
+        all_text = (TextView) view.findViewById(R.id.all_text);
         rlSpanner.setVisibility(View.VISIBLE);
         btnCheckout.setOnClickListener(this);
+        all_text.setOnClickListener(this);
         RxBus.getInstance().register(RxRefreshCartList.class);
     }
 
@@ -116,7 +118,22 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
         for (CartItem cartItem : checkItem) {
             total += cartItem.getPrice() * cartItem.quality;
         }
-        tvTotal.setText(Util.getFormatDouble(total));
+        tvTotal.setText(Util.getFormatDouble(Math.max(0.0, total)));
+    }
+
+    @Override
+    public void selectAll(boolean selectAll) {
+        Double total = 0.0;
+        if (!ListUtils.isEmpty(mAdapter.getData()) && selectAll) {
+            checkItem.clear();
+            checkItem.addAll(mAdapter.getData());
+            for (CartItem cartItem : checkItem) {
+                total += cartItem.getPrice() * cartItem.quality;
+            }
+        }else{
+            checkItem.clear();
+        }
+        tvTotal.setText(Util.getFormatDouble(Math.max(0.0,total)));
     }
 
     public void deleteCartItems() {
@@ -129,6 +146,7 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
                         mAdapter.notifyDataSetChanged();
                         mPresenter.saveCart(mAdapter.getData());
                         tvTotal.setText("0.0");
+                        checkItem.clear();
                     }).setMessage("確認刪除商品條目？")
                     .setTitle("刪除")
                     .create();

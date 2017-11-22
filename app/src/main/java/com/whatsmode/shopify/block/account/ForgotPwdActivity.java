@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.whatsmode.library.util.SnackUtil;
 import com.whatsmode.library.util.Util;
 import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.block.me.StatusBarUtil;
@@ -79,7 +80,7 @@ public class ForgotPwdActivity extends MvpActivity<ForgotPwdPresenter> implement
                 }
                 //Intent intent = new Intent(this,CheckEmailActivity.class);
                 //startActivityForResult(intent,REQUEST_CODE);
-                finish();
+                mPresenter.recover(email);
                 break;
             case R.id.back:
                 finish();
@@ -93,5 +94,15 @@ public class ForgotPwdActivity extends MvpActivity<ForgotPwdPresenter> implement
         if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
             finish();
         }
+    }
+
+    @Override
+    public void success() {
+        finish();
+    }
+
+    @Override
+    public void onError(int code, String msg) {
+        SnackUtil.toastShow(this,msg);
     }
 }

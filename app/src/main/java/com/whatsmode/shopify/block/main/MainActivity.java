@@ -1,5 +1,7 @@
 package com.whatsmode.shopify.block.main;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -23,6 +25,7 @@ import android.widget.TextView;
 import com.innodroid.expandablerecycler.ExpandableRecyclerAdapter;
 import com.whatsmode.library.util.ScreenUtils;
 import com.whatsmode.shopify.R;
+import com.whatsmode.shopify.block.WebActivity;
 import com.whatsmode.shopify.block.cart.CartFragment;
 import com.whatsmode.shopify.mvp.MvpActivity;
 import com.whatsmode.shopify.ui.helper.BaseFragmentAdapter;
@@ -194,5 +197,10 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
     @Override
     public void onClick(View v) {
         getPresenter().onClickView(v);
+    }
+
+    public static Intent newIntent(Context context) {
+        Intent intent = new Intent(context, MainActivity.class);
+        return intent;
     }
 }

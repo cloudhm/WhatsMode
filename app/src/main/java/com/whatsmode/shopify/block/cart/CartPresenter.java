@@ -1,9 +1,6 @@
 package com.whatsmode.shopify.block.cart;
 
-import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -47,7 +44,7 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
                         getView().setAdapter(createAdapter(cartItems));
                         if (!ListUtils.isEmpty(cartItems)) {
                             getView().showContent(true);
-                        }else{
+                        } else {
                             getView().showTheEnd();
                         }
                     }
@@ -91,7 +88,6 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
                 });
                 helper.itemView.setOnClickListener(v -> {
                     // TODO: 2017/11/21
-                    Logger.e("---item----");
                 });
             }
         };
@@ -120,7 +116,7 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
     public void saveCart(List<CartItem> data) {
         try {
             PreferencesUtil.putObject(WhatsApplication.getContext(), AccountManager.getUsername(), data);
-        }   catch (IOException e) {
+        } catch (IOException e) {
             Logger.e(e);
             e.printStackTrace();
         }
@@ -128,7 +124,6 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
 
     private boolean selectAll;
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onClickView(View v) {
         switch (v.getId()) {
@@ -149,7 +144,6 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     private void checkOut(List<CartItem> data) {
         if (!ListUtils.isEmpty(data)) {
             if (isViewAttached()) {
@@ -160,7 +154,6 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
                 public void onSuccess(String webUrl) {
                     if (isViewAttached()) {
                         getView().hideLoading();
-                        Logger.e(webUrl);
                         getView().showSuccess(webUrl);
                     }
                 }
@@ -173,7 +166,7 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
                     }
                 }
             }).execute();
-        }else{
+        } else {
             getView().showError("請選擇商品");
         }
     }

@@ -7,9 +7,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.shopify.buy3.Storefront;
-import com.shopify.graphql.support.ID;
-import com.shopify.graphql.support.Input;
 import com.whatsmode.library.util.ListUtils;
 import com.whatsmode.library.util.PreferencesUtil;
 import com.whatsmode.shopify.R;
@@ -22,9 +19,7 @@ import com.zchu.log.Logger;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableOnSubscribe;
@@ -73,6 +68,9 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
                             : Integer.parseInt(tvQuality.getText().toString()) - 1;
                     item.quality = quality;
                     tvQuality.setText(String.valueOf(quality));
+                    if (isViewAttached()) {
+                        getView().checkTotal();
+                    }
                 });
                 ImageView ivCheck = helper.getView(R.id.iv_radio);
                 ivCheck.setOnClickListener(v -> {
@@ -86,6 +84,9 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
                     int quality = Integer.parseInt(tvQuality.getText().toString()) + 1;
                     item.quality = quality;
                     tvQuality.setText(String.valueOf(quality));
+                    if (isViewAttached()) {
+                        getView().checkTotal();
+                    }
                 });
                 helper.itemView.setOnClickListener(v -> {
                     // TODO: 2017/11/21                

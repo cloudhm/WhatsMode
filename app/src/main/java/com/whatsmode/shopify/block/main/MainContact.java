@@ -25,6 +25,7 @@ class MainContact {
 
         void showAbout();
 
+        void deleteCart();
     }
 
     interface Presenter extends MvpPresenter<MainContact.View> {

@@ -62,6 +62,11 @@ class MainPresenter extends MvpBasePresenter<MainContact.View> implements MainCo
                     getView().showAbout();
                 }
                 return true;
+            case R.id.action_delete:
+                if (isViewAttached()) {
+                    getView().deleteCart();
+                }
+                return true;
         }
         return false;
     }

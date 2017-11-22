@@ -6,7 +6,22 @@
     <string name="tabFourth">My</string>
     <string name="search">搜索</string>
     <string name="save">保存</string>
-    <string name="no_more">这回真没了</string>
+    <string name="no_more">已無更多</string>
+    <string name="sign_in">Sign in</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="forgot_password">Forgot Password</string>
+    <string name="create_account">Create Account</string>
+    <string name="please_enter_a_valid_email">Please enter a valid Email !</string>
+    <string name="please_enter_the_email">Please enter the email</string>
+    <string name="please_input_a_password">Please input a password</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="create">Create</string>
+    <string name="forgot_your_password">Forgot your password?</string>
+    <string name="we_well_send_you_an_email_to_reset_your_password">We well send you an email to reset your password.</string>
+    <string name="continue_text">Continue</string>
+    <string name="back">Back</string>
     <string name="all">全選</string>
 
     <array name="category">
@@ -95,5 +110,4 @@
         <item>/collections/boots</item>
         <item>/collections/shoes</item>
     </array>
->>>>>>> 9fb3ed027fb615960b8c89966460d7d77cffdb98
 </resources>

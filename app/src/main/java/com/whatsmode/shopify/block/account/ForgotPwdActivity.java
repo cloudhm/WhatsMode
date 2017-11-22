@@ -3,14 +3,19 @@ package com.whatsmode.shopify.block.account;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.whatsmode.library.util.Util;
 import com.whatsmode.shopify.R;
+import com.whatsmode.shopify.block.me.StatusBarUtil;
 import com.whatsmode.shopify.mvp.MvpActivity;
 
 /**
@@ -21,28 +26,23 @@ public class ForgotPwdActivity extends MvpActivity<ForgotPwdPresenter> implement
 
     private static final int REQUEST_CODE = 10;
 
-    private EditText mEmail;
+    private TextInputEditText mEmail;
     private Button mContinueSure;
-    private TextView mBack;
-    private Toolbar mToolbar;
+    private Button mBack;
+    private TextInputLayout mEmailL;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forgot_pwd);
-        mEmail = (EditText) findViewById(R.id.email);
+        StatusBarUtil.StatusBarLightMode(this);
+        mEmail = (TextInputEditText) findViewById(R.id.email);
+        mEmailL = (TextInputLayout) findViewById(R.id.email_l);
         mContinueSure = (Button) findViewById(R.id.continue_sure);
-        mBack = (TextView) findViewById(R.id.back);
+        mBack = (Button) findViewById(R.id.back);
         mContinueSure.setOnClickListener(this);
         mBack.setOnClickListener(this);
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        init();
-    }
-
-    private void init(){
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setTitle("忘记密码");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @NonNull
@@ -65,8 +65,21 @@ public class ForgotPwdActivity extends MvpActivity<ForgotPwdPresenter> implement
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.continue_sure:
-                Intent intent = new Intent(this,CheckEmailActivity.class);
-                startActivityForResult(intent,REQUEST_CODE);
+                String email = mEmail.getText().toString();
+                if (TextUtils.isEmpty(email)) {
+                    mEmailL.setError(getString(R.string.please_enter_the_email));
+                    return;
+                }else{
+                    if(!Util.isEmail(email)){
+                        mEmailL.setError(getString(R.string.please_enter_a_valid_email));
+                        return;
+                    }else{
+                        mEmailL.setError(null);
+                    }
+                }
+                //Intent intent = new Intent(this,CheckEmailActivity.class);
+                //startActivityForResult(intent,REQUEST_CODE);
+                finish();
                 break;
             case R.id.back:
                 finish();

@@ -3,6 +3,7 @@ package com.whatsmode.shopify.block.me;
 import com.whatsmode.shopify.block.address.Address;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * Created by tom on 17-11-21.
@@ -26,11 +27,12 @@ public class Order {
     private BigDecimal totalShippingPrice;
     private BigDecimal totalTax;
     private String cursor;
+    private List<LineItem> lineItems;
 
     public Order(String customerUrl, String email, String id, Integer orderNumber, String phone,
                  Address shippingAddress, BigDecimal subtotalPrice, BigDecimal totalPrice,
                  BigDecimal totalRefunded, BigDecimal totalShippingPrice, BigDecimal totalTax,
-                 String cursor) {
+                 String cursor,List<LineItem> lineItems) {
         this.customerUrl = customerUrl;
         this.email = email;
         this.id = id;
@@ -43,6 +45,7 @@ public class Order {
         this.totalShippingPrice = totalShippingPrice;
         this.totalTax = totalTax;
         this.cursor = cursor;
+        this.lineItems = lineItems;
     }
 
     public static boolean isHasNextPage() {
@@ -150,6 +153,14 @@ public class Order {
         this.cursor = cursor;
     }
 
+    public List<LineItem> getLineItems() {
+        return lineItems;
+    }
+
+    public void setLineItems(List<LineItem> lineItems) {
+        this.lineItems = lineItems;
+    }
+
     @Override
     public String toString() {
         return "Order{" +
@@ -165,6 +176,56 @@ public class Order {
                 ", totalShippingPrice=" + totalShippingPrice +
                 ", totalTax=" + totalTax +
                 ", cursor='" + cursor + '\'' +
+                ", lineItems=" + lineItems +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Order order = (Order) o;
+
+        if (customerUrl != null ? !customerUrl.equals(order.customerUrl) : order.customerUrl != null)
+            return false;
+        if (email != null ? !email.equals(order.email) : order.email != null) return false;
+        if (id != null ? !id.equals(order.id) : order.id != null) return false;
+        if (orderNumber != null ? !orderNumber.equals(order.orderNumber) : order.orderNumber != null)
+            return false;
+        if (phone != null ? !phone.equals(order.phone) : order.phone != null) return false;
+        if (shippingAddress != null ? !shippingAddress.equals(order.shippingAddress) : order.shippingAddress != null)
+            return false;
+        if (subtotalPrice != null ? !subtotalPrice.equals(order.subtotalPrice) : order.subtotalPrice != null)
+            return false;
+        if (totalPrice != null ? !totalPrice.equals(order.totalPrice) : order.totalPrice != null)
+            return false;
+        if (totalRefunded != null ? !totalRefunded.equals(order.totalRefunded) : order.totalRefunded != null)
+            return false;
+        if (totalShippingPrice != null ? !totalShippingPrice.equals(order.totalShippingPrice) : order.totalShippingPrice != null)
+            return false;
+        if (totalTax != null ? !totalTax.equals(order.totalTax) : order.totalTax != null)
+            return false;
+        if (cursor != null ? !cursor.equals(order.cursor) : order.cursor != null) return false;
+        return lineItems != null ? lineItems.equals(order.lineItems) : order.lineItems == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = customerUrl != null ? customerUrl.hashCode() : 0;
+        result = 31 * result + (email != null ? email.hashCode() : 0);
+        result = 31 * result + (id != null ? id.hashCode() : 0);
+        result = 31 * result + (orderNumber != null ? orderNumber.hashCode() : 0);
+        result = 31 * result + (phone != null ? phone.hashCode() : 0);
+        result = 31 * result + (shippingAddress != null ? shippingAddress.hashCode() : 0);
+        result = 31 * result + (subtotalPrice != null ? subtotalPrice.hashCode() : 0);
+        result = 31 * result + (totalPrice != null ? totalPrice.hashCode() : 0);
+        result = 31 * result + (totalRefunded != null ? totalRefunded.hashCode() : 0);
+        result = 31 * result + (totalShippingPrice != null ? totalShippingPrice.hashCode() : 0);
+        result = 31 * result + (totalTax != null ? totalTax.hashCode() : 0);
+        result = 31 * result + (cursor != null ? cursor.hashCode() : 0);
+        result = 31 * result + (lineItems != null ? lineItems.hashCode() : 0);
+        return result;
     }
 }

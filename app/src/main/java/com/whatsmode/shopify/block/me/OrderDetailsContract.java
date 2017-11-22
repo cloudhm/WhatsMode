@@ -3,14 +3,13 @@ package com.whatsmode.shopify.block.me;
 import com.whatsmode.shopify.mvp.MvpPresenter;
 import com.whatsmode.shopify.mvp.MvpView;
 
-
 /**
- * Created by tom on 17-11-20.
+ * Created by tom on 17-11-22.
  */
 
-public interface MyContract {
+public interface OrderDetailsContract {
     interface View extends MvpView{
-        void onError(int code ,String msg);
+
     }
     interface Presenter extends MvpPresenter<View>{
 

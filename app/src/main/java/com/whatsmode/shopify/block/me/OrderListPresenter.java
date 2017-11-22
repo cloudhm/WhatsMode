@@ -41,11 +41,12 @@ public class OrderListPresenter extends BaseRxPresenter<OrderListContract.View> 
                     if (edges != null && !edges.isEmpty()) {
                         for (Storefront.OrderEdge edge : edges) {
                             Storefront.Order node = edge.getNode();
+                            List<LineItem> lineItem = getLineItem(node.getLineItems());
                             Address orderAddress = getOrderAddress(node.getShippingAddress());
                             Order order = new Order(node.getCustomerUrl(),node.getEmail(),node.getId().toString(),
                                     node.getOrderNumber(),node.getPhone(),orderAddress,node.getSubtotalPrice(),
                                     node.getTotalPrice(),node.getTotalRefunded(),node.getTotalShippingPrice(),
-                                    node.getTotalTax(),edge.getCursor());
+                                    node.getTotalTax(),edge.getCursor(),lineItem);
                             orders.add(order);
                         }
                     }
@@ -83,10 +84,79 @@ public class OrderListPresenter extends BaseRxPresenter<OrderListContract.View> 
 
     @Override
     public void loadMoreOrderList() {
+        if(cursor == null) return;
+        MyRepository.create().getOrders(AccountManager.getCustomerAccessToken(),new OrderFragment(false,pageSize,cursor))
+                .map(m -> {
+                    Order.sHasNextPage = m.getPageInfo().getHasNextPage();
+                    List<Storefront.OrderEdge> edges = m.getEdges();
+                    List<Order> orders = new ArrayList<Order>();
+                    if (edges != null && !edges.isEmpty()) {
+                        for (Storefront.OrderEdge edge : edges) {
+                            Storefront.Order node = edge.getNode();
+                            List<LineItem> lineItem = getLineItem(node.getLineItems());
+                            Address orderAddress = getOrderAddress(node.getShippingAddress());
+                            Order order = new Order(node.getCustomerUrl(),node.getEmail(),node.getId().toString(),
+                                    node.getOrderNumber(),node.getPhone(),orderAddress,node.getSubtotalPrice(),
+                                    node.getTotalPrice(),node.getTotalRefunded(),node.getTotalShippingPrice(),
+                                    node.getTotalTax(),edge.getCursor(),lineItem);
+                            orders.add(order);
+                        }
+                    }
+                    return orders;
+                }).observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new SingleObserver<List<Order>>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        addSubscribe(d);
+                    }
 
+                    @Override
+                    public void onSuccess(@NonNull List<Order> orders) {
+                        if (isViewAttached()) {
+                            if (!orders.isEmpty()) {
+                                cursor = orders.get(orders.size() - 1).getCursor();
+                            }
+                            getView().showContent(LoadType.TYPE_LOAD_MORE_SUCCESS,orders);
+                        }
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        if (isViewAttached()) {
+                            if (e instanceof APIException) {
+                                APIException t = (APIException) e;
+                                getView().onError(t.getCode(),t.getMessage());
+                            }else{
+                                getView().onError(APIException.CODE_COMMON_EXCEPTION,e.getMessage());
+                            }
+                        }
+                    }
+                });
     }
 
-
+    private List<LineItem> getLineItem(Storefront.OrderLineItemConnection orderLineItem) {
+        List<Storefront.OrderLineItemEdge> edges = orderLineItem.getEdges();
+        List<LineItem> items = new ArrayList<>();
+        if (edges != null && !edges.isEmpty()) {
+            for (Storefront.OrderLineItemEdge edge : edges) {
+                LineItem lineItem = new LineItem();
+                Storefront.OrderLineItem node = edge.getNode();
+                Storefront.ProductVariant variant = node.getVariant();
+                if (variant != null) {
+                    lineItem.setVariant(new LineItem.Variant(variant.getAvailableForSale(),variant.getTitle(),
+                            variant.getSku(),variant.getPrice(),new LineItem.Variant.Image(variant.getImage() == null ? null : variant.getImage().getSrc())));
+                }
+                lineItem.setQuantity(node.getQuantity());
+                lineItem.setTitle(node.getTitle());
+                LineItem.CustomAttributes customAttributes = lineItem.getCustomAttributes();
+                if (customAttributes != null) {
+                    lineItem.setCustomAttributes(new LineItem.CustomAttributes(customAttributes.getKey(),customAttributes.getValue()));
+                }
+                items.add(lineItem);
+            }
+        }
+        return items;
+    }
 
     private Address getOrderAddress(Storefront.MailingAddress node){
         Address address = new Address(node.getId().toString(),node.getAddress1(),node.getAddress2(),
@@ -133,7 +203,7 @@ public class OrderListPresenter extends BaseRxPresenter<OrderListContract.View> 
         public void define(Storefront.OrderLineItemConnectionQuery query) {
             query.pageInfo(info -> info.hasPreviousPage().hasNextPage())
                     .edges(queyDef ->  queyDef.cursor()
-                            .node(q -> q.variant(qd -> qd.availableForSale().title().sku().price())
+                            .node(q -> q.variant(qd -> qd.availableForSale().title().sku().price().image(args -> args.maxHeight(100).maxWidth(100).crop(Storefront.CropRegion.CENTER), quey -> quey.src()))
                                     .quantity().title().customAttributes(a -> a.value().key())));
         }
     }

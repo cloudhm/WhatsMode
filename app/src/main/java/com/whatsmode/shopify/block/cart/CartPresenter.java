@@ -72,7 +72,7 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
                         getView().checkTotal();
                     }
                 });
-                ImageView ivCheck = helper.getView(R.id.iv_radio);
+                View ivCheck = helper.getView(R.id.iv_radio);
                 ivCheck.setOnClickListener(v -> {
                     if (isViewAttached()) {
                         ivCheck.setSelected(!ivCheck.isSelected());
@@ -89,7 +89,7 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
                     }
                 });
                 helper.itemView.setOnClickListener(v -> {
-                    // TODO: 2017/11/21                
+                    // TODO: 2017/11/21
                 });
             }
         };

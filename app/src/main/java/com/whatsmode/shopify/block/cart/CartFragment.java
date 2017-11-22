@@ -1,6 +1,5 @@
 package com.whatsmode.shopify.block.cart;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,11 +13,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.whatsmode.library.rx.RxBus;
-import com.whatsmode.library.rx.RxUtil;
 import com.whatsmode.library.rx.Util;
 import com.whatsmode.library.util.ListUtils;
-import com.whatsmode.library.util.PreferencesHelper;
-import com.whatsmode.library.util.PreferencesUtil;
 import com.whatsmode.library.util.ToastUtil;
 import com.whatsmode.shopify.AppNavigator;
 import com.whatsmode.shopify.R;

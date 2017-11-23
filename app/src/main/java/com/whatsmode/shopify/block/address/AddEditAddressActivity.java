@@ -55,7 +55,7 @@ public class AddEditAddressActivity extends MvpActivity<AddEditAddressPresenter>
         mPhone = (EditText) findViewById(R.id.phone);
 
         mType = getIntent().getIntExtra(KeyConstant.KEY_ADD_EDIT_ADDRESS,TYPE_ADD_ADDRESS);
-        mAddress = getIntent().getParcelableExtra(KeyConstant.KEY_ADDRESS);
+        mAddress = (Address) getIntent().getSerializableExtra(KeyConstant.KEY_ADDRESS);
         if (mType == TYPE_EDIT_ADDRESS && mAddress != null) {
             showAddress(mAddress);
         }

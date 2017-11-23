@@ -1,7 +1,11 @@
 package com.whatsmode.shopify.block.me;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.whatsmode.shopify.block.address.Address;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -9,7 +13,7 @@ import java.util.List;
  * Created by tom on 17-11-21.
  */
 
-public class Order {
+public class Order implements Serializable{
     public static boolean sHasNextPage;
     //currencyCode
     //customerLocale
@@ -47,6 +51,16 @@ public class Order {
         this.cursor = cursor;
         this.lineItems = lineItems;
     }
+
+    protected Order(Parcel in) {
+        customerUrl = in.readString();
+        email = in.readString();
+        id = in.readString();
+        phone = in.readString();
+        shippingAddress = in.readParcelable(Address.class.getClassLoader());
+        cursor = in.readString();
+    }
+
 
     public static boolean isHasNextPage() {
         return sHasNextPage;
@@ -228,4 +242,5 @@ public class Order {
         result = 31 * result + (lineItems != null ? lineItems.hashCode() : 0);
         return result;
     }
+
 }

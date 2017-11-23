@@ -1,15 +1,19 @@
 package com.whatsmode.shopify.block.me;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
  * Created by tom on 17-11-22.
  */
 
-public class LineItem {
+public class LineItem implements Serializable{
 
     private Variant variant;
-    private Integer quantity;
+    private int quantity;
     private String title;
     private CustomAttributes customAttributes;
 
@@ -21,6 +25,10 @@ public class LineItem {
         this.quantity = quantity;
         this.title = title;
         this.customAttributes = customAttributes;
+    }
+
+    protected LineItem(Parcel in) {
+        title = in.readString();
     }
 
     public Variant getVariant() {
@@ -55,7 +63,7 @@ public class LineItem {
         this.customAttributes = customAttributes;
     }
 
-    public static class CustomAttributes{
+    public static class CustomAttributes implements Serializable{
         private String key;
         private String value;
 
@@ -65,6 +73,11 @@ public class LineItem {
         public CustomAttributes(String key, String value) {
             this.key = key;
             this.value = value;
+        }
+
+        protected CustomAttributes(Parcel in) {
+            key = in.readString();
+            value = in.readString();
         }
 
         public String getKey() {
@@ -82,9 +95,10 @@ public class LineItem {
         public void setValue(String value) {
             this.value = value;
         }
+
     }
 
-    public static class Variant{
+    public static class Variant implements Serializable{
         private boolean availableForSale;
         private String title;
         private String sku;
@@ -100,6 +114,12 @@ public class LineItem {
             this.sku = sku;
             this.price = price;
             this.image = image;
+        }
+
+        protected Variant(Parcel in) {
+            availableForSale = in.readByte() != 0;
+            title = in.readString();
+            sku = in.readString();
         }
 
         public boolean isAvailableForSale() {
@@ -142,7 +162,7 @@ public class LineItem {
             this.image = image;
         }
 
-        public static class Image{
+        public static class Image implements Serializable{
             private String src;
 
             public Image() {

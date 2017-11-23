@@ -23,6 +23,7 @@
     <string name="continue_text">Continue</string>
     <string name="back">Back</string>
     <string name="all">全選</string>
+    <string name="sent_check_your_email">Sent! Check Your Email</string>
 
     <array name="category">
         <item>APPAREL</item>

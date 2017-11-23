@@ -8,8 +8,11 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,13 +24,14 @@ import com.whatsmode.shopify.BuildConfig;
 import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.block.me.MyFragment;
 import com.whatsmode.shopify.block.me.StatusBarUtil;
+import com.whatsmode.shopify.common.KeyConstant;
 import com.whatsmode.shopify.mvp.MvpActivity;
 
 /**
  * Created by tom on 17-11-16.
  */
 
-public class LoginActivity extends MvpActivity<LoginPresenter> implements LoginContract.View, View.OnClickListener, View.OnFocusChangeListener {
+public class LoginActivity extends MvpActivity<LoginPresenter> implements LoginContract.View, View.OnClickListener, View.OnFocusChangeListener, TextWatcher {
 
 
     private TextInputEditText mEmail;
@@ -36,6 +40,7 @@ public class LoginActivity extends MvpActivity<LoginPresenter> implements LoginC
     private TextInputLayout mPwdL;
     private TextView mForgotPwd;
     private TextView mCreateAccount;
+    private Button mLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +51,7 @@ public class LoginActivity extends MvpActivity<LoginPresenter> implements LoginC
         mEmailL = (TextInputLayout)findViewById(R.id.email_l);
         mPwdL = (TextInputLayout)findViewById(R.id.pwd_l);
         mPwd = (TextInputEditText) findViewById(R.id.pwd);
+        mLogin = (Button) findViewById(R.id.login);
         findViewById(R.id.forgot_pwd).setOnClickListener(this);
         mForgotPwd = (TextView) findViewById(R.id.forgot_pwd);
         mForgotPwd.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG );
@@ -53,7 +59,8 @@ public class LoginActivity extends MvpActivity<LoginPresenter> implements LoginC
         mCreateAccount.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG );
         mCreateAccount.setOnClickListener(this);
         mEmail.setOnFocusChangeListener(this);
-
+        mEmail.addTextChangedListener(this);
+        mPwd.addTextChangedListener(this);
     }
 
 
@@ -90,6 +97,7 @@ public class LoginActivity extends MvpActivity<LoginPresenter> implements LoginC
     public void loginSuccess() {
         SnackUtil.toastShow(this,"登录成功");
         AppNavigator.jumpToMain(this);
+        finish();
     }
 
     @Override
@@ -105,7 +113,9 @@ public class LoginActivity extends MvpActivity<LoginPresenter> implements LoginC
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.forgot_pwd:
-                startActivity(new Intent(this,ForgotPwdActivity.class));
+                Intent intent = new Intent(this, ForgotPwdActivity.class);
+                intent.putExtra(KeyConstant.KEY_EMAIL,mEmail.getText().toString());
+                startActivity(intent);
                 break;
             case R.id.create_account:
                 startActivity(new Intent(this,RegisterActivity.class));
@@ -125,5 +135,28 @@ public class LoginActivity extends MvpActivity<LoginPresenter> implements LoginC
                 }
             }
         }
+    }
+
+    void changeSubmitStatus() {
+        if (!TextUtils.isEmpty(mEmail.getText()) && !TextUtils.isEmpty(mPwd.getText())) {
+            mLogin.setEnabled(true);
+        } else {
+            mLogin.setEnabled(false);
+        }
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+    }
+
+    @Override
+    public void afterTextChanged(Editable editable) {
+        changeSubmitStatus();
     }
 }

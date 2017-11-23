@@ -1,7 +1,12 @@
 package com.whatsmode.library.util;
 
+import android.content.Context;
+import android.view.inputmethod.InputMethodManager;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static android.content.Context.INPUT_METHOD_SERVICE;
 
 /**
  * Created by tom on 17-11-22.
@@ -21,5 +26,16 @@ public class Util {
         Matcher matcher = regex.matcher(email);
         boolean isMatched = matcher.matches();
         return isMatched;
+    }
+
+    /**
+     * 控制软键盘显示与消失
+     * @param context
+     * @param visible
+     */
+    public static void inputMethodVisible(Context context, boolean visible) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(INPUT_METHOD_SERVICE);
+
+        imm.toggleSoftInput(0, visible ? InputMethodManager.HIDE_NOT_ALWAYS : InputMethodManager.RESULT_SHOWN);
     }
 }

@@ -3,11 +3,13 @@ package com.whatsmode.shopify.block.address;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.io.Serializable;
+
 /**
  * Created by tom on 17-11-17.
  */
 
-public class Address implements Parcelable{
+public class Address implements Serializable{
     public static boolean sHasNextPage;
     private String id;
     private String address1;
@@ -82,18 +84,6 @@ public class Address implements Parcelable{
         zip = in.readString();
         cursor = in.readString();
     }
-
-    public static final Creator<Address> CREATOR = new Creator<Address>() {
-        @Override
-        public Address createFromParcel(Parcel in) {
-            return new Address(in);
-        }
-
-        @Override
-        public Address[] newArray(int size) {
-            return new Address[size];
-        }
-    };
 
     public String getId() {
         return id;
@@ -268,31 +258,6 @@ public class Address implements Parcelable{
         result = 31 * result + (cursor != null ? cursor.hashCode() : 0);
         return result;
     }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(id);
-        parcel.writeString(address1);
-        parcel.writeString(address2);
-        parcel.writeString(city);
-        parcel.writeString(province);
-        parcel.writeString(provinceCode);
-        parcel.writeString(country);
-        parcel.writeString(countryCode);
-        parcel.writeString(company);
-        parcel.writeString(firstName);
-        parcel.writeString(lastName);
-        parcel.writeString(name);
-        parcel.writeString(phone);
-        parcel.writeString(zip);
-        parcel.writeString(cursor);
-    }
-
     @Override
     public String toString() {
         return "Address{" +

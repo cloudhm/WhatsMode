@@ -22,8 +22,6 @@
     <TextView
         android:text="@string/forgot_your_password"
         android:layout_marginTop="42dp"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
         android:textColor="@color/black"
         android:textSize="@dimen/sp_22"
         android:layout_width="wrap_content"
@@ -53,6 +51,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/email"
+            android:focusableInTouchMode="true"
+            android:focusable="true"
+            android:clickable="true"
             android:imeOptions="actionNext"
             android:textColor="@color/black"
             android:textSize="@dimen/sp_18"
@@ -66,10 +67,11 @@
         android:text="@string/continue_text"
         android:layout_marginTop="28dp"
         android:textSize="@dimen/sp_18"
-        android:textColor="@color/white"
+        android:textColor="@drawable/btn_text_selector"
         android:textAllCaps="false"
+        android:enabled="false"
         android:layout_marginBottom="2dp"
-        android:background="@drawable/login_btn"
+        android:background="@drawable/btn_sure_selector"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 

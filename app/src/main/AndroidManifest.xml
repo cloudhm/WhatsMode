@@ -19,11 +19,7 @@
                   android:theme="@style/StatusImmersion"
                   android:windowSoftInputMode="adjustPan|adjustUnspecified"
             >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name="com.whatsmode.shopify.block.main.MainActivity"
             android:launchMode="singleTask"
@@ -54,7 +50,6 @@
         <activity android:name=".block.account.ForgotPwdActivity"
                   android:screenOrientation="portrait"
                   android:theme="@style/StatusImmersion"
-                  android:windowSoftInputMode="adjustPan|adjustUnspecified"
             />
 
         <activity android:name=".block.account.CheckEmailActivity"
@@ -65,6 +60,17 @@
         <activity android:name=".block.me.OrderDetailsActivity"
                   android:screenOrientation="portrait"
             />
+
+        <activity android:name=".block.account.SplashActivity"
+                  android:screenOrientation="portrait"
+                  android:theme="@style/StatusImmersion"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

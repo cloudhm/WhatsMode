@@ -11,5 +11,6 @@
     <color name="gray_d5d5d5">#D5D5D5</color>
     <color name="black">#000000</color>
     <color name="create_account">#EF7112</color>
+    <color name="gray_333333">#333333</color>
 
 </resources>

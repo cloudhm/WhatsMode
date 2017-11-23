@@ -14,8 +14,10 @@ import com.whatsmode.library.util.SnackUtil;
 import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.block.address.Address;
 import com.whatsmode.shopify.block.address.LoadType;
+import com.whatsmode.shopify.common.KeyConstant;
 import com.whatsmode.shopify.mvp.MvpFragment;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -116,7 +118,7 @@ public class OrderListFragment extends MvpFragment<OrderListPresenter> implement
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         Order order = mList.get(position);
         Intent intent = new Intent(getActivity(),OrderDetailsActivity.class);
-
+        intent.putExtra(KeyConstant.KEY_ORDER, order);
         startActivity(intent);
     }
 }

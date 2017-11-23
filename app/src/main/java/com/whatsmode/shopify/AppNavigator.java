@@ -1,7 +1,9 @@
 package com.whatsmode.shopify;
 
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 
 import com.whatsmode.shopify.block.WebActivity;
 import com.whatsmode.shopify.block.account.LoginActivity;
@@ -16,7 +18,11 @@ public class AppNavigator {
         context.startActivity(WebActivity.newIntent(context, url));
     }
 
-    public static void jumpToMain(LoginActivity loginActivity) {
-        loginActivity.startActivity(MainActivity.newIntent(loginActivity));
+    public static void jumpToMain(Activity activity) {
+        activity.startActivity(MainActivity.newIntent(activity));
+    }
+
+    public static void jumpToLogin(Activity activity) {
+        activity.startActivity(new Intent(activity,LoginActivity.class));
     }
 }

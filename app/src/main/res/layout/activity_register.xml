@@ -154,10 +154,11 @@
         android:text="@string/create"
         android:layout_marginTop="28dp"
         android:textSize="@dimen/sp_18"
-        android:textColor="@color/white"
+        android:textColor="@drawable/btn_text_selector"
         android:textAllCaps="false"
+        android:enabled="false"
         android:layout_marginBottom="16dp"
-        android:background="@drawable/login_btn"
+        android:background="@drawable/btn_sure_selector"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 

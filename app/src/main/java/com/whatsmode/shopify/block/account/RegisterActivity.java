@@ -6,9 +6,13 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.InputType;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,13 +21,14 @@ import com.whatsmode.library.util.SnackUtil;
 import com.whatsmode.library.util.Util;
 import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.block.me.StatusBarUtil;
+import com.whatsmode.shopify.common.Constant;
 import com.whatsmode.shopify.mvp.MvpActivity;
 
 /**
  * Created by tom on 17-11-16.
  */
 
-public class RegisterActivity extends MvpActivity<RegisterPresenter> implements RegisterContract.View, View.OnFocusChangeListener, View.OnClickListener {
+public class RegisterActivity extends MvpActivity<RegisterPresenter> implements RegisterContract.View, View.OnFocusChangeListener, View.OnClickListener, TextWatcher {
 
 
     private Toolbar mToolbar;
@@ -35,6 +40,7 @@ public class RegisterActivity extends MvpActivity<RegisterPresenter> implements 
     private TextInputLayout mPwdL;
     private TextInputLayout mFirstNameL;
     private TextInputLayout mLastNameL;
+    private Button mRegister;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,13 +48,17 @@ public class RegisterActivity extends MvpActivity<RegisterPresenter> implements 
         setContentView(R.layout.activity_register);
         StatusBarUtil.StatusBarLightMode(this);
         mEmail = (TextInputEditText) findViewById(R.id.email);
+        mEmail.addTextChangedListener(this);
         mPwd = (TextInputEditText) findViewById(R.id.pwd);
+        mPwd.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+        mPwd.addTextChangedListener(this);
         mFirstName = (TextInputEditText) findViewById(R.id.first_name);
         mLastName = (TextInputEditText) findViewById(R.id.last_name);
         mEmailL = (TextInputLayout) findViewById(R.id.email_l);
         mPwdL = (TextInputLayout) findViewById(R.id.pwd_l);
         mFirstNameL = (TextInputLayout) findViewById(R.id.first_name_l);
         mLastNameL = (TextInputLayout) findViewById(R.id.last_name_l);
+        mRegister = (Button) findViewById(R.id.register);
         TextView signIn = (TextView) findViewById(R.id.sign_in);
         signIn.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG );
         signIn.setOnClickListener(this);
@@ -106,6 +116,9 @@ public class RegisterActivity extends MvpActivity<RegisterPresenter> implements 
 
     @Override
     public void registerFail(String msg) {
+        if (Constant.EMAIL_HAS_ALREADY_BEEN_TAKEN.equals(msg)) {
+            finish();
+        }
         SnackUtil.toastShow(this,msg);
     }
 
@@ -130,5 +143,28 @@ public class RegisterActivity extends MvpActivity<RegisterPresenter> implements 
                 finish();
                 break;
         }
+    }
+
+    void changeSubmitStatus() {
+        if (!TextUtils.isEmpty(mEmail.getText()) && !TextUtils.isEmpty(mPwd.getText())) {
+            mRegister.setEnabled(true);
+        } else {
+            mRegister.setEnabled(false);
+        }
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+    }
+
+    @Override
+    public void afterTextChanged(Editable editable) {
+        changeSubmitStatus();
     }
 }

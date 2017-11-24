@@ -64,4 +64,18 @@ public class AccountRepository {
                 .subscribeOn(Schedulers.io());
     }
 
+    public Single<Storefront.CustomerRecoverPayload> recover(String email, Storefront.CustomerRecoverPayloadQueryDefinition queryDef){
+        MutationGraphCall call = mGraphClient.mutateGraph(Storefront.mutation(root -> root.customerRecover(email, queryDef)));
+
+        return RxUtil.rxGraphMutationCall(call)
+                .map(Storefront.Mutation::getCustomerRecover)
+                .flatMap(it -> {
+                    if (it.getUserErrors().isEmpty()) {
+                        return Single.just(it);
+                    }else{
+                        return Single.error(new APIException(0,Util.mapItems(it.getUserErrors(),Storefront.UserError::getMessage)));
+                    }
+                }).subscribeOn(Schedulers.io());
+    }
+
 }

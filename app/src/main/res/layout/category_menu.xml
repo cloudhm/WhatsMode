@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:layout_marginRight="100dp"
+    android:layout_marginTop="50dp"
     android:background="@color/white"
-    android:layout_marginTop="108dp"
     android:orientation="vertical">
 
     <LinearLayout
@@ -115,11 +115,10 @@
     <TextView
         android:id="@+id/about_us"
         android:text="@string/aboutUs"
-        android:layout_marginBottom="30dp"
         android:gravity="center_vertical"
         android:textSize="14sp"
         android:textColor="@color/black"
-        android:paddingLeft="13dp"
+        android:paddingLeft="28dp"
         android:layout_width="match_parent"
         android:layout_height="48dp" />
 </LinearLayout>

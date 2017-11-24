@@ -39,12 +39,10 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
     private MenuItem menuItemDelete;
     private MenuItem mTempMenu;
     private BaseFragmentAdapter fragmentAdapter;
-    private LinearLayout layoutParent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        layoutParent = (LinearLayout) findViewById(R.id.parent);
         vpContent = (NoScrollViewPager) findViewById(R.id.vp_content);
         vpContent.setOffscreenPageLimit(3);
         ivMenu = (ImageView) findViewById(R.id.menu);
@@ -146,9 +144,7 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
         }else {
             initPopWindowView();
             popupWindow.setFocusable(true);
-//            popupWindow.showAtLocation(parentLayout,0,0);
-            popupWindow.showAtLocation(layoutParent, Gravity.BOTTOM,0,0);
-//            popupWindow.showAsDropDown(layoutParent,0,0);
+            popupWindow.showAsDropDown(toolbar, 0,0);
             ivMenu.setEnabled(false);
         }
     }
@@ -160,7 +156,9 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
         adapter.setMode(ExpandableRecyclerAdapter.MODE_ACCORDION);
         recycler.setLayoutManager(new LinearLayoutManager(this));
         recycler.setAdapter(adapter);
-        popupWindow = new PopupWindow(customView, ScreenUtils.dip2px(this,225), ScreenUtils.getScreenHeight(this));
+//        popupWindow = new PopupWindow(customView, ScreenUtils.dip2px(this,225), ScreenUtils.getScreenHeight(this)-100);
+        popupWindow = new PopupWindow(customView, LinearLayout.LayoutParams
+        .WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
         popupWindow.setAnimationStyle(R.style.AnimationFade);
         popupWindow.setOutsideTouchable(true);
         popupWindow.setOnDismissListener(() -> ivMenu.postDelayed(() -> ivMenu.setEnabled(true),1));

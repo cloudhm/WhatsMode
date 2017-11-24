@@ -5,24 +5,25 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
-import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 
+import com.whatsmode.library.util.SnackUtil;
 import com.whatsmode.library.util.Util;
 import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.block.me.StatusBarUtil;
+import com.whatsmode.shopify.common.KeyConstant;
 import com.whatsmode.shopify.mvp.MvpActivity;
 
 /**
  * Created by tom on 17-11-20.
  */
 
-public class ForgotPwdActivity extends MvpActivity<ForgotPwdPresenter> implements ForgotPwdContract.View, View.OnClickListener {
+public class ForgotPwdActivity extends MvpActivity<ForgotPwdPresenter> implements ForgotPwdContract.View, View.OnClickListener, TextWatcher {
 
     private static final int REQUEST_CODE = 10;
 
@@ -38,11 +39,15 @@ public class ForgotPwdActivity extends MvpActivity<ForgotPwdPresenter> implement
         setContentView(R.layout.activity_forgot_pwd);
         StatusBarUtil.StatusBarLightMode(this);
         mEmail = (TextInputEditText) findViewById(R.id.email);
+        mEmail.addTextChangedListener(this);
         mEmailL = (TextInputLayout) findViewById(R.id.email_l);
         mContinueSure = (Button) findViewById(R.id.continue_sure);
         mBack = (Button) findViewById(R.id.back);
         mContinueSure.setOnClickListener(this);
         mBack.setOnClickListener(this);
+        String email = getIntent().getStringExtra(KeyConstant.KEY_EMAIL);
+        mEmail.setText(email);
+        mEmail.performClick();
     }
 
     @NonNull
@@ -79,7 +84,7 @@ public class ForgotPwdActivity extends MvpActivity<ForgotPwdPresenter> implement
                 }
                 //Intent intent = new Intent(this,CheckEmailActivity.class);
                 //startActivityForResult(intent,REQUEST_CODE);
-                finish();
+                mPresenter.recover(email);
                 break;
             case R.id.back:
                 finish();
@@ -93,5 +98,40 @@ public class ForgotPwdActivity extends MvpActivity<ForgotPwdPresenter> implement
         if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
             finish();
         }
+    }
+
+    @Override
+    public void success() {
+        SnackUtil.toastShow(this,R.string.sent_check_your_email);
+        finish();
+    }
+
+    @Override
+    public void onError(int code, String msg) {
+        SnackUtil.toastShow(this,msg);
+    }
+
+
+    void changeSubmitStatus() {
+        if (!TextUtils.isEmpty(mEmail.getText())) {
+            mContinueSure.setEnabled(true);
+        } else {
+            mContinueSure.setEnabled(false);
+        }
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+    }
+
+    @Override
+    public void afterTextChanged(Editable editable) {
+        changeSubmitStatus();
     }
 }

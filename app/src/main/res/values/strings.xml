@@ -35,6 +35,7 @@
     <string name="discover_tv">DISCOVER</string>
     <string name="sale">SALE</string>
     <string name="aboutUs">About US</string>
+    <string name="sent_check_your_email">Sent! Check Your Email</string>
 
     <array name="category">
         <item>APPAREL</item>

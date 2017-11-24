@@ -1,7 +1,9 @@
 package com.whatsmode.shopify;
 
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 
 import com.shopify.graphql.support.ID;
 import com.whatsmode.shopify.block.WebActivity;
@@ -22,13 +24,15 @@ public class AppNavigator {
         context.startActivity(WebActivity.newIntent(context, title,url));
     }
 
-
     public static void jumpToCheckoutUpdateActivity(Context context, ID id, CartItemLists cartItemList){
         context.startActivity(CheckoutUpdateActivity.newIntent(context,id,cartItemList));
     }
 
+    public static void jumpToMain(Activity activity) {
+        activity.startActivity(MainActivity.newIntent(activity));
+    }
 
-    public static void jumpToMain(LoginActivity loginActivity) {
-        loginActivity.startActivity(MainActivity.newIntent(loginActivity));
+    public static void jumpToLogin(Activity activity) {
+        activity.startActivity(new Intent(activity,LoginActivity.class));
     }
 }

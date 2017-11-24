@@ -1,5 +1,6 @@
 package com.whatsmode.shopify.block.cart;
 
+import com.shopify.graphql.support.ID;
 import com.whatsmode.shopify.base.BaseListContract;
 
 import java.util.List;
@@ -10,7 +11,7 @@ public class CartContact{
 
         void onCheckSelect(boolean selected, CartItem cartItems);
 
-        void showSuccess(String webUrl);
+        void showSuccess(ID webUrl);
 
         void showError(String message);
 

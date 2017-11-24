@@ -90,6 +90,7 @@ public class LoginActivity extends MvpActivity<LoginPresenter> implements LoginC
     public void loginSuccess() {
         SnackUtil.toastShow(this,"登录成功");
         AppNavigator.jumpToMain(this);
+        finish();
     }
 
     @Override

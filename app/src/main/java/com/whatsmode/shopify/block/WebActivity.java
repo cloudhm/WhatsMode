@@ -25,13 +25,18 @@ import com.whatsmode.shopify.ui.helper.ToolbarHelper;
 public class WebActivity extends BaseActivity {
 
     private static final String EXTRA_URL = "url";
+    private static final String EXTRA_TITLE = "title";
     private ProgressBar mProgressBar;
     private WebView mWebView;
     private String url;
+    private String title;
 
-    public static Intent newIntent(Context context, String url) {
+    public static final String STATE_CHECKOUT = "CHECK OUT";
+
+    public static Intent newIntent(Context context,String title, String url) {
         Intent intent = new Intent(context, WebActivity.class);
         intent.putExtra(EXTRA_URL, url);
+        intent.putExtra(EXTRA_TITLE, title);
         return intent;
     }
 
@@ -39,6 +44,8 @@ public class WebActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.page_web);
+        title = getIntent().getStringExtra(EXTRA_TITLE);
+        ToolbarHelper.initToolbarNoFix(this, R.id.toolbar, true, title);
         mWebView = (WebView) findViewById(R.id.webview);
         mWebView.getSettings().setUserAgentString("mobile");
 

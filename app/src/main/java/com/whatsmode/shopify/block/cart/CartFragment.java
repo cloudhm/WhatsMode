@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.shopify.graphql.support.ID;
 import com.whatsmode.library.rx.RxBus;
 import com.whatsmode.library.rx.Util;
 import com.whatsmode.library.util.ListUtils;
@@ -19,6 +20,7 @@ import com.whatsmode.library.util.ToastUtil;
 import com.whatsmode.shopify.AppNavigator;
 import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.base.BaseListFragment;
+import com.whatsmode.shopify.block.WebActivity;
 import com.whatsmode.shopify.block.account.data.AccountManager;
 
 import java.util.ArrayList;
@@ -98,8 +100,9 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
     }
 
     @Override
-    public void showSuccess(String webUrl) {
-        AppNavigator.jumpToWebActivity(getActivity(),webUrl);
+    public void showSuccess(ID id) {
+        //AppNavigator.jumpToWebActivity(getActivity(), WebActivity.STATE_CHECKOUT,webUrl);
+        AppNavigator.jumpToCheckoutUpdateActivity(getActivity(),id,new CartItemLists(checkItem));
     }
 
     @Override
@@ -140,15 +143,15 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
         if (!ListUtils.isEmpty(checkItem) && mAdapter != null) {
             if(alertDialog == null)
             alertDialog = new AlertDialog.Builder(getActivity())
-                    .setNegativeButton("取消", null)
-                    .setPositiveButton("確認", (dialog, which) -> {
+                    .setNegativeButton(R.string.cancel, null)
+                    .setPositiveButton(R.string.confirm, (dialog, which) -> {
                         mAdapter.getData().removeAll(checkItem);
                         mAdapter.notifyDataSetChanged();
                         mPresenter.saveCart(mAdapter.getData());
                         tvTotal.setText("0.0");
                         checkItem.clear();
-                    }).setMessage("確認刪除商品條目？")
-                    .setTitle("刪除")
+                    }).setMessage(R.string.confirm_delete)
+                    .setTitle(R.string.delete)
                     .create();
             alertDialog.show();
         }

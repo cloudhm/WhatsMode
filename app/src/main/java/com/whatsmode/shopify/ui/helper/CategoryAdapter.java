@@ -45,12 +45,12 @@ public class CategoryAdapter extends ExpandableRecyclerAdapter<CategoryAdapter.C
 
     private class HeaderViewHolder extends ExpandableRecyclerAdapter.HeaderViewHolder {
         TextView name;
-
         HeaderViewHolder(View view) {
             super(view, (ImageView) view.findViewById(R.id.item_arrow));
 
             name = (TextView) view.findViewById(R.id.item_header_name);
         }
+
 
         public void bind(int position) {
             super.bind(position);
@@ -73,7 +73,7 @@ public class CategoryAdapter extends ExpandableRecyclerAdapter<CategoryAdapter.C
         void bind(int position) {
             name.setText(visibleItems.get(position).Text);
             view.setOnClickListener(v ->
-                            AppNavigator.jumpToWebActivity(mContext,
+                            AppNavigator.jumpToWebActivity(mContext,"",
                             new StringBuilder(Constant.WEB_PREFIX)
                                     .append(visibleItems.get(position).tag).toString()));
         }

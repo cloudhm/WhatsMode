@@ -17,10 +17,10 @@
         android:layout_height="wrap_content" />
 
     <ImageView android:id="@+id/item_arrow"
-        android:layout_width="35dp"
-        android:visibility="gone"
-        android:layout_height="35dp"
+        android:layout_width="14dp"
+        android:visibility="visible"
+        android:layout_height="8dp"
         android:layout_gravity="center_vertical"
-        android:src="@mipmap/ic_launcher"/>
+        android:src="@drawable/btn_close"/>
 
 </LinearLayout>

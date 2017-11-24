@@ -19,9 +19,24 @@ public class CheckoutUpdatePresenter extends BaseRxPresenter<CheckoutUpdateConta
         switch (v.getId()) {
             case R.id.pay:
                 if (isViewAttached()) {
+                    getView().showLoading();
                     ID checkoutId = getView().getCheckoutId();
                     CartRepository.create().bindUser(checkoutId)
-                            .bindAddress();
+                            .updateCheckoutListener(new CartRepository.UpdateCheckoutListener() {
+                                @Override
+                                public void onSuccess(String url) {
+                                    if (isViewAttached())
+                                    getView().showSuccess(url);
+
+                                }
+
+                                @Override
+                                public void onError(String message) {
+                                    if(isViewAttached())
+                                    getView().showError(message);
+                                }
+                            })
+                            .bindAddress(getView().getAddress());
                 }
 
                 break;

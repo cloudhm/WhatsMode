@@ -107,7 +107,8 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
 
     @Override
     public void showError(String message) {
-        ToastUtil.showToast(message);
+        getActivity().runOnUiThread(() -> ToastUtil.showToast(message));
+
     }
 
     @Override

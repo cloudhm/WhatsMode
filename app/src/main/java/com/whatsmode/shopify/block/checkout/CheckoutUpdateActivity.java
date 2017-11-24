@@ -9,18 +9,20 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.identity.intents.model.UserAddress;
+import com.shopify.buy3.pay.PayAddress;
 import com.shopify.graphql.support.ID;
 import com.whatsmode.library.util.ListUtils;
+import com.whatsmode.library.util.ToastUtil;
+import com.whatsmode.shopify.AppNavigator;
 import com.whatsmode.shopify.R;
+import com.whatsmode.shopify.block.WebActivity;
+import com.whatsmode.shopify.block.address.Address;
 import com.whatsmode.shopify.block.cart.CartItem;
 import com.whatsmode.shopify.block.cart.CartItemLists;
 import com.whatsmode.shopify.mvp.MvpActivity;
 import com.whatsmode.shopify.ui.helper.ToolbarHelper;
 import com.zchu.log.Logger;
-
-/**
- * Created by Administrator on 2017/11/23.
- */
 
 public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Presenter> implements CheckoutUpdateContact.View, View.OnClickListener {
 
@@ -45,7 +47,6 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
         setContentView(R.layout.activity_checkout_update);
         if (getIntent().hasExtra(EXTRA_ID)) {
             id = (ID) getIntent().getSerializableExtra(EXTRA_ID);
-            Logger.e(id + "====id");
         }
         if (getIntent().hasExtra(EXTRA_BUNDLE)) {
             CartItemLists cartItemLists = (CartItemLists) getIntent().getBundleExtra(EXTRA_BUNDLE).getSerializable(EXTRA_ITEMS);
@@ -124,5 +125,37 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
     @Override
     public ID getCheckoutId() {
         return id;
+    }
+
+    @Override
+    public void showSuccess(String url) {
+        hideLoading();
+        AppNavigator.jumpToWebActivity(this, WebActivity.STATE_PAY, url);
+    }
+
+    @Override
+    public void showError(String message) {
+        hideLoading();
+        runOnUiThread(() -> ToastUtil.showToast(message));
+
+    }
+
+    @Override
+    public void showLoading() {
+        runOnUiThread(() -> super.showLoading());
+
+    }
+
+    @Override
+    public void hideLoading() {
+        runOnUiThread(() -> super.hideLoading());
+    }
+
+
+    @Override
+    public Address getAddress() {
+        return new Address("", "guiping road", "minhangqu", "Alabama", "Alabama", "", "United States",
+                "", "", "z", "ym", "zym", "13333333333", "35201", "");
+
     }
 }

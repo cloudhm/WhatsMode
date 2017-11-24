@@ -8,11 +8,15 @@ import com.shopify.buy3.GraphClient;
 import com.shopify.buy3.GraphError;
 import com.shopify.buy3.GraphResponse;
 import com.shopify.buy3.Storefront;
+import com.shopify.buy3.pay.PayAddress;
 import com.shopify.graphql.support.ID;
 import com.shopify.graphql.support.Input;
 import com.whatsmode.library.util.ListUtils;
 import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.WhatsApplication;
+import com.whatsmode.shopify.block.account.data.AccountManager;
+import com.whatsmode.shopify.block.address.Address;
+import com.zchu.log.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +31,7 @@ public class CartRepository {
     private static CartRepository cartRepository;
     private List<CartItem> dataSource;
     private QueryListener mListener;
+    private UpdateCheckoutListener updateCheckoutListener;
     private ID checkoutId;
 
     private CartRepository(){
@@ -45,48 +50,68 @@ public class CartRepository {
         return cartRepository;
     }
 
-    CartRepository listener(QueryListener listener){
+    CartRepository checkoutListener(QueryListener listener){
         this.mListener = listener;
+        return cartRepository;
+    }
+
+    public CartRepository updateCheckoutListener(UpdateCheckoutListener listener) {
+        updateCheckoutListener = listener;
         return cartRepository;
     }
 
     public CartRepository bindUser(ID checkoutId) {
         this.checkoutId = checkoutId;
-//        Storefront.MutationQuery mutationQuery = Storefront.mutation(_queryBuilder -> _queryBuilder.checkoutEmailUpdate(checkoutId, username, new Storefront.CheckoutEmailUpdatePayloadQueryDefinition() {
-//            @Override
-//            public void define(Storefront.CheckoutEmailUpdatePayloadQuery _queryBuilder) {
-//                _queryBuilder.checkout(_queryBuilder1 -> _queryBuilder1.webUrl());
-//            }
-//        }));
         return cartRepository;
     }
 
-    public void bindAddress() {
+    public void bindAddress(Address address) {
         Storefront.MailingAddressInput input = new Storefront.MailingAddressInput()
-                .setAddress1("a")
-                .setAddress2("b")
-                .setCity("c")
-                .setCountry("d")
-                .setFirstName("d")
-                .setLastName("e")
-                .setPhone("13333333333")
-                .setProvince("f")
-                .setZip("g");
-        Storefront.MutationQuery mutation = Storefront.mutation(_queryBuilder
-                -> _queryBuilder.checkoutShippingAddressUpdate(input, checkoutId, _queryBuilder1
-                -> _queryBuilder1.checkout(new Storefront.CheckoutQueryDefinition() {
-            @Override
-            public void define(Storefront.CheckoutQuery _queryBuilder1) {
-                _queryBuilder1.webUrl();
-            }
-        })));
-
-        client.mutateGraph(mutation)
+                .setAddress1(address.getAddress1())
+                .setAddress2(address.getAddress2())
+                .setCity(address.getCity())
+                .setCountry(address.getCountry())
+                .setFirstName(address.getFirstName())
+                .setLastName(address.getLastName())
+                .setPhone(address.getPhone())
+                .setProvince(address.getProvince())
+                .setZip(address.getZip());
+        Storefront.MutationQuery query = Storefront.mutation(mutationQuery -> mutationQuery
+                .checkoutEmailUpdate(checkoutId, AccountManager.getUsername(), emailUpdatePayloadQuery
+                        -> emailUpdatePayloadQuery.checkout(checkoutQuery
+                        -> checkoutQuery.webUrl())
+                        .userErrors(userErrorQuery
+                        -> userErrorQuery.field().message()
+                        )
+                ).checkoutShippingAddressUpdate(input, checkoutId, shippingAddressUpdatePayloadQuery
+                                -> shippingAddressUpdatePayloadQuery.checkout(checkoutQuery
+                                -> checkoutQuery.webUrl().shippingAddress(new Storefront.MailingAddressQueryDefinition() {
+                            @Override
+                            public void define(Storefront.MailingAddressQuery _queryBuilder) {
+                                _queryBuilder.firstName().address1();
+                            }
+                        })
+                        )
+                                .userErrors(userErrorQuery -> userErrorQuery
+                                        .field()
+                                        .message()
+                                )
+                )
+        );
+        client.mutateGraph(query)
                 .enqueue(new GraphCall.Callback<Storefront.Mutation>() {
                     @Override
                     public void onResponse(@android.support.annotation.NonNull GraphResponse<Storefront.Mutation> response) {
-                        if (!ListUtils.isEmpty(response.errors())) {
+                        if (!ListUtils.isEmpty(response.data().getCheckoutShippingAddressUpdate().getUserErrors())) {
+                            if (updateCheckoutListener != null) {
+                                updateCheckoutListener.onError(response.data().getCheckoutShippingAddressUpdate().getUserErrors().get(0).getMessage());
+                            }
+                            Logger.e("===");
                         }else {
+                            Logger.e("====success===");
+                            if (updateCheckoutListener != null) {
+                                updateCheckoutListener.onSuccess(response.data().getCheckoutShippingAddressUpdate().getCheckout().getWebUrl());
+                            }
                         }
                     }
 
@@ -152,6 +177,11 @@ public class CartRepository {
 
     public interface QueryListener {
         void onSuccess(ID id);
+        void onError(String message);
+    }
+
+    public interface UpdateCheckoutListener {
+        void onSuccess(String url);
         void onError(String message);
     }
 }

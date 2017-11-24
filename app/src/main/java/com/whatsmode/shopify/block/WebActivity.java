@@ -20,18 +20,20 @@ import android.widget.ProgressBar;
 import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.base.BaseActivity;
 import com.whatsmode.shopify.ui.helper.ToolbarHelper;
+import com.zchu.log.Logger;
 
 
 public class WebActivity extends BaseActivity {
 
     private static final String EXTRA_URL = "url";
     private static final String EXTRA_TITLE = "title";
+
     private ProgressBar mProgressBar;
     private WebView mWebView;
     private String url;
-    private String title;
 
-    public static final String STATE_CHECKOUT = "CHECK OUT";
+    public static final String STATE_PAY = "PAY";  // 支付頁
+    public static final String STATE_PRODUCT = "PRODUCT";  // 商品詳情頁
 
     public static Intent newIntent(Context context,String title, String url) {
         Intent intent = new Intent(context, WebActivity.class);
@@ -44,7 +46,8 @@ public class WebActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.page_web);
-        title = getIntent().getStringExtra(EXTRA_TITLE);
+        String title = getIntent().getStringExtra(EXTRA_TITLE);
+        initToolBar(title);
         ToolbarHelper.initToolbarNoFix(this, R.id.toolbar, true, title);
         mWebView = (WebView) findViewById(R.id.webview);
         mWebView.getSettings().setUserAgentString("mobile");
@@ -55,6 +58,10 @@ public class WebActivity extends BaseActivity {
         if (!TextUtils.isEmpty(url)){
             initWeb();
         }
+    }
+
+    private void initToolBar(String title) {
+        // modify toolbar display according title
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -88,6 +95,13 @@ public class WebActivity extends BaseActivity {
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 mWebView.loadUrl(url);
                 return true;
+            }
+
+            @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                Logger.e("---url---" + request.getUrl());
+                return super.shouldOverrideUrlLoading(view, request);
             }
         });
         mWebView.setWebChromeClient(new WebChromeClient(){

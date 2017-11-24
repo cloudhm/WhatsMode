@@ -18,6 +18,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.innodroid.expandablerecycler.ExpandableRecyclerAdapter;
+import com.whatsmode.library.util.DensityUtil;
 import com.whatsmode.library.util.ScreenUtils;
 import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.block.cart.CartFragment;
@@ -101,11 +102,8 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
     @Override
     public void switch2Mode() {
         switchMenu(menuItemSearch);
-        if (toolbarTitle.getVisibility() != View.VISIBLE) {
-            toolbarTitle.setVisibility(View.VISIBLE);
-        }
-        toolbar.setVisibility(View.VISIBLE);
         ivMenu.setVisibility(View.VISIBLE);
+        toolbar.setVisibility(View.VISIBLE);
     }
 
     private void switchMenu(MenuItem menuItem) {
@@ -122,18 +120,20 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
     public void switch2Influence() {
         switchMenu(menuItemSearch);
         ivMenu.setVisibility(View.VISIBLE);
+        toolbar.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void switch2Cart() {
         switchMenu(menuItemDelete);
         ivMenu.setVisibility(View.GONE);
+        toolbar.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void switch2Mine() {
         switchMenu(null);
-        ivMenu.setVisibility(View.GONE);
+        toolbar.setVisibility(View.GONE);
     }
 
     private PopupWindow popupWindow;
@@ -147,6 +147,7 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
             popupWindow.showAsDropDown(toolbar, 0,0);
             ivMenu.setEnabled(false);
         }
+        toolbar.setVisibility(View.VISIBLE);
     }
 
     private void initPopWindowView() {
@@ -156,9 +157,8 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
         adapter.setMode(ExpandableRecyclerAdapter.MODE_ACCORDION);
         recycler.setLayoutManager(new LinearLayoutManager(this));
         recycler.setAdapter(adapter);
-//        popupWindow = new PopupWindow(customView, ScreenUtils.dip2px(this,225), ScreenUtils.getScreenHeight(this)-100);
-        popupWindow = new PopupWindow(customView, LinearLayout.LayoutParams
-        .WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        popupWindow = new PopupWindow(customView,ScreenUtils.getScreenWidth(this)- DensityUtil.dp2px(this,65),
+                ScreenUtils.getScreenHeight(this) - ScreenUtils.dip2px(this,80));
         popupWindow.setAnimationStyle(R.style.AnimationFade);
         popupWindow.setOutsideTouchable(true);
         popupWindow.setOnDismissListener(() -> ivMenu.postDelayed(() -> ivMenu.setEnabled(true),1));
@@ -197,7 +197,6 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
     }
 
     public static Intent newIntent(Context context) {
-        Intent intent = new Intent(context, MainActivity.class);
-        return intent;
+        return new Intent(context, MainActivity.class);
     }
 }

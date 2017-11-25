@@ -65,13 +65,13 @@ public class MyFragment extends MvpFragment<MyContract.Presenter> implements MyC
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.avatar:
-                startActivity(new Intent(getActivity(), LoginActivity.class));
+                startActivity(new Intent(getActivity(), SettingInfoActivity.class));
                 break;
             case R.id.view_address:
                 startActivity(new Intent(getActivity(), AddressListActivity.class));
                 break;
             case R.id.order_history:
-
+                ShareUtil.showShare(getActivity(),"https://whatsmode.com/","/storage/emulated/0/adv/af20c843-4081-4bc1-b7f8-b73041672e55.png","https://whatsmode.com/","https://whatsmode.com/");
                 break;
         }
     }

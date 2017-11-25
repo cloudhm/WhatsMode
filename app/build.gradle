@@ -44,4 +44,10 @@ dependencies {
     })
     testCompile 'junit:junit:4.12'
     compile project(':library')
+    compile files('libs/MobCommons-2017.1024.1907.jar')
+    compile files('libs/MobTools-2017.1024.1907.jar')
+    compile files('libs/ShareSDK-Core-3.1.1.jar')
+    compile files('libs/ShareSDK-Facebook-3.1.1.jar')
+    compile files('libs/ShareSDK-Instagram-3.1.1.jar')
+    compile files('libs/ShareSDK-WhatsApp-3.1.1.jar')
 }

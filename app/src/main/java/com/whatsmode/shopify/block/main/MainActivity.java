@@ -4,28 +4,23 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.view.menu.MenuItemImpl;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.innodroid.expandablerecycler.ExpandableRecyclerAdapter;
+import com.whatsmode.library.util.DensityUtil;
 import com.whatsmode.library.util.ScreenUtils;
 import com.whatsmode.shopify.R;
-import com.whatsmode.shopify.block.WebActivity;
 import com.whatsmode.shopify.block.cart.CartFragment;
 import com.whatsmode.shopify.mvp.MvpActivity;
 import com.whatsmode.shopify.ui.helper.BaseFragmentAdapter;
@@ -40,21 +35,20 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
     private Toolbar toolbar;
     private TextView toolbarTitle;
     private BottomBar bottomBar;
-    private ImageView ivSearch;
+    private ImageView ivMenu;
     private MenuItem menuItemSearch;
     private MenuItem menuItemDelete;
     private MenuItem mTempMenu;
     private BaseFragmentAdapter fragmentAdapter;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         vpContent = (NoScrollViewPager) findViewById(R.id.vp_content);
         vpContent.setOffscreenPageLimit(3);
-        ivSearch = (ImageView) findViewById(R.id.search);
-        ivSearch.setVisibility(View.VISIBLE);
-        ivSearch.setOnClickListener(this);
+        ivMenu = (ImageView) findViewById(R.id.menu);
+        ivMenu.setVisibility(View.VISIBLE);
+        ivMenu.setOnClickListener(this);
         ToolbarHelper.ToolbarHolder toolbarHolder = ToolbarHelper.initToolbarNoFix(this, R.id.toolbar, false, null);
         toolbar = toolbarHolder.toolbar;
         toolbarTitle = toolbarHolder.titleView;
@@ -108,9 +102,7 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
     @Override
     public void switch2Mode() {
         switchMenu(menuItemSearch);
-        if (toolbarTitle.getVisibility() != View.VISIBLE) {
-            toolbarTitle.setVisibility(View.VISIBLE);
-        }
+        ivMenu.setVisibility(View.VISIBLE);
         toolbar.setVisibility(View.VISIBLE);
     }
 
@@ -127,16 +119,21 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
     @Override
     public void switch2Influence() {
         switchMenu(menuItemSearch);
+        ivMenu.setVisibility(View.VISIBLE);
+        toolbar.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void switch2Cart() {
         switchMenu(menuItemDelete);
+        ivMenu.setVisibility(View.GONE);
+        toolbar.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void switch2Mine() {
         switchMenu(null);
+        toolbar.setVisibility(View.GONE);
     }
 
     private PopupWindow popupWindow;
@@ -147,24 +144,24 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
         }else {
             initPopWindowView();
             popupWindow.setFocusable(true);
-            popupWindow.showAsDropDown(toolbar,0,0);
-            ivSearch.setEnabled(false);
+            popupWindow.showAsDropDown(toolbar, 0,0);
+            ivMenu.setEnabled(false);
         }
+        toolbar.setVisibility(View.VISIBLE);
     }
 
     private void initPopWindowView() {
-        View customView = getLayoutInflater().inflate(R.layout.search_menu,null, false);
-        EditText searchContent = (EditText) customView.findViewById(R.id.searchContent);
+        View customView = getLayoutInflater().inflate(R.layout.category_menu,null, false);
         RecyclerView recycler = (RecyclerView) customView.findViewById(R.id.recycleView);
         CategoryAdapter adapter = new CategoryAdapter(this);
         adapter.setMode(ExpandableRecyclerAdapter.MODE_ACCORDION);
         recycler.setLayoutManager(new LinearLayoutManager(this));
         recycler.setAdapter(adapter);
-        searchContent.setOnEditorActionListener((v, actionId, event) -> actionId == EditorInfo.IME_ACTION_GO);
-        popupWindow = new PopupWindow(customView, ScreenUtils.dip2px(this,225), ScreenUtils.getScreenHeight(this));
+        popupWindow = new PopupWindow(customView,ScreenUtils.getScreenWidth(this)- DensityUtil.dp2px(this,65),
+                ScreenUtils.getScreenHeight(this) - ScreenUtils.dip2px(this,80));
         popupWindow.setAnimationStyle(R.style.AnimationFade);
         popupWindow.setOutsideTouchable(true);
-        popupWindow.setOnDismissListener(() -> ivSearch.postDelayed(() -> ivSearch.setEnabled(true),1));
+        popupWindow.setOnDismissListener(() -> ivMenu.postDelayed(() -> ivMenu.setEnabled(true),1));
     }
 
     @Override
@@ -200,7 +197,6 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
     }
 
     public static Intent newIntent(Context context) {
-        Intent intent = new Intent(context, MainActivity.class);
-        return intent;
+        return new Intent(context, MainActivity.class);
     }
 }

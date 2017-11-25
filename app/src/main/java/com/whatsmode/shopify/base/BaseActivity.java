@@ -3,21 +3,32 @@ package com.whatsmode.shopify.base;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
+import com.whatsmode.shopify.ui.helper.LoadingDialog;
+
 public class BaseActivity extends BaseSuperActivity{
     /**
      * 窗体第一次获取焦点
      */
     private boolean isFirstFocus = true;
+    private LoadingDialog mLoadingDialog;
 
-    //protected SystemBarTintManager systemBarTintManager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //设置沉淀式状态栏
-      //  systemBarTintManager = new SystemBarTintManager(this);
-       // systemBarTintManager.setStatusBarTintEnabled(true);
-       // systemBarTintManager.setStatusBarTintColor(ContextCompat.getColor(this, R.color.colorPrimary));
+    }
+
+    protected void showLoading(){
+        if (mLoadingDialog == null) {
+            mLoadingDialog = new LoadingDialog(this);
+        }
+        if(!mLoadingDialog.isShowing())
+        mLoadingDialog.show();
+    }
+
+    protected void hideLoading(){
+        if(mLoadingDialog != null && mLoadingDialog.isShowing())
+        mLoadingDialog.dismiss();
     }
 
     @Override
@@ -34,6 +45,17 @@ public class BaseActivity extends BaseSuperActivity{
     protected void onWindowFocusFirstObtain() {}
 
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mLoadingDialog != null && mLoadingDialog.isShowing()) {
+            mLoadingDialog.dismiss();
+        }
+    }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mLoadingDialog = null;
+    }
 }

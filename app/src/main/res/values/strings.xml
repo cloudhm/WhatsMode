@@ -23,6 +23,18 @@
     <string name="continue_text">Continue</string>
     <string name="back">Back</string>
     <string name="all">全選</string>
+    <string name="cancel">CANCEL</string>
+    <string name="confirm">CONFIRM</string>
+    <string name="confirm_delete">CONFIRM DELETE CART ITEMS?</string>
+    <string name="delete">DELETE</string>
+    <string name="no_clear_error">服務器忙,請稍後再試</string>
+    <string name="plz_select_products">請選擇商品</string>
+    <string name="custom_know">Billing address-Use a different billing address</string>
+    <string name="new_arrive">NEW</string>
+    <string name="new_arrive_suffix">ARRIVALS</string>
+    <string name="discover_tv">DISCOVER</string>
+    <string name="sale">SALE</string>
+    <string name="aboutUs">About US</string>
     <string name="sent_check_your_email">Sent! Check Your Email</string>
 
     <array name="category">

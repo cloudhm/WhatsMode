@@ -4,25 +4,34 @@
     android:id="@id/toolbar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#39B4D7"
+    android:background="@color/white"
     app:contentInsetStartWithNavigation="0dp"
     app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
     app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
     <ImageView
-        android:id="@+id/search"
+        android:id="@+id/menu"
         android:layout_marginBottom="10dp"
         android:visibility="gone"
-        android:src="@mipmap/ic_launcher"
-        android:layout_width="32dp"
-        android:layout_height="32dp" />
+        android:src="@drawable/btn_menu"
+        android:layout_width="23dp"
+        android:layout_height="16dp" />
     <TextView
         android:id="@+id/toolbar_title"
         android:layout_width="wrap_content"
+        android:visibility="gone"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:maxLines="1"
         android:textColor="@color/white"
         android:textSize="18sp" />
+
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="68dp"
+        android:layout_height="20dp"
+        android:layout_gravity="center"
+        android:layout_marginRight="43dp"
+        android:src="@drawable/logo" />
 
 </android.support.v7.widget.Toolbar>

@@ -4,6 +4,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.shopify.graphql.support.ID;
 import com.whatsmode.library.util.ListUtils;
 import com.whatsmode.library.util.PreferencesUtil;
 import com.whatsmode.shopify.R;
@@ -61,8 +62,7 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
                         .setText(R.id.quality, String.valueOf(item.quality));
                 TextView tvQuality = helper.getView(R.id.quality);
                 helper.getView(R.id.tv_descrease).setOnClickListener(v -> {
-                    int quality = (Integer.parseInt(tvQuality.getText().toString()) - 1) < 0 ? 0
-                            : Integer.parseInt(tvQuality.getText().toString()) - 1;
+                    int quality = Math.max(0, Integer.parseInt(tvQuality.getText().toString())- 1);
                     item.quality = quality;
                     tvQuality.setText(String.valueOf(quality));
                     if (isViewAttached()) {
@@ -149,12 +149,13 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
             if (isViewAttached()) {
                 getView().showLoading(false);
             }
-            CartRepository.create().parameter(data).listener(new CartRepository.QueryListener() {
+            CartRepository.create().parameter(data).checkoutListener(new CartRepository.QueryListener() {
                 @Override
-                public void onSuccess(String webUrl) {
+                public void onSuccess(ID id) {
+                    // TODO: 2017/11/23  save  checkoutID
                     if (isViewAttached()) {
                         getView().hideLoading();
-                        getView().showSuccess(webUrl);
+                        getView().showSuccess(id);
                     }
                 }
 
@@ -167,7 +168,7 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
                 }
             }).execute();
         } else {
-            getView().showError("請選擇商品");
+            getView().showError(WhatsApplication.getContext().getString(R.string.plz_select_products));
         }
     }
 }

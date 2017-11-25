@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginRight="100dp"
+    android:layout_marginTop="50dp"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="13dp"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="13dp"
+            android:layout_weight="1">
+
+            <com.github.siyamed.shapeimageview.RoundedImageView
+                android:id="@+id/new_arrive"
+                android:layout_width="match_parent"
+                app:siRadius="3dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/left_bg_new"
+                android:scaleType="centerCrop" />
+
+            <TextView
+                android:id="@+id/new_prefix"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="7dp"
+                android:text="@string/new_arrive"
+                android:textColor="@color/white"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/new_suffix"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/new_prefix"
+                android:layout_centerHorizontal="true"
+                android:text="@string/new_arrive_suffix"
+                android:textColor="@color/white"
+                android:textSize="14sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="13dp"
+            android:layout_weight="1">
+
+            <com.github.siyamed.shapeimageview.RoundedImageView
+                android:id="@+id/discover"
+                android:layout_width="match_parent"
+                app:siRadius="3dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:src="@drawable/left_bg_discover"
+                android:scaleType="centerCrop" />
+
+            <TextView
+                android:id="@+id/discover_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@string/discover_tv"
+                android:textColor="@color/white"
+                android:textSize="14sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="13dp"
+            android:layout_marginRight="13dp"
+            android:layout_weight="1">
+
+            <com.github.siyamed.shapeimageview.RoundedImageView
+                android:id="@+id/sale"
+                android:layout_width="match_parent"
+                app:siRadius="3dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/left_bg_sale"
+                android:scaleType="centerCrop" />
+
+            <TextView
+                android:id="@+id/sale_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@string/sale"
+                android:textColor="@color/white"
+                android:textSize="14sp" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycleView"
+        android:layout_width="match_parent"
+        android:layout_marginTop="13dp"
+        android:layout_weight="1"
+        android:layout_height="0dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:background="@color/separator"
+        android:layout_height="0.5dp" />
+    <TextView
+        android:id="@+id/about_us"
+        android:text="@string/aboutUs"
+        android:gravity="center_vertical"
+        android:textSize="14sp"
+        android:textColor="@color/black"
+        android:paddingLeft="28dp"
+        android:layout_width="match_parent"
+        android:layout_height="48dp" />
+</LinearLayout>

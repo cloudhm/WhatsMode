@@ -8,6 +8,7 @@ import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.base.BaseWebFragment;
 import com.whatsmode.shopify.block.cart.CartFragment;
 import com.whatsmode.shopify.block.me.MyFragment;
+import com.whatsmode.shopify.common.Constant;
 import com.whatsmode.shopify.mvp.MvpBasePresenter;
 import com.whatsmode.shopify.ui.helper.BaseFragmentAdapter;
 
@@ -22,8 +23,8 @@ class MainPresenter extends MvpBasePresenter<MainContact.View> implements MainCo
     public void initViewPage(FragmentManager supportFragmentManager) {
         final BaseFragmentAdapter fragmentAdapter = new BaseFragmentAdapter(supportFragmentManager);
         ArrayList<Fragment> fragments = new ArrayList<>();
-        fragments.add(BaseWebFragment.newInstance("https://www.shopify.com/domains"));
-        fragments.add(BaseWebFragment.newInstance("https://github.com"));
+        fragments.add(BaseWebFragment.newInstance(Constant.URL_TAB_MODE));
+        fragments.add(BaseWebFragment.newInstance(Constant.URL_TAB_INFLUENCE));
         fragments.add(CartFragment.newInstance());
         fragments.add(MyFragment.newInstance());
         fragmentAdapter.setFragmentPages(fragments);
@@ -74,7 +75,7 @@ class MainPresenter extends MvpBasePresenter<MainContact.View> implements MainCo
     @Override
     public void onClickView(View v) {
         switch (v.getId()) {
-            case R.id.search:
+            case R.id.menu:
                 if (isViewAttached()) {
                     getView().showSearch();
                 }

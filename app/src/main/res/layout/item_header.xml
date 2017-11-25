@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
-    android:padding="15dp"
+    android:padding="13dp"
     android:background="@color/white"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -11,16 +11,16 @@
         tools:text="Group Name"
         android:textStyle="bold"
         android:layout_weight="1"
-        android:layout_marginLeft="15dp"
+        android:textColor="@color/black"
         android:layout_gravity="center_vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
     <ImageView android:id="@+id/item_arrow"
-        android:layout_width="35dp"
-        android:visibility="gone"
-        android:layout_height="35dp"
+        android:layout_width="14dp"
+        android:visibility="visible"
+        android:layout_height="8dp"
         android:layout_gravity="center_vertical"
-        android:src="@mipmap/ic_launcher"/>
+        android:src="@drawable/btn_close"/>
 
 </LinearLayout>

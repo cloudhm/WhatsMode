@@ -26,6 +26,7 @@
     <string name="cancel">CANCEL</string>
     <string name="confirm">CONFIRM</string>
     <string name="confirm_delete">CONFIRM DELETE CART ITEMS?</string>
+    <string name="total_cost">" : %1$s"</string>
     <string name="delete">DELETE</string>
     <string name="no_clear_error">服務器忙,請稍後再試</string>
     <string name="plz_select_products">請選擇商品</string>
@@ -36,6 +37,9 @@
     <string name="sale">SALE</string>
     <string name="aboutUs">About US</string>
     <string name="sent_check_your_email">Sent! Check Your Email</string>
+    <string name="apply">APPLY</string>
+    <string name="gift_card">ADD COUPON</string>
+    <string name="plz_fill_card_num">PLEASE INPUT CARD NUM</string>
 
     <array name="category">
         <item>APPAREL</item>

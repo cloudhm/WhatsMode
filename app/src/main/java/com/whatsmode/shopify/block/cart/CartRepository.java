@@ -8,7 +8,6 @@ import com.shopify.buy3.GraphClient;
 import com.shopify.buy3.GraphError;
 import com.shopify.buy3.GraphResponse;
 import com.shopify.buy3.Storefront;
-import com.shopify.buy3.pay.PayAddress;
 import com.shopify.graphql.support.ID;
 import com.shopify.graphql.support.Input;
 import com.whatsmode.library.util.ListUtils;
@@ -16,7 +15,6 @@ import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.WhatsApplication;
 import com.whatsmode.shopify.block.account.data.AccountManager;
 import com.whatsmode.shopify.block.address.Address;
-import com.zchu.log.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -106,9 +104,7 @@ public class CartRepository {
                             if (updateCheckoutListener != null) {
                                 updateCheckoutListener.onError(response.data().getCheckoutShippingAddressUpdate().getUserErrors().get(0).getMessage());
                             }
-                            Logger.e("===");
                         }else {
-                            Logger.e("====success===");
                             if (updateCheckoutListener != null) {
                                 updateCheckoutListener.onSuccess(response.data().getCheckoutShippingAddressUpdate().getCheckout().getWebUrl());
                             }
@@ -117,6 +113,9 @@ public class CartRepository {
 
                     @Override
                     public void onFailure(@android.support.annotation.NonNull GraphError error) {
+                        if (updateCheckoutListener != null) {
+                            updateCheckoutListener.onError(error.getMessage());
+                        }
                     }
                 });
     }
@@ -175,9 +174,48 @@ public class CartRepository {
                     .setLineItemsInput(Input.value(arrayList));
     }
 
+    public void checkout(String checkoutId, String s, GiftCheckListener giftCheckListener) {
+        Storefront.MutationQuery mutation = Storefront.mutation(mutationQuery -> mutationQuery.checkoutGiftCardApply(s, new ID(checkoutId), new Storefront.CheckoutGiftCardApplyPayloadQueryDefinition() {
+            @Override
+            public void define(Storefront.CheckoutGiftCardApplyPayloadQuery _queryBuilder) {
+                _queryBuilder.checkout(_queryBuilder13
+                        -> _queryBuilder13.appliedGiftCards
+                        (Storefront.AppliedGiftCardQuery::balance))
+                        .userErrors(Storefront.UserErrorQuery::message);
+            }
+        }));
+        client.mutateGraph(mutation)
+                .enqueue(new GraphCall.Callback<Storefront.Mutation>() {
+                    @Override
+                    public void onResponse(@android.support.annotation.NonNull GraphResponse<Storefront.Mutation> response) {
+                        if (giftCheckListener != null) {
+                            if (ListUtils.isEmpty(response.data().getCheckoutGiftCardApply().getUserErrors())) {
+                                giftCheckListener.exist(String.valueOf(response.data().getCheckoutGiftCardApply()
+                                        .getCheckout().getAppliedGiftCards()
+                                        .get(0).getBalance()));
+                            }else{
+                                giftCheckListener.illegal(response.data().getCheckoutGiftCardApply().getUserErrors().get(0).getMessage());
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@android.support.annotation.NonNull GraphError error) {
+                        if (giftCheckListener != null) {
+                            giftCheckListener.illegal(error.getMessage());
+                        }
+                    }
+                });
+    }
+
     public interface QueryListener {
         void onSuccess(ID id);
         void onError(String message);
+    }
+
+    public interface GiftCheckListener{
+        void exist(String balance);
+        void illegal(String message);
     }
 
     public interface UpdateCheckoutListener {

@@ -21,6 +21,8 @@ public class CheckoutUpdateContact {
         void hideLoading();
 
         Address getAddress();
+
+        void jumpToGiftSelect();
     }
 
     interface Presenter extends MvpPresenter<View> {

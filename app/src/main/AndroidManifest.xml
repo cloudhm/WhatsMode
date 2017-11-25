@@ -48,6 +48,10 @@
             android:screenOrientation="portrait"
             />
 
+        <activity android:name=".block.checkout.CheckGiftCardActivity"
+            android:screenOrientation="portrait"
+            />
+
         <activity android:name=".block.account.ForgotPwdActivity"
                   android:screenOrientation="portrait"
                   android:theme="@style/StatusImmersion"

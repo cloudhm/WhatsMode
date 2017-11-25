@@ -16,10 +16,6 @@ import com.whatsmode.shopify.base.BaseActivity;
 import com.whatsmode.shopify.block.cart.CartRepository;
 import com.whatsmode.shopify.ui.helper.ToolbarHelper;
 
-/**
- * Created by Administrator on 2017/11/25.
- */
-
 public class CheckGiftCardActivity extends BaseActivity implements View.OnClickListener {
 
     private EditText mEtGiftNumber;

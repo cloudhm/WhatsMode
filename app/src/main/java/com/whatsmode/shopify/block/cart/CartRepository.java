@@ -65,37 +65,29 @@ public class CartRepository {
 
     public void bindAddress(Address address) {
         Storefront.MailingAddressInput input = new Storefront.MailingAddressInput()
-                .setAddress1(address.getAddress1())
-                .setAddress2(address.getAddress2())
-                .setCity(address.getCity())
-                .setCountry(address.getCountry())
-                .setFirstName(address.getFirstName())
-                .setLastName(address.getLastName())
-                .setPhone(address.getPhone())
-                .setProvince(address.getProvince())
-                .setZip(address.getZip());
-        Storefront.MutationQuery query = Storefront.mutation(mutationQuery -> mutationQuery
-                .checkoutEmailUpdate(checkoutId, AccountManager.getUsername(), emailUpdatePayloadQuery
+                        .setAddress1(address.getAddress1())
+                        .setAddress2(address.getAddress2())
+                        .setCity(address.getCity())
+                        .setCountry(address.getCountry())
+                        .setFirstName(address.getFirstName())
+                        .setLastName(address.getLastName())
+                        .setPhone(address.getPhone())
+                        .setProvince(address.getProvince())
+                        .setZip(address.getZip());
+        Storefront.MutationQuery query = Storefront.mutation(mutationQuery
+                        -> mutationQuery.checkoutEmailUpdate(checkoutId, AccountManager.getUsername(), emailUpdatePayloadQuery
                         -> emailUpdatePayloadQuery.checkout(checkoutQuery
-                        -> checkoutQuery.webUrl())
-                        .userErrors(userErrorQuery
-                        -> userErrorQuery.field().message()
-                        )
-                ).checkoutShippingAddressUpdate(input, checkoutId, shippingAddressUpdatePayloadQuery
-                                -> shippingAddressUpdatePayloadQuery.checkout(checkoutQuery
-                                -> checkoutQuery.webUrl().shippingAddress(new Storefront.MailingAddressQueryDefinition() {
+                        -> checkoutQuery.webUrl()).userErrors(userErrorQuery
+                        -> userErrorQuery.field().message())).checkoutShippingAddressUpdate(input, checkoutId, shippingAddressUpdatePayloadQuery
+                        -> shippingAddressUpdatePayloadQuery.checkout(checkoutQuery
+                        -> checkoutQuery.webUrl().shippingAddress(new Storefront.MailingAddressQueryDefinition() {
                             @Override
                             public void define(Storefront.MailingAddressQuery _queryBuilder) {
                                 _queryBuilder.firstName().address1();
                             }
-                        })
-                        )
-                                .userErrors(userErrorQuery -> userErrorQuery
-                                        .field()
-                                        .message()
-                                )
-                )
-        );
+                        })).userErrors(userErrorQuery
+                        -> userErrorQuery.field().message())));
+
         client.mutateGraph(query)
                 .enqueue(new GraphCall.Callback<Storefront.Mutation>() {
                     @Override
@@ -104,10 +96,8 @@ public class CartRepository {
                             if (updateCheckoutListener != null) {
                                 updateCheckoutListener.onError(response.data().getCheckoutShippingAddressUpdate().getUserErrors().get(0).getMessage());
                             }
-                        }else {
-                            if (updateCheckoutListener != null) {
+                        }else if (updateCheckoutListener != null) {
                                 updateCheckoutListener.onSuccess(response.data().getCheckoutShippingAddressUpdate().getCheckout().getWebUrl());
-                            }
                         }
                     }
 

@@ -27,7 +27,6 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
     private static final String EXTRA_ITEMS = "items";
     private static final String EXTRA_BUNDLE = "bundle";
 
-    private TextView mTvSelectAddress,mTvSelectMethod,mTvSelectGift,mTvPay,mTvTotal;
     public ID id;
     private CartItemLists dataSource;
     private LinearLayout layoutContainer;
@@ -50,12 +49,12 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
             dataSource = cartItemLists;
         }
         ToolbarHelper.initToolbarNoFix(this, R.id.toolbar, true, "CHECK OUT");
-        mTvSelectAddress = (TextView) findViewById(R.id.select_address);
-        mTvSelectMethod = (TextView) findViewById(R.id.select_method);
+        TextView mTvSelectAddress = (TextView) findViewById(R.id.select_address);
+        TextView mTvSelectMethod = (TextView) findViewById(R.id.select_method);
         layoutContainer = (LinearLayout) findViewById(R.id.container);
-        mTvPay = (TextView) findViewById(R.id.pay);
-        mTvTotal = (TextView) findViewById(R.id.total_count);
-        mTvSelectGift = (TextView) findViewById(R.id.select_gift);
+        TextView mTvPay = (TextView) findViewById(R.id.pay);
+        TextView mTvTotal = (TextView) findViewById(R.id.total_count);
+        TextView mTvSelectGift = (TextView) findViewById(R.id.select_gift);
         mTvSelectGift.setOnClickListener(this);
         mTvSelectAddress.setOnClickListener(this);
         mTvSelectMethod.setOnClickListener(this);
@@ -65,7 +64,7 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
 
     private void addItemToLayout() {
         if(dataSource == null || ListUtils.isEmpty(dataSource.cartItems))
-            return;
+        return;
         for (CartItem i : dataSource.cartItems) {
             View view = LayoutInflater.from(this).inflate(R.layout.item_cart, null);
             TextView tvName = (TextView) view.findViewById(R.id.name);
@@ -96,23 +95,13 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
     }
 
     @Override
-    public ID getCheckoutId() {
-        return id;
-    }
+    public ID getCheckoutId() {return id;}
 
     @Override
-    public void showSuccess(String url) {
-        hideLoading();
-        AppNavigator.jumpToWebActivity(this, WebActivity.STATE_PAY, url);
-    }
+    public void showSuccess(String url) {runOnUiThread(() -> {hideLoading();AppNavigator.jumpToWebActivity(CheckoutUpdateActivity.this, WebActivity.STATE_PAY, url);});}
 
     @Override
-    public void showError(String message) {
-        runOnUiThread(() -> {
-            hideLoading();
-            ToastUtil.showToast(message);
-        });
-    }
+    public void showError(String message) {runOnUiThread(() -> {hideLoading();ToastUtil.showToast(message);});}
 
     @Override
     public void showLoading() {
@@ -123,7 +112,6 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
     public void hideLoading() {
         runOnUiThread(() -> super.hideLoading());
     }
-
 
     @Override
     public Address getAddress() {

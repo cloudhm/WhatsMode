@@ -10,7 +10,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.whatsmode.library.exception.APIException;
 import com.whatsmode.library.util.SnackUtil;
+import com.whatsmode.shopify.AppNavigator;
 import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.block.address.Address;
 import com.whatsmode.shopify.block.address.LoadType;
@@ -95,6 +97,9 @@ public class OrderListFragment extends MvpFragment<OrderListPresenter> implement
     public void onError(int code, String msg) {
         completeRefresh();
         SnackUtil.toastShow(getContext(),msg);
+        if (code == APIException.CODE_SESSION_EXPIRE) {
+            AppNavigator.jumpToLogin(getActivity());
+        }
     }
 
     @Override

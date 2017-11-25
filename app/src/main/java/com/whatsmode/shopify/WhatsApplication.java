@@ -2,6 +2,8 @@ package com.whatsmode.shopify;
 
 import android.app.Application;
 import android.content.Context;
+
+import com.mob.MobApplication;
 import com.shopify.buy3.GraphClient;
 import com.shopify.buy3.HttpCachePolicy;
 
@@ -12,7 +14,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import com.whatsmode.library.util.ToastUtil;
 
 
-public class WhatsApplication extends Application {
+public class WhatsApplication extends MobApplication {
 
     private static WhatsApplication sContext = null;
 

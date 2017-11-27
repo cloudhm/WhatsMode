@@ -1,10 +1,12 @@
 <resources>
     <string name="app_name">whatsMode</string>
-    <string name="tabFirst">Mode</string>
-    <string name="tabSecond">Influence</string>
-    <string name="tabThird">Cart</string>
-    <string name="tabFourth">My</string>
+    <string name="tabFirst">MODE</string>
+    <string name="tabSecond">INFLUENCER</string>
+    <string name="tabThird">MY CART</string>
+    <string name="tabFourth">ACCOUNT</string>
     <string name="search">搜索</string>
+    <string name="edit">Edit</string>
+    <string name="done">Done</string>
     <string name="save">保存</string>
     <string name="no_more">已無更多</string>
     <string name="sign_in">Sign in</string>
@@ -22,7 +24,7 @@
     <string name="we_well_send_you_an_email_to_reset_your_password">We well send you an email to reset your password.</string>
     <string name="continue_text">Continue</string>
     <string name="back">Back</string>
-    <string name="all">全選</string>
+    <string name="all">ALL</string>
     <string name="cancel">CANCEL</string>
     <string name="confirm">CONFIRM</string>
     <string name="confirm_delete">CONFIRM DELETE CART ITEMS?</string>
@@ -49,6 +51,10 @@
     <string name="sent">Sent</string>
     <string name="sent_">Sent!</string>
     <string name="check_your_email">Check Your Email</string>
+    <string name="press_again_exist">Press again to exit</string>
+    <string name="checkout">CHECKOUT</string>
+    <string name="amount_all">Subtotal:</string>
+    <string name="unit">US$</string>
 
     <array name="category">
         <item>APPAREL</item>

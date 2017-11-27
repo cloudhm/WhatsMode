@@ -14,5 +14,7 @@
     <color name="gray_333333">#333333</color>
     <color name="gray_bbbbbb">#BBBBBB</color>
     <color name="btn_sure">#E60A5B</color>
+    <color name="gray_bbb">#bbbbbb</color>
+    <color name="amount_color">#151515</color>
 
 </resources>

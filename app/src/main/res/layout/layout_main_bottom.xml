@@ -12,39 +12,39 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        app:bbi_iconNormal="@mipmap/ic_launcher"
-        app:bbi_iconSelected="@mipmap/ic_launcher"
+        app:bbi_iconNormal="@drawable/nav_home"
+        app:bbi_iconSelected="@drawable/nav_home_select"
         app:bbi_text="@string/tabFirst"
-        app:bbi_textColorNormal="@color/tab_normal"
-        app:bbi_textColorSelected="@color/colorPrimary" />
+        app:bbi_textColorNormal="@color/gray_bbb"
+        app:bbi_textColorSelected="@color/black" />
 
     <com.whatsmode.shopify.ui.widget.BottomBarItem
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        app:bbi_iconNormal="@mipmap/ic_launcher"
-        app:bbi_iconSelected="@mipmap/ic_launcher"
+        app:bbi_iconNormal="@drawable/nav_influence"
+        app:bbi_iconSelected="@drawable/nav_influencer_select"
         app:bbi_text="@string/tabSecond"
-        app:bbi_textColorNormal="@color/tab_normal"
-        app:bbi_textColorSelected="@color/colorPrimary" />
+        app:bbi_textColorNormal="@color/gray_bbb"
+        app:bbi_textColorSelected="@color/black" />
 
     <com.whatsmode.shopify.ui.widget.BottomBarItem
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        app:bbi_iconNormal="@mipmap/ic_launcher"
-        app:bbi_iconSelected="@mipmap/ic_launcher"
+        app:bbi_iconNormal="@drawable/nav_cart"
+        app:bbi_iconSelected="@drawable/nav_cart_select"
         app:bbi_text="@string/tabThird"
-        app:bbi_textColorNormal="@color/tab_normal"
-        app:bbi_textColorSelected="@color/colorPrimary" />
+        app:bbi_textColorNormal="@color/gray_bbb"
+        app:bbi_textColorSelected="@color/black" />
 
     <com.whatsmode.shopify.ui.widget.BottomBarItem
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        app:bbi_iconNormal="@mipmap/ic_launcher"
-        app:bbi_iconSelected="@mipmap/ic_launcher"
+        app:bbi_iconNormal="@drawable/nav_account"
+        app:bbi_iconSelected="@drawable/nav_account_select"
         app:bbi_text="@string/tabFourth"
-        app:bbi_textColorNormal="@color/tab_normal"
-        app:bbi_textColorSelected="@color/colorPrimary" />
+        app:bbi_textColorNormal="@color/gray_bbb"
+        app:bbi_textColorSelected="@color/black" />
 </com.whatsmode.shopify.ui.widget.BottomBar>

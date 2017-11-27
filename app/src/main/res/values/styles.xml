@@ -12,7 +12,14 @@
     <style name="AppBaseTheme.Translucent" />
     <style name="AppBaseTheme.Translucent.Statebar" />
     <style name="AppTheme" parent="AppBaseTheme.Translucent.Statebar">
-        <!--  -->
+        <item name="android:actionMenuTextAppearance">@style/MenuTextStyle</item>
+    </style>
+
+    <style name="MenuTextStyle">
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:padding">2dp</item>
+        <item name="android:layout_marginTop">2dp</item>
     </style>
 
     <style name="AnimationFade">

@@ -20,6 +20,12 @@ public class CartContact{
         void checkTotal();
 
         void selectAll(boolean selectAll);
+
+        void jumpToDetail(CartItem item);
+
+        void showDeleteDialog();
+
+        void deleteItem(CartItem item);
     }
 
     interface Presenter extends BaseListContract.Presenter<View> {

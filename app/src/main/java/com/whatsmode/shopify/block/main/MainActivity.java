@@ -8,26 +8,35 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.innodroid.expandablerecycler.ExpandableRecyclerAdapter;
 import com.whatsmode.library.util.DensityUtil;
+import com.whatsmode.library.util.ListUtils;
+import com.whatsmode.library.util.PreferencesUtil;
 import com.whatsmode.library.util.ScreenUtils;
+import com.whatsmode.library.util.ToastUtil;
+import com.whatsmode.shopify.AppNavigator;
 import com.whatsmode.shopify.R;
+import com.whatsmode.shopify.WhatsApplication;
+import com.whatsmode.shopify.block.WebActivity;
 import com.whatsmode.shopify.block.cart.CartFragment;
+import com.whatsmode.shopify.block.cart.CartItem;
+import com.whatsmode.shopify.common.Constant;
 import com.whatsmode.shopify.mvp.MvpActivity;
 import com.whatsmode.shopify.ui.helper.BaseFragmentAdapter;
 import com.whatsmode.shopify.ui.helper.CategoryAdapter;
 import com.whatsmode.shopify.ui.helper.ToolbarHelper;
 import com.whatsmode.shopify.ui.widget.BottomBar;
 import com.whatsmode.shopify.ui.widget.NoScrollViewPager;
+
+import java.io.IOException;
+import java.util.List;
 
 public class MainActivity extends MvpActivity<MainContact.Presenter> implements MainContact.View, View.OnClickListener {
 
@@ -40,6 +49,7 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
     private MenuItem menuItemDelete;
     private MenuItem mTempMenu;
     private BaseFragmentAdapter fragmentAdapter;
+    private ImageView ivLogo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +62,7 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
         ToolbarHelper.ToolbarHolder toolbarHolder = ToolbarHelper.initToolbarNoFix(this, R.id.toolbar, false, null);
         toolbar = toolbarHolder.toolbar;
         toolbarTitle = toolbarHolder.titleView;
+        ivLogo = (ImageView) findViewById(R.id.logo);
         bottomBar = (BottomBar)findViewById(R.id.bottomBar);
         getPresenter().initViewPage(getSupportFragmentManager());
     }
@@ -104,6 +115,8 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
         switchMenu(menuItemSearch);
         ivMenu.setVisibility(View.VISIBLE);
         toolbar.setVisibility(View.VISIBLE);
+        ivLogo.setVisibility(View.VISIBLE);
+        toolbarTitle.setVisibility(View.GONE);
     }
 
     private void switchMenu(MenuItem menuItem) {
@@ -121,13 +134,26 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
         switchMenu(menuItemSearch);
         ivMenu.setVisibility(View.VISIBLE);
         toolbar.setVisibility(View.VISIBLE);
+        ivLogo.setVisibility(View.VISIBLE);
+        toolbarTitle.setVisibility(View.GONE);
     }
 
     @Override
     public void switch2Cart() {
         switchMenu(menuItemDelete);
         ivMenu.setVisibility(View.GONE);
+        ivLogo.setVisibility(View.GONE);
+        toolbarTitle.setVisibility(View.VISIBLE);
         toolbar.setVisibility(View.VISIBLE);
+        try {
+            List<CartItem> cartItemList = (List<CartItem>) PreferencesUtil.getObject(WhatsApplication.getContext(), Constant.CART_LOCAL);
+            toolbarTitle.setText(ListUtils.isEmpty(cartItemList) ? "My Cart" : "My Cart(" + cartItemList.size() + ")");
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
@@ -138,7 +164,7 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
 
     private PopupWindow popupWindow;
     @Override
-    public void showSearch() {
+    public void showMenu() {
         if (popupWindow != null && popupWindow.isShowing()) {
             popupWindow.dismiss();
         }else {
@@ -165,13 +191,16 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
     }
 
     @Override
-    public void showAbout() {
+    public void showSearch() {
+        AppNavigator.jumpToWebActivity(this, WebActivity.STATE_SEARCH, Constant.URL_SEARCH);
     }
 
     @Override
     public void deleteCart() {
         CartFragment item = (CartFragment) fragmentAdapter.getItem(2);
-        item.deleteCartItems();
+        String title = menuItemDelete.getTitle().toString();
+        menuItemDelete.setTitle(title.equalsIgnoreCase(getString(R.string.edit)) ? R.string.done : R.string.edit);
+        item.deleteCartItems(menuItemDelete.getTitle().toString());
     }
 
     @Override
@@ -198,5 +227,17 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
 
     public static Intent newIntent(Context context) {
         return new Intent(context, MainActivity.class);
+    }
+
+    private static final long WAIT_TIME = 2000L;
+    private long TOUCH_TIME = 0;
+    @Override
+    public void onBackPressed() {
+        if (System.currentTimeMillis() - TOUCH_TIME < WAIT_TIME) {
+            finish();
+        } else {
+            TOUCH_TIME = System.currentTimeMillis();
+            ToastUtil.showToast(getString(R.string.press_again_exist));
+        }
     }
 }

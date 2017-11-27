@@ -19,6 +19,8 @@ public class Constant {
     public static final String URL_TAB_INFLUENCE = "https://whatsmode.com/pages/influencer-brands-1";
     public static final String URL_TAB_MODE = "https://www.shopify.com/domains";
     public static final int KEY_ACCOUNT_DISMISS = 0x4444;
+    public static final String URL_SEARCH = "https://whatsmode.com/search";
+    public static final String CART_LOCAL = "cart_local";
 
 
     static {

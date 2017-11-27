@@ -41,9 +41,7 @@ public class CheckGiftCardActivity extends BaseActivity implements View.OnClickL
         }else{
             CartRepository.create().checkout(checkoutId.toString(), mEtGiftNumber.getText().toString(), new CartRepository.GiftCheckListener() {
                 @Override
-                public void exist(String balance) {
-                    runOnUiThread(() -> ToastUtil.showToast(balance));
-                }
+                public void exist(String balance) {runOnUiThread(() -> ToastUtil.showToast(balance));}
 
                 @Override
                 public void illegal(String message) {

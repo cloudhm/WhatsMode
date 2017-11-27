@@ -22,7 +22,7 @@ public class BottomBarItem extends RelativeLayout {
     private Drawable mIconNormal;
     private Drawable mIconSelected;
     private String mText;
-    private int mTextSize = 12;//sp
+    private int mTextSize = 9;//sp
     private int mTextColorNormal = 0xFF909090;
     private int mTextColorSelected = 0xff1976D2;
 
@@ -65,7 +65,7 @@ public class BottomBarItem extends RelativeLayout {
         iconView = (ImageView) findViewById(R.id.bottomBar_item_iconView);
         textView = (TextView) findViewById(R.id.bottomBar_item_textView);
         textView.setText(mText);
-        textView.setTextSize(mTextSize);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP,mTextSize);
         setSelectedState(isSelected());
     }
 

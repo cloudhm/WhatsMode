@@ -60,7 +60,7 @@ class MainPresenter extends MvpBasePresenter<MainContact.View> implements MainCo
         switch (itemId) {
             case R.id.action_search:
                 if (isViewAttached()) {
-                    getView().showAbout();
+                    getView().showSearch();
                 }
                 return true;
             case R.id.action_delete:
@@ -77,7 +77,7 @@ class MainPresenter extends MvpBasePresenter<MainContact.View> implements MainCo
         switch (v.getId()) {
             case R.id.menu:
                 if (isViewAttached()) {
-                    getView().showSearch();
+                    getView().showMenu();
                 }
                 break;
         }

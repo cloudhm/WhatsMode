@@ -1,5 +1,7 @@
 package com.whatsmode.library.util;
 
+import android.text.TextUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -100,6 +102,13 @@ public class RegexUtils {
         return isMatch(REGEX_MOBILE_EXACT, input);
     }
 
+    public static boolean isProduct (String url){
+        return !TextUtils.isEmpty(url) && url.contains("/product/");
+    }
+
+    public static boolean isCollection(String url) {
+        return !TextUtils.isEmpty(url) && url.contains("/collections/");
+    }
     /**
      * 验证电话号码
      *

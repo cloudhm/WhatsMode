@@ -67,7 +67,7 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
         return;
         for (CartItem i : dataSource.cartItems) {
             View view = LayoutInflater.from(this).inflate(R.layout.item_cart, null);
-            TextView tvName = (TextView) view.findViewById(R.id.name);
+            TextView tvName = (TextView) view.findViewById(R.id.description);
             tvName.setText(i.getName());
             TextView tvPrice = (TextView) view.findViewById(R.id.price);
             tvPrice.setVisibility(View.VISIBLE);

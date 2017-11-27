@@ -15,7 +15,12 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.whatsmode.library.rx.Util;
+import com.whatsmode.library.util.RegexUtils;
+import com.whatsmode.shopify.AppNavigator;
 import com.whatsmode.shopify.R;
+import com.whatsmode.shopify.block.WebActivity;
+import com.zchu.log.Logger;
 
 public class BaseWebFragment extends BaseFragment {
 
@@ -40,6 +45,7 @@ public class BaseWebFragment extends BaseFragment {
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
+                Logger.e("---finish---" + url);
                 mProgressBar.setVisibility(View.GONE);
             }
 
@@ -52,6 +58,7 @@ public class BaseWebFragment extends BaseFragment {
             @Override
             public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
                 super.onReceivedError(view, errorCode, description, failingUrl);
+                Logger.e("--receive--" + failingUrl);
                 mProgressBar.setVisibility(View.GONE);
             }
             @TargetApi(Build.VERSION_CODES.M)
@@ -59,11 +66,19 @@ public class BaseWebFragment extends BaseFragment {
             public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
                 super.onReceivedError(view, request, error);
                 mProgressBar.setVisibility(View.GONE);
+                Logger.e("---error---" + request.getUrl());
             }
 
             public boolean shouldOverrideUrlLoading(WebView view, String url){
                 //  重写此方法表明点击网页里面的链接还是在当前的webview里跳转，不跳到浏览器那边
-                view.loadUrl(url);
+                if (RegexUtils.isProduct(url)) {
+                    AppNavigator.jumpToWebActivity(getActivity(), WebActivity.STATE_PRODUCT,url);
+                } else if (RegexUtils.isCollection(url)) {
+                    AppNavigator.jumpToWebActivity(getContext(),WebActivity.STATE_COLLECTIONS,url);
+                }else{
+                    view.loadUrl(url);
+                }
+                Logger.e("---override---" + url);
                 return true;
             }
         });

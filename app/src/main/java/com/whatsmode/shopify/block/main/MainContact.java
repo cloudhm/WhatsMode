@@ -21,9 +21,9 @@ class MainContact {
 
         void switch2Mine();
 
-        void showSearch();
+        void showMenu();
 
-        void showAbout();
+        void showSearch();
 
         void deleteCart();
     }

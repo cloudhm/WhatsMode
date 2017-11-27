@@ -137,7 +137,7 @@ public final class Util {
 
   public static String getFormatDouble(double v) {
     DecimalFormat df = new DecimalFormat(".##");
-    return df.format(v);
+    return ".0".equalsIgnoreCase(df.format(v)) ? "0.0" : df.format(v);
   }
 
     public interface ReduceCallback<T, R> {

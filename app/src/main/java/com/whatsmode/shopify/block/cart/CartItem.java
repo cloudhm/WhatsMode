@@ -10,8 +10,35 @@ public class CartItem implements Serializable{
     String name;
     int quality;
     String url;
+    String icon = "https://img14.360buyimg.com/da/jfs/t4024/266/968344120/18745/d610233c/5863a879Nb8f02aeb.jpg";
     String id;
     Double price;
+    String color;
+    String size;
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public String getSize() {
+        return size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
+    }
 
     public Double getPrice() {
         return price;
@@ -69,8 +96,8 @@ public class CartItem implements Serializable{
          }
          */
         List<CartItem> cartItems = new ArrayList<>();
-        cartItems.add(new CartItem("a",11,"aaa","Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0VmFyaWFudC8xMjE3MTc3NzE0NzE1",10.0));
-        cartItems.add(new CartItem("b",12,"bbb","Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0VmFyaWFudC8xMjE3MTc3NzQ3NDgz",23.3));
+        cartItems.add(new CartItem("a",11,"https://whatsmode.com/collections/coats-jackets/products/sweet-like-strawberry-ice-cream-embroidered-zipper-pu-leather-jacket","Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0VmFyaWFudC8xMjE3MTc3NzE0NzE1",10.0));
+        cartItems.add(new CartItem("b",12,"https://whatsmode.com/collections/coats-jackets/products/camouflage-green-two-pockets-contracted-jacket","Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0VmFyaWFudC8xMjE3MTc3NzQ3NDgz",23.3));
         return cartItems;
     }
 

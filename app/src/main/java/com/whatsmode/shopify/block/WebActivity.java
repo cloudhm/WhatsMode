@@ -15,25 +15,32 @@ import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
 import android.widget.ProgressBar;
 
+import com.whatsmode.library.util.RegexUtils;
 import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.base.BaseActivity;
 import com.whatsmode.shopify.ui.helper.ToolbarHelper;
 import com.zchu.log.Logger;
 
 
-public class WebActivity extends BaseActivity {
+public class WebActivity extends BaseActivity implements View.OnClickListener {
 
     private static final String EXTRA_URL = "url";
     private static final String EXTRA_TITLE = "title";
 
-    private ProgressBar mProgressBar;
-    private WebView mWebView;
-    private String url;
-
+    public static final String STATE_SEARCH = "SEARCH"; // 搜索
     public static final String STATE_PAY = "PAY";  // 支付頁
     public static final String STATE_PRODUCT = "PRODUCT";  // 商品詳情頁
+    public static final String STATE_COLLECTIONS = "COLLECTIONS"; // 網紅
+
+    private ProgressBar mProgressBar;
+    private WebView mWebView;
+    private Button btnAddToCart;
+    private String url;
+    private String title;
+
 
     public static Intent newIntent(Context context,String title, String url) {
         Intent intent = new Intent(context, WebActivity.class);
@@ -46,31 +53,47 @@ public class WebActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.page_web);
-        String title = getIntent().getStringExtra(EXTRA_TITLE);
-        initToolBar(title);
+        title = getIntent().getStringExtra(EXTRA_TITLE);
+
         ToolbarHelper.initToolbarNoFix(this, R.id.toolbar, true, title);
         mWebView = (WebView) findViewById(R.id.webview);
         mWebView.getSettings().setUserAgentString("mobile");
 
+        btnAddToCart = (Button) findViewById(R.id.add_to_cart);
+        btnAddToCart.setOnClickListener(this);
         mProgressBar = (ProgressBar) findViewById(R.id.indeterminateBar);
         ToolbarHelper.initToolbarNoFix(this, R.id.toolbar, true, "");
         url = getIntent().getStringExtra(EXTRA_URL);
+        initToolBar();
         if (!TextUtils.isEmpty(url)){
-            initWeb();
+            initWebTitle();
         }
     }
 
-    private void initToolBar(String title) {
+    private void initToolBar() {
         // modify toolbar display according title
+        switch (title) {
+            case WebActivity.STATE_COLLECTIONS:
+                btnAddToCart.setVisibility(View.GONE);
+                break;
+            case WebActivity.STATE_PRODUCT:
+                btnAddToCart.setVisibility(View.VISIBLE);
+                break;
+            default:
+                btnAddToCart.setVisibility(View.GONE);
+                break;
+        }
     }
 
     @SuppressLint("SetJavaScriptEnabled")
-    private void initWeb() {
+    private void initWebTitle() {
         mWebView.setWebViewClient(new WebViewClient(){
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
+                Logger.e("---finish---" + url);
                 mProgressBar.setVisibility(View.GONE);
+                initToolBar();
             }
 
             @Override
@@ -82,18 +105,27 @@ public class WebActivity extends BaseActivity {
             @Override
             public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
                 super.onReceivedError(view, errorCode, description, failingUrl);
+                Logger.e("--webError--" + failingUrl);
                 mProgressBar.setVisibility(View.GONE);
             }
             @TargetApi(Build.VERSION_CODES.M)
             @Override
             public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
                 super.onReceivedError(view, request, error);
+                Logger.e("--webError--" + request.getUrl());
                 mProgressBar.setVisibility(View.GONE);
             }
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 mWebView.loadUrl(url);
+                if (RegexUtils.isCollection(url)) {
+                    startActivity(WebActivity.newIntent(WebActivity.this,WebActivity.STATE_COLLECTIONS,url));
+                } else if (RegexUtils.isProduct(url)) {
+                    startActivity(WebActivity.newIntent(WebActivity.this,WebActivity.STATE_PRODUCT,url));
+                }else{
+                    view.loadUrl(url);
+                }
                 return true;
             }
 
@@ -101,7 +133,7 @@ public class WebActivity extends BaseActivity {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                 Logger.e("---url---" + request.getUrl());
-                return super.shouldOverrideUrlLoading(view, request);
+                return shouldOverrideUrlLoading(view, request.getUrl().toString());
             }
         });
         mWebView.setWebChromeClient(new WebChromeClient(){
@@ -112,5 +144,14 @@ public class WebActivity extends BaseActivity {
         });
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.loadUrl(url);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.add_to_cart:
+                // FIXME: 2017/11/27
+                break;
+        }
     }
 }

@@ -9,8 +9,7 @@
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_delete"
-        android:icon="@mipmap/ic_launcher"
-        android:title="@string/search"
-        android:visible="false"
-        app:showAsAction="ifRoom" />
+        android:title="@string/edit"
+        app:showAsAction="withText|ifRoom"
+        android:visible="false" />
 </menu>

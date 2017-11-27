@@ -9,9 +9,27 @@
         android:layout_width="match_parent"
         android:layout_height="20dp"
         android:max="100"/>
-    <WebView
-        android:id="@+id/webview"
-        android:background="@color/white"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent">
+        <WebView
+            android:id="@+id/webview"
+            android:background="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <Button
+            android:visibility="gone"
+            android:id="@+id/add_to_cart"
+            android:text="+"
+            android:textSize="20sp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="20dp"
+            android:textColor="@color/white"
+            android:layout_marginBottom="120dp"
+            android:background="@color/colorAccent"
+            android:layout_width="70dp"
+            android:layout_height="45dp" />
+    </RelativeLayout>
 </LinearLayout>

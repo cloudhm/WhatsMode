@@ -26,6 +26,15 @@ public class Address implements Serializable{
     private String phone;
     private String zip;
     private String cursor;
+    private boolean isDefault;
+
+    public boolean isDefault() {
+        return isDefault;
+    }
+
+    public void setDefault(boolean aDefault) {
+        isDefault = aDefault;
+    }
 
     public Address(String id, String address1, String address2, String city, String province,
                    String provinceCode, String country, String countryCode, String company,

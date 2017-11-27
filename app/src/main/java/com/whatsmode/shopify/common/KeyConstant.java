@@ -10,4 +10,6 @@ public class KeyConstant {
     public static final String KEY_ADDRESS = "key_address";
     public static final String KEY_ORDER = "key_order";
     public static final String KEY_EMAIL = "key_email";
+    public static final String KEY_TYPE_ADDRESS = "key_type_address";
+    public static final String KEY_EXTRA_SELECT_ADDRESS = "key_extra_select_address";
 }

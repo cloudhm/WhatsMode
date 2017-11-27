@@ -18,6 +18,7 @@ import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.block.account.LoginActivity;
 import com.whatsmode.shopify.common.KeyConstant;
 import com.whatsmode.shopify.mvp.MvpActivity;
+import com.whatsmode.shopify.ui.helper.LoadingDialog;
 
 import java.security.Key;
 import java.util.ArrayList;
@@ -28,6 +29,11 @@ import java.util.List;
  */
 
 public class AddressListActivity extends MvpActivity<AddressListPresenter> implements AddressListContract.View, View.OnClickListener {
+
+    public static final int TYPE_SELECT = 1;
+    public static final int TYPE_VIEW = 2;
+
+    private int mType = TYPE_SELECT;
 
     private RecyclerView mRecyclerView;
 
@@ -45,10 +51,11 @@ public class AddressListActivity extends MvpActivity<AddressListPresenter> imple
         mSwipe = (SwipeRefreshLayout) findViewById(R.id.swipe);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         findViewById(R.id.add_address).setOnClickListener(this);
-
+        mType = getIntent().getIntExtra(KeyConstant.KEY_TYPE_ADDRESS,TYPE_SELECT);
         init();
         initRecycler();
         mPresenter.refreshAddressList();
+        showLoading();
     }
 
     private void init(){
@@ -76,7 +83,13 @@ public class AddressListActivity extends MvpActivity<AddressListPresenter> imple
         mAddressListAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-
+                if (mType == TYPE_SELECT) {
+                    Intent intent = new Intent();
+                    Address address = mList.get(position);
+                    intent.putExtra(KeyConstant.KEY_EXTRA_SELECT_ADDRESS,address);
+                    setResult(RESULT_OK,intent);
+                    finish();
+                }
             }
         });
         mAddressListAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
@@ -85,11 +98,16 @@ public class AddressListActivity extends MvpActivity<AddressListPresenter> imple
                 if (view.getId() == R.id.delete) {
                     String id = mList.get(position).getId();
                     mPresenter.deleteAddress(id);
+                    showLoading();
                 } else if (view.getId() == R.id.update) {
                     Intent intent = new Intent(AddressListActivity.this,AddEditAddressActivity.class);
                     intent.putExtra(KeyConstant.KEY_ADDRESS,mList.get(position));
                     intent.putExtra(KeyConstant.KEY_ADD_EDIT_ADDRESS, AddEditAddressActivity.TYPE_EDIT_ADDRESS);
                     startActivity(intent);
+                } else if (view.getId() == R.id.is_default) {
+                    String id = mList.get(position).getId();
+                    mPresenter.updateDefaultAddress(id);
+                    showLoading();
                 }
             }
         });
@@ -115,6 +133,7 @@ public class AddressListActivity extends MvpActivity<AddressListPresenter> imple
     public void showContent(@LoadType.checker int type, @NonNull List<Address> addresses) {
         if(mAddressListAdapter == null || isDestroyed()) return;
         completeRefresh();
+        hideLoading();
         switch (type) {
             case LoadType.TYPE_REFRESH_SUCCESS:
                 if (addresses.isEmpty()) {
@@ -136,6 +155,7 @@ public class AddressListActivity extends MvpActivity<AddressListPresenter> imple
     @Override
     public void onError(int code,String msg) {
         completeRefresh();
+        hideLoading();
         if (code == APIException.CODE_SESSION_EXPIRE) {
             startActivity(new Intent(this, LoginActivity.class));
         }
@@ -145,6 +165,11 @@ public class AddressListActivity extends MvpActivity<AddressListPresenter> imple
     @Override
     public void deleteSuccess() {
         SnackUtil.toastShow(this,"delete success");
+        mPresenter.refreshAddressList();
+    }
+
+    @Override
+    public void updateDefaultAddressSuccess() {
         mPresenter.refreshAddressList();
     }
 

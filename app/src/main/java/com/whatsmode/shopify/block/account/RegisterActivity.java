@@ -1,5 +1,6 @@
 package com.whatsmode.shopify.block.account;
 
+import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -47,10 +48,10 @@ public class RegisterActivity extends MvpActivity<RegisterPresenter> implements 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         StatusBarUtil.StatusBarLightMode(this);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mEmail = (TextInputEditText) findViewById(R.id.email);
         mEmail.addTextChangedListener(this);
         mPwd = (TextInputEditText) findViewById(R.id.pwd);
-        mPwd.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
         mPwd.addTextChangedListener(this);
         mFirstName = (TextInputEditText) findViewById(R.id.first_name);
         mLastName = (TextInputEditText) findViewById(R.id.last_name);
@@ -63,6 +64,13 @@ public class RegisterActivity extends MvpActivity<RegisterPresenter> implements 
         signIn.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG );
         signIn.setOnClickListener(this);
         mEmail.setOnFocusChangeListener(this);
+        init();
+    }
+
+    private void init(){
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setTitle("");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     public void register(View view) {
@@ -90,6 +98,7 @@ public class RegisterActivity extends MvpActivity<RegisterPresenter> implements 
         if (TextUtils.isEmpty(mEmailL.getError())) {
 
             mPresenter.register(email,pwd,firstName,lastName);
+            showLoading();
         }
     }
 
@@ -97,6 +106,7 @@ public class RegisterActivity extends MvpActivity<RegisterPresenter> implements 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                setResult(RESULT_OK);
                 finish();
                 break;
         }
@@ -116,6 +126,7 @@ public class RegisterActivity extends MvpActivity<RegisterPresenter> implements 
 
     @Override
     public void registerFail(String msg) {
+        hideLoading();
         if (Constant.EMAIL_HAS_ALREADY_BEEN_TAKEN.equals(msg)) {
             finish();
         }
@@ -142,6 +153,15 @@ public class RegisterActivity extends MvpActivity<RegisterPresenter> implements 
             case R.id.sign_in:
                 finish();
                 break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Constant.KEY_ACCOUNT_DISMISS && resultCode == RESULT_OK) {
+            setResult(RESULT_OK);
+            finish();
         }
     }
 

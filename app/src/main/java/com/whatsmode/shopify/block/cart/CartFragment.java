@@ -164,7 +164,6 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
     @Override
     public void showDeleteDialog() {
         if (!ListUtils.isEmpty(checkItem) && mAdapter != null) {
-            if (alertDialog == null)
                 alertDialog = new AlertDialog.Builder(getActivity())
                         .setNegativeButton(R.string.cancel, null)
                         .setPositiveButton(R.string.confirm, (dialog, which) -> {

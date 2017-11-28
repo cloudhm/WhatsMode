@@ -8,7 +8,11 @@ import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.transition.Visibility;
+import android.support.v4.view.MenuItemCompat;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
@@ -18,11 +22,25 @@ import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ProgressBar;
 
+import com.whatsmode.library.rx.RxBus;
+import com.whatsmode.library.rx.RxUtil;
+import com.whatsmode.library.util.ListUtils;
+import com.whatsmode.library.util.PreferencesUtil;
 import com.whatsmode.library.util.RegexUtils;
+import com.whatsmode.shopify.AppNavigator;
 import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.base.BaseActivity;
+import com.whatsmode.shopify.block.cart.BadgeActionProvider;
+import com.whatsmode.shopify.block.cart.CartItem;
+import com.whatsmode.shopify.block.cart.JumpCartSelect;
+import com.whatsmode.shopify.common.Constant;
 import com.whatsmode.shopify.ui.helper.ToolbarHelper;
 import com.zchu.log.Logger;
+
+import org.greenrobot.eventbus.EventBus;
+
+import java.io.IOException;
+import java.util.List;
 
 
 public class WebActivity extends BaseActivity implements View.OnClickListener {
@@ -40,6 +58,9 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
     private Button btnAddToCart;
     private String url;
     private String title;
+    private MenuItem menuItemShare;
+    private MenuItem menuItemCart;
+    private BadgeActionProvider mActionProvider;
 
 
     public static Intent newIntent(Context context,String title, String url) {
@@ -50,11 +71,30 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_web, menu);
+        menuItemShare = menu.findItem(R.id.action_share);
+        menuItemCart = menu.findItem(R.id.action_cart);
+        mActionProvider = (BadgeActionProvider) MenuItemCompat.getActionProvider(menuItemCart);
+        mActionProvider.setOnClickListener(0, what -> {
+            AppNavigator.jumpToMain(this);
+            EventBus.getDefault().post(new JumpCartSelect());
+        });// 设置点击监听。
+        initToolBar();
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+
+    }
+
+    @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.page_web);
         title = getIntent().getStringExtra(EXTRA_TITLE);
-
         ToolbarHelper.initToolbarNoFix(this, R.id.toolbar, true, title);
         mWebView = (WebView) findViewById(R.id.webview);
         mWebView.getSettings().setUserAgentString("mobile");
@@ -64,7 +104,6 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
         mProgressBar = (ProgressBar) findViewById(R.id.indeterminateBar);
         ToolbarHelper.initToolbarNoFix(this, R.id.toolbar, true, "");
         url = getIntent().getStringExtra(EXTRA_URL);
-        initToolBar();
         if (!TextUtils.isEmpty(url)){
             initWebTitle();
         }
@@ -75,12 +114,18 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
         switch (title) {
             case WebActivity.STATE_COLLECTIONS:
                 btnAddToCart.setVisibility(View.GONE);
+                menuItemCart.setVisible(false);
+                menuItemShare.setVisible(true);
                 break;
             case WebActivity.STATE_PRODUCT:
                 btnAddToCart.setVisibility(View.VISIBLE);
+                menuItemShare.setVisible(true);
+                menuItemCart.setVisible(true);
                 break;
             default:
                 btnAddToCart.setVisibility(View.GONE);
+                menuItemShare.setVisible(false);
+                menuItemCart.setVisible(false);
                 break;
         }
     }
@@ -91,7 +136,6 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                Logger.e("---finish---" + url);
                 mProgressBar.setVisibility(View.GONE);
                 initToolBar();
             }
@@ -118,11 +162,10 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                mWebView.loadUrl(url);
-                if (RegexUtils.isCollection(url)) {
-                    startActivity(WebActivity.newIntent(WebActivity.this,WebActivity.STATE_COLLECTIONS,url));
-                } else if (RegexUtils.isProduct(url)) {
+                if (RegexUtils.isProduct(url)) {
                     startActivity(WebActivity.newIntent(WebActivity.this,WebActivity.STATE_PRODUCT,url));
+                } else if (RegexUtils.isCollection(url)) {
+                    startActivity(WebActivity.newIntent(WebActivity.this,WebActivity.STATE_COLLECTIONS,url));
                 }else{
                     view.loadUrl(url);
                 }

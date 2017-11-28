@@ -20,7 +20,8 @@ public class AddressListDiff extends BaseDiff<Address> {
                         getHashCode(mOldData.get(oldItemPosition).getAddress2()) == getHashCode(mNewData.get(newItemPosition).getAddress2())&&
                                 getHashCode(mOldData.get(oldItemPosition).getCity()) == getHashCode(mNewData.get(newItemPosition).getCity())&&
                                         getHashCode(mOldData.get(oldItemPosition).getProvince()) == getHashCode(mNewData.get(newItemPosition).getProvince())&&
-                                                getHashCode(mOldData.get(oldItemPosition).getCountry()) == getHashCode(mNewData.get(newItemPosition).getCountry())
+                                                getHashCode(mOldData.get(oldItemPosition).getCountry()) == getHashCode(mNewData.get(newItemPosition).getCountry())&&
+                mOldData.get(oldItemPosition).isDefault() == mNewData.get(newItemPosition).isDefault()
                 ) {
             return true;
         }

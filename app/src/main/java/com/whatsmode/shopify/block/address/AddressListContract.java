@@ -16,10 +16,12 @@ public interface AddressListContract {
         void showContent(@LoadType.checker int type,@NonNull List<Address> addresses);
         void onError(int code ,String msg);
         void deleteSuccess();
+        void updateDefaultAddressSuccess();
     }
     interface Presenter extends MvpPresenter<View>{
         void refreshAddressList();
         void loadModeAddressList();
         void deleteAddress(String id);
+        void updateDefaultAddress(String addressId);
     }
 }

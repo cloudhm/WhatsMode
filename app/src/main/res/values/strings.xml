@@ -46,6 +46,11 @@
     <string name="apply">APPLY</string>
     <string name="gift_card">ADD COUPON</string>
     <string name="plz_fill_card_num">PLEASE INPUT CARD NUM</string>
+    <string name="already_have_a_whatsmode">Already have a Whatsmode?</string>
+    <string name="log_in">Log In</string>
+    <string name="sent">Sent</string>
+    <string name="sent_">Sent!</string>
+    <string name="check_your_email">Check Your Email</string>
     <string name="press_again_exist">Press again to exit</string>
     <string name="checkout">CHECKOUT</string>
     <string name="amount_all">Subtotal:</string>

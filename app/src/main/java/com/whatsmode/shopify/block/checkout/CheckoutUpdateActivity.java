@@ -30,6 +30,7 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
     public ID id;
     private CartItemLists dataSource;
     private LinearLayout layoutContainer;
+    private ToolbarHelper.ToolbarHolder toolbarHolder;
 
     @NonNull
     @Override
@@ -47,17 +48,9 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
         if (getIntent().hasExtra(EXTRA_BUNDLE)) {
             dataSource = (CartItemLists) getIntent().getBundleExtra(EXTRA_BUNDLE).getSerializable(EXTRA_ITEMS);
         }
-        ToolbarHelper.initToolbarNoFix(this, R.id.toolbar, true, "CHECK OUT");
-        TextView mTvSelectAddress = (TextView) findViewById(R.id.select_address);
-        TextView mTvSelectMethod = (TextView) findViewById(R.id.select_method);
+        toolbarHolder = ToolbarHelper.initToolbarNoFix(this, R.id.toolbar, true, "CHECK OUT");
+        toolbarHolder.titleView.setVisibility(View.VISIBLE);
         layoutContainer = (LinearLayout) findViewById(R.id.container);
-        TextView mTvPay = (TextView) findViewById(R.id.pay);
-        TextView mTvTotal = (TextView) findViewById(R.id.total_count);
-        TextView mTvSelectGift = (TextView) findViewById(R.id.select_gift);
-        mTvSelectGift.setOnClickListener(this);
-        mTvSelectAddress.setOnClickListener(this);
-        mTvSelectMethod.setOnClickListener(this);
-        mTvPay.setOnClickListener(this);
         addItemToLayout();
     }
 

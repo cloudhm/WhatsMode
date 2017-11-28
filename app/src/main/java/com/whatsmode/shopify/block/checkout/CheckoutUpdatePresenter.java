@@ -35,11 +35,11 @@ public class CheckoutUpdatePresenter extends BaseRxPresenter<CheckoutUpdateConta
                 }
 
                 break;
-            case R.id.select_gift:
-                if (isViewAttached()) {
-                    getView().jumpToGiftSelect();
-                }
-                break;
+//            case R.id.select_gift:
+//                if (isViewAttached()) {
+//                    getView().jumpToGiftSelect();
+//                }
+//                break;
         }
     }
 }

@@ -67,6 +67,7 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
         toolbar = toolbarHolder.toolbar;
         toolbarTitle = toolbarHolder.titleView;
         ivLogo = (ImageView) findViewById(R.id.logo);
+        ivLogo.setVisibility(View.VISIBLE);
         bottomBar = (BottomBar)findViewById(R.id.bottomBar);
         getPresenter().initViewPage(getSupportFragmentManager());
         EventBus.getDefault().register(this);

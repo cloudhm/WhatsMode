@@ -56,6 +56,12 @@
     <string name="amount_all">Subtotal:</string>
     <string name="unit">US$</string>
     <string name="share">SHARE</string>
+    <string name="pay">PAY</string>
+    <string name="total_text">Subtotal</string>
+    <string name="add_address">add shipping address</string>
+    <string name="subtotal">Subtotal</string>
+    <string name="shipping_cost">Shipping(Standard Shipping)</string>
+    <string name="taxes">Taxes</string>
 
     <array name="category">
         <item>APPAREL</item>

@@ -17,6 +17,7 @@ import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.block.account.LoginActivity;
 import com.whatsmode.shopify.block.address.AddressListActivity;
 import com.whatsmode.shopify.block.address.LoadType;
+import com.whatsmode.shopify.common.KeyConstant;
 import com.whatsmode.shopify.mvp.MvpFragment;
 
 import java.util.ArrayList;
@@ -68,7 +69,9 @@ public class MyFragment extends MvpFragment<MyContract.Presenter> implements MyC
                 startActivity(new Intent(getActivity(), SettingInfoActivity.class));
                 break;
             case R.id.view_address:
-                startActivity(new Intent(getActivity(), AddressListActivity.class));
+                Intent intent = new Intent(getActivity(), AddressListActivity.class);
+                intent.putExtra(KeyConstant.KEY_TYPE_ADDRESS,AddressListActivity.TYPE_VIEW);
+                startActivity(intent);
                 break;
             case R.id.order_history:
                 ShareUtil.showShare(getActivity(),"https://whatsmode.com/","/storage/emulated/0/adv/af20c843-4081-4bc1-b7f8-b73041672e55.png","https://whatsmode.com/","https://whatsmode.com/");

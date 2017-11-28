@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,6 +25,7 @@ import com.whatsmode.shopify.BuildConfig;
 import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.block.me.MyFragment;
 import com.whatsmode.shopify.block.me.StatusBarUtil;
+import com.whatsmode.shopify.common.Constant;
 import com.whatsmode.shopify.common.KeyConstant;
 import com.whatsmode.shopify.mvp.MvpActivity;
 
@@ -41,12 +43,14 @@ public class LoginActivity extends MvpActivity<LoginPresenter> implements LoginC
     private TextView mForgotPwd;
     private TextView mCreateAccount;
     private Button mLogin;
+    private Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         StatusBarUtil.StatusBarLightMode(this);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mEmail = (TextInputEditText) findViewById(R.id.email);
         mEmailL = (TextInputLayout)findViewById(R.id.email_l);
         mPwdL = (TextInputLayout)findViewById(R.id.pwd_l);
@@ -61,8 +65,14 @@ public class LoginActivity extends MvpActivity<LoginPresenter> implements LoginC
         mEmail.setOnFocusChangeListener(this);
         mEmail.addTextChangedListener(this);
         mPwd.addTextChangedListener(this);
+        init();
     }
 
+    private void init(){
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setTitle("");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
 
     public void login(View view) {
         String email = mEmail.getText().toString();
@@ -85,6 +95,7 @@ public class LoginActivity extends MvpActivity<LoginPresenter> implements LoginC
             mPwdL.setError(null);
         }
         mPresenter.login(email,pwd);
+        showLoading();
     }
 
     @NonNull
@@ -95,6 +106,7 @@ public class LoginActivity extends MvpActivity<LoginPresenter> implements LoginC
 
     @Override
     public void loginSuccess() {
+        hideLoading();
         SnackUtil.toastShow(this,"登录成功");
         AppNavigator.jumpToMain(this);
         finish();
@@ -106,7 +118,18 @@ public class LoginActivity extends MvpActivity<LoginPresenter> implements LoginC
             SnackUtil.toastShow(this, msg);
             startActivity(new Intent(this,RegisterActivity.class));
         }*/
+        hideLoading();
         SnackUtil.toastShow(this, msg);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -115,11 +138,20 @@ public class LoginActivity extends MvpActivity<LoginPresenter> implements LoginC
             case R.id.forgot_pwd:
                 Intent intent = new Intent(this, ForgotPwdActivity.class);
                 intent.putExtra(KeyConstant.KEY_EMAIL,mEmail.getText().toString());
-                startActivity(intent);
+                startActivityForResult(intent, Constant.KEY_ACCOUNT_DISMISS);
                 break;
             case R.id.create_account:
-                startActivity(new Intent(this,RegisterActivity.class));
+                startActivityForResult(new Intent(this,RegisterActivity.class),Constant.KEY_ACCOUNT_DISMISS);
                 break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Constant.KEY_ACCOUNT_DISMISS && resultCode == RESULT_OK) {
+            setResult(RESULT_OK);
+            finish();
         }
     }
 

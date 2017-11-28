@@ -1,4 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+                android:fitsSystemWindows="true"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <android.support.v7.widget.Toolbar
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:navigationIcon="@drawable/login_close"
+        app:navigationIcon="@drawable/login_close"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:contentInsetStartWithNavigation="0dp" />
+
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -13,6 +30,7 @@
               android:layout_height="match_parent">
 
     <ImageView
+        android:visibility="gone"
         android:src="@drawable/login_logo"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="72dp"
@@ -21,17 +39,18 @@
 
     <TextView
         android:text="@string/forgot_your_password"
-        android:layout_marginTop="42dp"
+        android:layout_marginTop="32dp"
         android:textColor="@color/black"
-        android:textSize="@dimen/sp_22"
+        android:textSize="@dimen/sp_32"
+        android:textStyle="bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
     <TextView
         android:text="@string/we_well_send_you_an_email_to_reset_your_password"
         android:layout_marginTop="4dp"
-        android:textColor="@color/black"
-        android:textSize="@dimen/sp_14"
+        android:textColor="@color/gray_bbbbbb"
+        android:textSize="@dimen/sp_22"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
@@ -81,7 +100,7 @@
         android:text="@string/back"
         android:layout_marginTop="6dp"
         android:textSize="@dimen/sp_18"
-        android:textColor="@color/create_account"
+        android:textColor="@color/btn_sure"
         android:textAllCaps="false"
         android:layout_marginBottom="16dp"
         android:background="@drawable/cancel_shape"
@@ -90,3 +109,4 @@
 
 </LinearLayout>
 </ScrollView>
+</LinearLayout>

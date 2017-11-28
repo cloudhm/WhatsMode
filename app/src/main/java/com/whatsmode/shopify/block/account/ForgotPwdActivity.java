@@ -5,17 +5,21 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.whatsmode.library.util.SnackUtil;
 import com.whatsmode.library.util.Util;
 import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.block.me.StatusBarUtil;
+import com.whatsmode.shopify.common.Constant;
 import com.whatsmode.shopify.common.KeyConstant;
 import com.whatsmode.shopify.mvp.MvpActivity;
 
@@ -25,12 +29,11 @@ import com.whatsmode.shopify.mvp.MvpActivity;
 
 public class ForgotPwdActivity extends MvpActivity<ForgotPwdPresenter> implements ForgotPwdContract.View, View.OnClickListener, TextWatcher {
 
-    private static final int REQUEST_CODE = 10;
-
     private TextInputEditText mEmail;
     private Button mContinueSure;
     private Button mBack;
     private TextInputLayout mEmailL;
+    private Toolbar mToolbar;
 
 
     @Override
@@ -38,6 +41,7 @@ public class ForgotPwdActivity extends MvpActivity<ForgotPwdPresenter> implement
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forgot_pwd);
         StatusBarUtil.StatusBarLightMode(this);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mEmail = (TextInputEditText) findViewById(R.id.email);
         mEmail.addTextChangedListener(this);
         mEmailL = (TextInputLayout) findViewById(R.id.email_l);
@@ -48,6 +52,13 @@ public class ForgotPwdActivity extends MvpActivity<ForgotPwdPresenter> implement
         String email = getIntent().getStringExtra(KeyConstant.KEY_EMAIL);
         mEmail.setText(email);
         mEmail.performClick();
+        init();
+    }
+
+    private void init(){
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setTitle("");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @NonNull
@@ -60,6 +71,7 @@ public class ForgotPwdActivity extends MvpActivity<ForgotPwdPresenter> implement
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                setResult(RESULT_OK);
                 finish();
                 break;
         }
@@ -85,6 +97,7 @@ public class ForgotPwdActivity extends MvpActivity<ForgotPwdPresenter> implement
                 //Intent intent = new Intent(this,CheckEmailActivity.class);
                 //startActivityForResult(intent,REQUEST_CODE);
                 mPresenter.recover(email);
+                showLoading();
                 break;
             case R.id.back:
                 finish();
@@ -95,19 +108,22 @@ public class ForgotPwdActivity extends MvpActivity<ForgotPwdPresenter> implement
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
+        if (requestCode == Constant.KEY_ACCOUNT_DISMISS && resultCode == RESULT_OK) {
+            setResult(RESULT_OK);
             finish();
         }
     }
 
     @Override
     public void success() {
-        SnackUtil.toastShow(this,R.string.sent_check_your_email);
+        hideLoading();
+        showToast();
         finish();
     }
 
     @Override
     public void onError(int code, String msg) {
+        hideLoading();
         SnackUtil.toastShow(this,msg);
     }
 
@@ -133,5 +149,12 @@ public class ForgotPwdActivity extends MvpActivity<ForgotPwdPresenter> implement
     @Override
     public void afterTextChanged(Editable editable) {
         changeSubmitStatus();
+    }
+
+    private void showToast(){
+        Toast toast = new Toast(this);
+        toast.setGravity(Gravity.CENTER,0,0);
+        toast.setView(View.inflate(this,R.layout.toast_sent_email,null));
+        toast.show();
     }
 }

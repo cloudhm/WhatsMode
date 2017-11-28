@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_enabled="false">
-        <bitmap android:src="@drawable/login_btn_pre"/>
+        <shape>
+            <solid android:color="@color/gray_bbbbbb"/>
+            <corners android:radius="8dp"/>
+        </shape>
     </item>
     <item android:state_enabled="true">
-        <bitmap android:src="@drawable/login_btn"/>
+        <shape>
+            <solid android:color="@color/btn_sure"/>
+            <corners android:radius="8dp"/>
+        </shape>
     </item>
 </selector>

@@ -51,7 +51,7 @@ public class AddressRepository {
                 .subscribeOn(Schedulers.io());
     }
 
-    public Observable<Storefront.MailingAddressConnection> getAddressListObservable(String customerAccessToken, Storefront.CustomerQueryDefinition queryDef){
+    public Observable<Storefront.Customer> getAddressListObservable(String customerAccessToken, Storefront.CustomerQueryDefinition queryDef){
         QueryGraphCall call = mGraphClient.queryGraph(Storefront.query(q ->  q.customer(customerAccessToken, queryDef)))
                 .cachePolicy(HttpCachePolicy.NETWORK_FIRST.expireAfter(20, TimeUnit.MINUTES));
 
@@ -64,7 +64,7 @@ public class AddressRepository {
                     }
                 })
                 .map(Storefront.QueryRoot::getCustomer)
-                .map(Storefront.Customer::getAddresses)
+                //.map(Storefront.Customer::getAddresses)
                 .subscribeOn(Schedulers.io());
     }
 
@@ -110,6 +110,21 @@ public class AddressRepository {
                         return Single.error(new APIException(APIException.CODE_COMMON_EXCEPTION, Util.mapItems(t.getUserErrors(),Storefront.UserError::getMessage)));
                     }
                 }).map(Storefront.CustomerAddressDeletePayload::getDeletedCustomerAddressId)
+                .subscribeOn(Schedulers.io());
+    }
+
+    public Single<Storefront.Customer> updateDefaultAddress(String customerAccessToken, String addressId, Storefront.CustomerDefaultAddressUpdatePayloadQueryDefinition queryDef){
+        MutationGraphCall call = mGraphClient.mutateGraph(Storefront.mutation(root -> root.customerDefaultAddressUpdate(customerAccessToken, new ID(addressId), queryDef)));
+
+        return RxUtil.rxGraphMutationCall(call)
+                .map(Storefront.Mutation::getCustomerDefaultAddressUpdate)
+                .flatMap(t -> {
+                    if (t.getUserErrors().isEmpty()) {
+                        return Single.just(t);
+                    }else{
+                        return Single.error(new APIException(APIException.CODE_COMMON_EXCEPTION, Util.mapItems(t.getUserErrors(),Storefront.UserError::getMessage)));
+                    }
+                }).map(Storefront.CustomerDefaultAddressUpdatePayload::getCustomer)
                 .subscribeOn(Schedulers.io());
     }
 }

@@ -27,6 +27,7 @@ import com.whatsmode.shopify.WhatsApplication;
 import com.whatsmode.shopify.block.WebActivity;
 import com.whatsmode.shopify.block.cart.CartFragment;
 import com.whatsmode.shopify.block.cart.CartItem;
+import com.whatsmode.shopify.block.cart.JumpCartSelect;
 import com.whatsmode.shopify.common.Constant;
 import com.whatsmode.shopify.mvp.MvpActivity;
 import com.whatsmode.shopify.ui.helper.BaseFragmentAdapter;
@@ -34,6 +35,9 @@ import com.whatsmode.shopify.ui.helper.CategoryAdapter;
 import com.whatsmode.shopify.ui.helper.ToolbarHelper;
 import com.whatsmode.shopify.ui.widget.BottomBar;
 import com.whatsmode.shopify.ui.widget.NoScrollViewPager;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.io.IOException;
 import java.util.List;
@@ -65,6 +69,12 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
         ivLogo = (ImageView) findViewById(R.id.logo);
         bottomBar = (BottomBar)findViewById(R.id.bottomBar);
         getPresenter().initViewPage(getSupportFragmentManager());
+        EventBus.getDefault().register(this);
+    }
+
+    @Subscribe
+    public void receive(JumpCartSelect select){
+        vpContent.setCurrentItem(2);
     }
 
     @NonNull
@@ -210,6 +220,7 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
             popupWindow.dismiss();
         }
         popupWindow = null;
+        EventBus.getDefault().unregister(this);
     }
 
     @Override

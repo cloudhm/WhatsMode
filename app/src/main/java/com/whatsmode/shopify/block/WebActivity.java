@@ -22,6 +22,8 @@ import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ProgressBar;
 
+import com.whatsmode.library.rx.RxBus;
+import com.whatsmode.library.rx.RxUtil;
 import com.whatsmode.library.util.ListUtils;
 import com.whatsmode.library.util.PreferencesUtil;
 import com.whatsmode.library.util.RegexUtils;
@@ -30,9 +32,12 @@ import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.base.BaseActivity;
 import com.whatsmode.shopify.block.cart.BadgeActionProvider;
 import com.whatsmode.shopify.block.cart.CartItem;
+import com.whatsmode.shopify.block.cart.JumpCartSelect;
 import com.whatsmode.shopify.common.Constant;
 import com.whatsmode.shopify.ui.helper.ToolbarHelper;
 import com.zchu.log.Logger;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
 import java.util.List;
@@ -71,7 +76,10 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
         menuItemShare = menu.findItem(R.id.action_share);
         menuItemCart = menu.findItem(R.id.action_cart);
         mActionProvider = (BadgeActionProvider) MenuItemCompat.getActionProvider(menuItemCart);
-        mActionProvider.setOnClickListener(0, what -> AppNavigator.jumpToMain(this));// 设置点击监听。
+        mActionProvider.setOnClickListener(0, what -> {
+            AppNavigator.jumpToMain(this);
+            EventBus.getDefault().post(new JumpCartSelect());
+        });// 设置点击监听。
         initToolBar();
         return super.onCreateOptionsMenu(menu);
     }

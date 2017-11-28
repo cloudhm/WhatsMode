@@ -45,8 +45,7 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
             id = (ID) getIntent().getSerializableExtra(EXTRA_ID);
         }
         if (getIntent().hasExtra(EXTRA_BUNDLE)) {
-            CartItemLists cartItemLists = (CartItemLists) getIntent().getBundleExtra(EXTRA_BUNDLE).getSerializable(EXTRA_ITEMS);
-            dataSource = cartItemLists;
+            dataSource = (CartItemLists) getIntent().getBundleExtra(EXTRA_BUNDLE).getSerializable(EXTRA_ITEMS);
         }
         ToolbarHelper.initToolbarNoFix(this, R.id.toolbar, true, "CHECK OUT");
         TextView mTvSelectAddress = (TextView) findViewById(R.id.select_address);

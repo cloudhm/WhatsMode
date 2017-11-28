@@ -48,6 +48,7 @@ public class OrderListFragment extends MvpFragment<OrderListPresenter> implement
         mOrderListAdapter = new OrderListAdapter(
                 R.layout.item_order_item, mList
         );
+        mOrderListAdapter.setFragment(this);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mOrderListAdapter);

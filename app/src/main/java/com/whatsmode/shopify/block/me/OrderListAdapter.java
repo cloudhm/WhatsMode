@@ -1,9 +1,16 @@
 package com.whatsmode.shopify.block.me;
 
 import android.support.v7.util.DiffUtil;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.HeaderViewListAdapter;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.whatsmode.library.util.ScreenUtils;
+import com.whatsmode.library.util.Util;
 import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.block.address.Address;
 import com.whatsmode.shopify.block.address.diff.AddressListDiff;
@@ -23,17 +30,70 @@ public class OrderListAdapter extends CommonAdapter<Order> {
     }
 
     @Override
+    public CommonViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        CommonViewHolder commonViewHolder = super.onCreateViewHolder(parent, viewType);
+        commonViewHolder.itemView.setClickable(false);
+        return commonViewHolder;
+    }
+
+    @Override
     protected void convert(CommonViewHolder helper, Order item) {
-        helper.setText(R.id.order_num, "OrderNumber: "+String.valueOf(item.getOrderNumber()))
-            .setText(R.id.price,"TotalPrice: "+String.valueOf(item.getTotalPrice().intValue()));
         List<LineItem> lineItems = item.getLineItems();
-        String src = null;
-        if ((src = getSrc(lineItems)) != null) {
-            Glide.with(mContext).load(src).placeholder(R.mipmap.ic_launcher).into((ImageView) helper.getView(R.id.image_view));
-        }else{
-            Glide.with(mContext).load(R.mipmap.ic_launcher).placeholder(R.mipmap.ic_launcher).into((ImageView) helper.getView(R.id.image_view));
+        helper.setText(R.id.order_num, "Order#"+String.valueOf(item.getOrderNumber()))
+            .setText(R.id.price,"Total:$"+String.valueOf(item.getTotalPrice().intValue()))
+            .setText(R.id.items,String.valueOf(lineItems == null ? 0 : lineItems.size()) + " items");
+
+        ClickRecyclerView recyclerView = helper.getView(R.id.recycler_view);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(mContext,LinearLayoutManager.HORIZONTAL,false));
+        recyclerView.setAdapter(new ImageAdapter(R.layout.item_image_view,lineItems));
+        recyclerView.setOnRecyclerClickLinstener(new ClickRecyclerView.OnRecyclerClickLinstener() {
+            @Override
+            public void onRecyclerClick() {
+                mOrderListFragment.onItemClick(OrderListAdapter.this,helper.itemView, helper.getLayoutPosition());
+            }
+        });
+    }
+
+    OrderListFragment mOrderListFragment;
+
+    public void setFragment(OrderListFragment orderListFragment) {
+        mOrderListFragment = orderListFragment;
+    }
+
+    class ImageAdapter extends CommonAdapter<LineItem>{
+
+        public ImageAdapter(int layoutResId, List<LineItem> data) {
+            super(layoutResId, data);
         }
 
+        @Override
+        public CommonViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            CommonViewHolder commonViewHolder = super.onCreateViewHolder(parent, viewType);
+            ImageView imageView = commonViewHolder.getView(R.id.image_view);
+            ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
+            if (layoutParams == null) {
+                layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            }
+            int screenWidth = ScreenUtils.getScreenWidth(mContext);
+            int mar = ScreenUtils.dip2px(mContext, 16 + 16 + 8 * 4);
+            int width = (screenWidth - mar) / 4;
+            layoutParams.width = width;
+            layoutParams.height = (int)(width * 1.5);
+            imageView.setLayoutParams(layoutParams);
+            return commonViewHolder;
+        }
+
+        @Override
+        protected void convert(CommonViewHolder helper, LineItem item) {
+            LineItem.Variant variant = item.getVariant();
+            if (variant != null && variant.getImage() != null) {
+                String url = variant.getImage().getSrc();
+                Glide.with(mContext).load(url).placeholder(R.mipmap.ic_launcher).into((ImageView) helper.getView(R.id.image_view));
+            }else{
+                Glide.with(mContext).load(R.mipmap.ic_launcher).placeholder(R.mipmap.ic_launcher).into((ImageView) helper.getView(R.id.image_view));
+            }
+        }
     }
 
     private String getSrc(List<LineItem> lineItems){

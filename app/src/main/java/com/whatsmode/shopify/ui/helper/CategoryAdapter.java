@@ -10,6 +10,7 @@ import com.innodroid.expandablerecycler.ExpandableRecyclerAdapter;
 import com.whatsmode.shopify.AppNavigator;
 import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.WhatsApplication;
+import com.whatsmode.shopify.block.WebActivity;
 import com.whatsmode.shopify.common.Constant;
 
 import java.util.ArrayList;
@@ -73,7 +74,7 @@ public class CategoryAdapter extends ExpandableRecyclerAdapter<CategoryAdapter.C
         void bind(int position) {
             name.setText(visibleItems.get(position).Text);
             view.setOnClickListener(v ->
-                            AppNavigator.jumpToWebActivity(mContext,"",
+                            AppNavigator.jumpToWebActivity(mContext, WebActivity.STATE_COLLECTIONS,
                             new StringBuilder(Constant.WEB_PREFIX)
                                     .append(visibleItems.get(position).tag).toString()));
         }

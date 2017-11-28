@@ -103,7 +103,7 @@ public class RegexUtils {
     }
 
     public static boolean isProduct (String url){
-        return !TextUtils.isEmpty(url) && url.contains("/product/");
+        return !TextUtils.isEmpty(url) && (url.contains("/product/")||(url.contains("/products/")));
     }
 
     public static boolean isCollection(String url) {

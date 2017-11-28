@@ -4,11 +4,11 @@
     <string name="tabSecond">INFLUENCER</string>
     <string name="tabThird">MY CART</string>
     <string name="tabFourth">ACCOUNT</string>
-    <string name="search">搜索</string>
+    <string name="search">search</string>
     <string name="edit">Edit</string>
     <string name="done">Done</string>
-    <string name="save">保存</string>
-    <string name="no_more">已無更多</string>
+    <string name="save">save</string>
+    <string name="no_more">no more</string>
     <string name="sign_in">Sign in</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
@@ -25,13 +25,13 @@
     <string name="continue_text">Continue</string>
     <string name="back">Back</string>
     <string name="all">ALL</string>
-    <string name="cancel">CANCEL</string>
-    <string name="confirm">CONFIRM</string>
+    <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
     <string name="confirm_delete">CONFIRM DELETE CART ITEMS?</string>
     <string name="total_cost">" : %1$s"</string>
     <string name="delete">DELETE</string>
-    <string name="no_clear_error">服務器忙,請稍後再試</string>
-    <string name="plz_select_products">請選擇商品</string>
+    <string name="no_clear_error">the server is busying, please try later</string>
+    <string name="plz_select_products">please select pruducts</string>
     <string name="custom_know">Billing address-Use a different billing address</string>
     <string name="new_arrive">NEW</string>
     <string name="new_arrive_suffix">ARRIVALS</string>
@@ -55,6 +55,7 @@
     <string name="checkout">CHECKOUT</string>
     <string name="amount_all">Subtotal:</string>
     <string name="unit">US$</string>
+    <string name="share">SHARE</string>
 
     <array name="category">
         <item>APPAREL</item>

@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * Created by tom on 17-11-22.
@@ -104,22 +105,26 @@ public class LineItem implements Serializable{
         private String sku;
         private BigDecimal price;
         private Image image;
+        private List<SelectedOptions> selectedOptions;
+
+        public List<SelectedOptions> getSelectedOptions() {
+            return selectedOptions;
+        }
+
+        public void setSelectedOptions(List<SelectedOptions> selectedOptions) {
+            this.selectedOptions = selectedOptions;
+        }
 
         public Variant() {
         }
 
-        public Variant(boolean availableForSale, String title, String sku, BigDecimal price, Image image) {
+        public Variant(boolean availableForSale, String title, String sku, BigDecimal price, Image image, List<SelectedOptions> selectedOptions) {
             this.availableForSale = availableForSale;
             this.title = title;
             this.sku = sku;
             this.price = price;
             this.image = image;
-        }
-
-        protected Variant(Parcel in) {
-            availableForSale = in.readByte() != 0;
-            title = in.readString();
-            sku = in.readString();
+            this.selectedOptions = selectedOptions;
         }
 
         public boolean isAvailableForSale() {
@@ -178,6 +183,32 @@ public class LineItem implements Serializable{
 
             public void setSrc(String src) {
                 this.src = src;
+            }
+        }
+
+        public static class SelectedOptions implements Serializable{
+            private String name;
+            private String value;
+
+            public SelectedOptions(String name, String value) {
+                this.name = name;
+                this.value = value;
+            }
+
+            public String getName() {
+                return name;
+            }
+
+            public void setName(String name) {
+                this.name = name;
+            }
+
+            public String getValue() {
+                return value;
+            }
+
+            public void setValue(String value) {
+                this.value = value;
             }
         }
     }

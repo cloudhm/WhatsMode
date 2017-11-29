@@ -74,6 +74,7 @@
     <string name="shipping_cost">Shipping(Standard Shipping)</string>
     <string name="gift_card_hint">Gift card or Coupon code：</string>
     <string name="no_shipping_currently">No AvailableShippingRates now</string>
+    <string name="plz_select_address">please select your address</string>
 
     <array name="category">
         <item>APPAREL</item>

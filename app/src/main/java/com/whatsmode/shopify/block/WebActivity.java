@@ -83,7 +83,8 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.page_web);
         title = getIntent().getStringExtra(EXTRA_TITLE);
-        ToolbarHelper.initToolbar(this, R.id.toolbar, true, title);
+        ToolbarHelper.ToolbarHolder toolbarHolder = ToolbarHelper.initToolbar(this, R.id.toolbar, true, title);
+        toolbarHolder.titleView.setVisibility(View.VISIBLE);
         mWebView = (WebView) findViewById(R.id.webview);
         mWebView.getSettings().setUserAgentString("mobile-Android");
 

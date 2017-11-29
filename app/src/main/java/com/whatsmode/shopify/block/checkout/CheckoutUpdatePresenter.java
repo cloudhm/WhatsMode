@@ -20,25 +20,8 @@ public class CheckoutUpdatePresenter extends BaseRxPresenter<CheckoutUpdateConta
         switch (v.getId()) {
             case R.id.pay:
                 if (isViewAttached()) {
-                    getView().showLoading();
-                    ID checkoutId = getView().getCheckoutId();
-                    CartRepository.create().bindUser(checkoutId)
-                            .updateCheckoutListener(new CartRepository.UpdateCheckoutListener() {
-                                @Override
-                                public void onSuccess(String url) {
-                                    if (isViewAttached())
-                                    getView().showSuccess(url);
-                                }
-
-                                @Override
-                                public void onError(String message) {
-                                    if(isViewAttached())
-                                    getView().showError(message);
-                                }
-                            })
-                            .bindAddress(getView().getAddress());
+                    getView().jumpToPay();
                 }
-
                 break;
             case R.id.sign_in_icon:
                 if (isViewAttached()) {
@@ -55,11 +38,6 @@ public class CheckoutUpdatePresenter extends BaseRxPresenter<CheckoutUpdateConta
                     getView().checkGiftCard();
                 }
                 break;
-//            case R.id.select_gift:
-//                if (isViewAttached()) {
-//                    getView().checkGiftCard();
-//                }
-//                break;
             case R.id.shipping_method_layout:
                 if(isViewAttached())
                 checkShippingMethods(getView().getCheckoutId());
@@ -95,9 +73,9 @@ public class CheckoutUpdatePresenter extends BaseRxPresenter<CheckoutUpdateConta
         CartRepository.create().bindUser(id)
                 .shippingListener(new CartRepository.ShippingListener() {
                     @Override
-                    public void onSuccess(List<Storefront.ShippingRate> shippingRates) {
+                    public void onSuccess(List<Storefront.ShippingRate> shippingRates,String url) {
                         if (isViewAttached()) {
-                            getView().onShippingResponse(shippingRates);
+                            getView().onShippingResponse(shippingRates,url);
                         }
                     }
 
@@ -118,7 +96,6 @@ public class CheckoutUpdatePresenter extends BaseRxPresenter<CheckoutUpdateConta
                     @Override
                     public void onSuccess(String url) {
                         if (isViewAttached()) {
-                            getView().hideLoading();
                             checkShippingMethods(id);
                         }
                     }

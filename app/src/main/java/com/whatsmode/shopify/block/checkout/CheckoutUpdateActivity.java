@@ -16,6 +16,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.shopify.buy3.Storefront;
 import com.shopify.graphql.support.ID;
 import com.whatsmode.library.util.ListUtils;
 import com.whatsmode.library.util.PreferencesUtil;
@@ -60,6 +61,9 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
     private TextView mTvName;
     private TextView mTvPhone;
     private TextView mTvAddressDetail;
+    private TextView mTvShippingMethod;
+    private Double shippingCost;
+    private TextView mTvShippingCost;
 
     @NonNull
     @Override
@@ -78,14 +82,18 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
         addAddressLayout = (LinearLayout) findViewById(R.id.add_address);
         findViewById(R.id.iv_add).setOnClickListener(this);
 
+        //findViewById(R.id.shipping_method_layout).setOnClickListener(this);
+
         mTvName = (TextView) findViewById(R.id.name);
         mTvPhone = (TextView) findViewById(R.id.phone);
         mTvAddressDetail = (TextView) findViewById(R.id.detail_address);
+        mTvShippingCost = (TextView) findViewById(R.id.shipping_cost);
 
+        mTvShippingMethod = (TextView) findViewById(R.id.shiping_method);
         findViewById(R.id.check_card).setOnClickListener(this);
         addressDetailLayout = (RelativeLayout) findViewById(R.id.address_detail);
         getParseData();
-        ToolbarHelper.ToolbarHolder toolbarHolder = ToolbarHelper.initToolbarNoFix(this, R.id.toolbar, true, "CHECK OUT");
+        ToolbarHelper.ToolbarHolder toolbarHolder = ToolbarHelper.initToolbar(this, R.id.toolbar, true, "CHECK OUT");
         toolbarHolder.titleView.setVisibility(View.VISIBLE);
         layoutContainer = (LinearLayout) findViewById(R.id.container);
         addItemToLayout();
@@ -136,6 +144,8 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
                 case REQUEST_CODE_ADDRESS:
                     mCurrentAddr = (Address) data.getSerializableExtra(KeyConstant.KEY_EXTRA_SELECT_ADDRESS);
                     fillAddress();
+                    showLoading();
+                    mPresenter.bindAddress(id,mCurrentAddr);
                     Logger.e(mCurrentAddr);
                     break;
             }
@@ -148,7 +158,8 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
             return;
         }
         mTvName.setText(mCurrentAddr.getName());
-        mTvPhone.setText(new StringBuilder()
+        mTvPhone.setText(mCurrentAddr.getPhone());
+        mTvAddressDetail.setText(new StringBuilder()
                 .append(mCurrentAddr.getAddress1())
                 .append(mCurrentAddr.getAddress2())
                 .append(mCurrentAddr.getCity())
@@ -270,5 +281,17 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
         runOnUiThread(() ->{
             hideLoading();
             ToastUtil.showToast(message);});
+    }
+
+    @Override
+    public void onShippingResponse(List<Storefront.ShippingRate> shippingRates) {
+        runOnUiThread(() -> {
+            if (ListUtils.isEmpty(shippingRates)) {
+                return;
+            }
+            mTvShippingMethod.setText(shippingRates.get(0).getTitle());
+            shippingCost = shippingRates.get(0).getPrice().doubleValue();
+            mTvShippingCost.setText(new StringBuilder("+$").append(String.valueOf(shippingCost)));
+        });
     }
 }

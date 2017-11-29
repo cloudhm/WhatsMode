@@ -8,7 +8,7 @@
         android:visible="false"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/action_delete"
+        android:id="@+id/action_edit"
         android:title="@string/edit"
         app:showAsAction="withText|ifRoom"
         android:visible="false" />

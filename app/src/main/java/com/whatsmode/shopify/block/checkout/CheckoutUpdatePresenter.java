@@ -3,11 +3,15 @@ package com.whatsmode.shopify.block.checkout;
 import android.text.TextUtils;
 import android.view.View;
 
+import com.shopify.buy3.Storefront;
 import com.shopify.graphql.support.ID;
 import com.whatsmode.library.util.ToastUtil;
 import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.base.BaseRxPresenter;
+import com.whatsmode.shopify.block.address.Address;
 import com.whatsmode.shopify.block.cart.CartRepository;
+
+import java.util.List;
 
 public class CheckoutUpdatePresenter extends BaseRxPresenter<CheckoutUpdateContact.View> implements CheckoutUpdateContact.Presenter{
 
@@ -56,6 +60,10 @@ public class CheckoutUpdatePresenter extends BaseRxPresenter<CheckoutUpdateConta
 //                    getView().checkGiftCard();
 //                }
 //                break;
+            case R.id.shipping_method_layout:
+                if(isViewAttached())
+                checkShippingMethods(getView().getCheckoutId());
+                break;
         }
     }
 
@@ -84,6 +92,44 @@ public class CheckoutUpdatePresenter extends BaseRxPresenter<CheckoutUpdateConta
 
     @Override
     public void checkShippingMethods(ID id) {
-        // TODO: 2017/11/29
+        CartRepository.create().bindUser(id)
+                .shippingListener(new CartRepository.ShippingListener() {
+                    @Override
+                    public void onSuccess(List<Storefront.ShippingRate> shippingRates) {
+                        if (isViewAttached()) {
+                            getView().onShippingResponse(shippingRates);
+                        }
+                    }
+
+                    @Override
+                    public void onError(String message) {
+                        if (isViewAttached()) {
+                            getView().showError(message);
+                        }
+                    }
+                })
+                .shippingMethods();
+    }
+
+    @Override
+    public void bindAddress(ID id, Address a) {
+        CartRepository.create().bindUser(id)
+                .updateCheckoutListener(new CartRepository.UpdateCheckoutListener() {
+                    @Override
+                    public void onSuccess(String url) {
+                        if (isViewAttached()) {
+                            getView().hideLoading();
+                            checkShippingMethods(id);
+                        }
+                    }
+
+                    @Override
+                    public void onError(String message) {
+                        if (isViewAttached()) {
+                            getView().showError(message);
+                        }
+                    }
+                })
+                .bindAddress(a);
     }
 }

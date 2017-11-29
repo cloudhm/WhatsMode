@@ -28,7 +28,7 @@ public class CheckGiftCardActivity extends BaseActivity implements View.OnClickL
         if (getIntent().hasExtra(EXTRA_CHECKOUT)) {
             checkoutId = (ID) getIntent().getSerializableExtra(EXTRA_CHECKOUT);
         }
-        ToolbarHelper.initToolbarNoFix(this, R.id.toolbar, true, getString(R.string.gift_card));
+        ToolbarHelper.initToolbar(this, R.id.toolbar, true, getString(R.string.gift_card));
         Button mBtnApply = (Button) findViewById(R.id.check);
         mEtGiftNumber = (EditText) findViewById(R.id.cardEdit);
         mBtnApply.setOnClickListener(this);

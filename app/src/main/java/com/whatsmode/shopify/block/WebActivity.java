@@ -83,14 +83,13 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.page_web);
         title = getIntent().getStringExtra(EXTRA_TITLE);
-        ToolbarHelper.initToolbarNoFix(this, R.id.toolbar, true, title);
+        ToolbarHelper.initToolbar(this, R.id.toolbar, true, title);
         mWebView = (WebView) findViewById(R.id.webview);
         mWebView.getSettings().setUserAgentString("mobile-Android");
 
         btnAddToCart = (Button) findViewById(R.id.add_to_cart);
         btnAddToCart.setOnClickListener(this);
         mProgressBar = (ProgressBar) findViewById(R.id.indeterminateBar);
-        ToolbarHelper.initToolbarNoFix(this, R.id.toolbar, true, "");
         url = getIntent().getStringExtra(EXTRA_URL);
         if (!TextUtils.isEmpty(url)){
             initWebTitle();

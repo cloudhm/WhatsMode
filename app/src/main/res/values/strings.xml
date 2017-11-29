@@ -73,6 +73,7 @@
     <string name="add_address">add shipping address</string>
     <string name="shipping_cost">Shipping(Standard Shipping)</string>
     <string name="gift_card_hint">Gift card or Coupon code：</string>
+    <string name="no_shipping_currently">No AvailableShippingRates now</string>
 
     <array name="category">
         <item>APPAREL</item>

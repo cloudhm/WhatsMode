@@ -117,10 +117,11 @@
 
 
                     <RelativeLayout
+                        android:id="@+id/shipping_method_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/line"
-                        android:layout_marginTop="15dp">
+                        android:paddingTop="15dp">
 
                         <TextView
                             android:id="@+id/text_ship"

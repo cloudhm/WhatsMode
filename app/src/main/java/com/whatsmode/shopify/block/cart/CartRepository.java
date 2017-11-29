@@ -15,6 +15,7 @@ import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.WhatsApplication;
 import com.whatsmode.shopify.block.account.data.AccountManager;
 import com.whatsmode.shopify.block.address.Address;
+import com.zchu.log.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,8 +32,9 @@ public class CartRepository {
     private QueryListener mListener;
     private UpdateCheckoutListener updateCheckoutListener;
     private ID checkoutId;
+    private ShippingListener shippingListener;
 
-    private CartRepository(){
+    private CartRepository() {
         client = WhatsApplication.getGraphClient();
     }
 
@@ -43,18 +45,23 @@ public class CartRepository {
         return cartRepository;
     }
 
-    CartRepository parameter(List<CartItem> dataSource){
+    CartRepository parameter(List<CartItem> dataSource) {
         this.dataSource = dataSource;
         return cartRepository;
     }
 
-    CartRepository checkoutListener(QueryListener listener){
+    CartRepository checkoutListener(QueryListener listener) {
         this.mListener = listener;
         return cartRepository;
     }
 
     public CartRepository updateCheckoutListener(UpdateCheckoutListener listener) {
         updateCheckoutListener = listener;
+        return cartRepository;
+    }
+
+    public CartRepository shippingListener(ShippingListener listener) {
+        this.shippingListener = listener;
         return cartRepository;
     }
 
@@ -65,28 +72,28 @@ public class CartRepository {
 
     public void bindAddress(Address address) {
         Storefront.MailingAddressInput input = new Storefront.MailingAddressInput()
-                        .setAddress1(address.getAddress1())
-                        .setAddress2(address.getAddress2())
-                        .setCity(address.getCity())
-                        .setCountry(address.getCountry())
-                        .setFirstName(address.getFirstName())
-                        .setLastName(address.getLastName())
-                        .setPhone(address.getPhone())
-                        .setProvince(address.getProvince())
-                        .setZip(address.getZip());
+                .setAddress1(address.getAddress1())
+                .setAddress2(address.getAddress2())
+                .setCity(address.getCity())
+                .setCountry(address.getCountry())
+                .setFirstName(address.getFirstName())
+                .setLastName(address.getLastName())
+                .setPhone(address.getPhone())
+                .setProvince(address.getProvince())
+                .setZip(address.getZip());
         Storefront.MutationQuery query = Storefront.mutation(mutationQuery
-                        -> mutationQuery.checkoutEmailUpdate(checkoutId, AccountManager.getUsername(), emailUpdatePayloadQuery
-                        -> emailUpdatePayloadQuery.checkout(checkoutQuery
-                        -> checkoutQuery.webUrl()).userErrors(userErrorQuery
-                        -> userErrorQuery.field().message())).checkoutShippingAddressUpdate(input, checkoutId, shippingAddressUpdatePayloadQuery
-                        -> shippingAddressUpdatePayloadQuery.checkout(checkoutQuery
-                        -> checkoutQuery.webUrl().shippingAddress(new Storefront.MailingAddressQueryDefinition() {
-                            @Override
-                            public void define(Storefront.MailingAddressQuery _queryBuilder) {
-                                _queryBuilder.firstName().address1();
-                            }
-                        })).userErrors(userErrorQuery
-                        -> userErrorQuery.field().message())));
+                -> mutationQuery.checkoutEmailUpdate(checkoutId, AccountManager.getUsername(), emailUpdatePayloadQuery
+                -> emailUpdatePayloadQuery.checkout(checkoutQuery
+                -> checkoutQuery.webUrl()).userErrors(userErrorQuery
+                -> userErrorQuery.field().message())).checkoutShippingAddressUpdate(input, checkoutId, shippingAddressUpdatePayloadQuery
+                -> shippingAddressUpdatePayloadQuery.checkout(checkoutQuery
+                -> checkoutQuery.webUrl().shippingAddress(new Storefront.MailingAddressQueryDefinition() {
+            @Override
+            public void define(Storefront.MailingAddressQuery _queryBuilder) {
+                _queryBuilder.firstName().address1();
+            }
+        })).userErrors(userErrorQuery
+                -> userErrorQuery.field().message())));
 
         client.mutateGraph(query)
                 .enqueue(new GraphCall.Callback<Storefront.Mutation>() {
@@ -96,8 +103,8 @@ public class CartRepository {
                             if (updateCheckoutListener != null) {
                                 updateCheckoutListener.onError(response.data().getCheckoutShippingAddressUpdate().getUserErrors().get(0).getMessage());
                             }
-                        }else if (updateCheckoutListener != null) {
-                                updateCheckoutListener.onSuccess(response.data().getCheckoutShippingAddressUpdate().getCheckout().getWebUrl());
+                        } else if (updateCheckoutListener != null) {
+                            updateCheckoutListener.onSuccess(response.data().getCheckoutShippingAddressUpdate().getCheckout().getWebUrl());
                         }
                     }
 
@@ -110,7 +117,7 @@ public class CartRepository {
                 });
     }
 
-    void execute(){
+    void execute() {
 
         Storefront.MutationQuery query = Storefront.mutation(mutationQuery -> mutationQuery
                 .checkoutCreate(generateInput(dataSource), createPayloadQuery -> createPayloadQuery
@@ -124,7 +131,8 @@ public class CartRepository {
                 )
         );
         client.mutateGraph(query).enqueue(new GraphCall.Callback<Storefront.Mutation>() {
-            @Override public void onResponse(@NonNull GraphResponse<Storefront.Mutation> response) {
+            @Override
+            public void onResponse(@NonNull GraphResponse<Storefront.Mutation> response) {
                 if (response.data() == null || response.data().getCheckoutCreate() == null) {
                     if (mListener != null) {
                         mListener.onError(WhatsApplication.getContext().getString(R.string.no_clear_error));
@@ -145,7 +153,8 @@ public class CartRepository {
                 }
             }
 
-            @Override public void onFailure(@NonNull GraphError error) {
+            @Override
+            public void onFailure(@NonNull GraphError error) {
                 // handle errors
                 if (mListener != null) {
                     mListener.onError(error.getMessage());
@@ -156,12 +165,12 @@ public class CartRepository {
 
     @TargetApi(Build.VERSION_CODES.N)
     private Storefront.CheckoutCreateInput generateInput(List<CartItem> data) {
-            ArrayList<Storefront.CheckoutLineItemInput> arrayList =
-                    data.stream().map(cartItem ->
-                            new Storefront.CheckoutLineItemInput(cartItem.quality, new ID(cartItem.id)))
-                            .collect(Collectors.toCollection(ArrayList::new));
-            return new Storefront.CheckoutCreateInput()
-                    .setLineItemsInput(Input.value(arrayList));
+        ArrayList<Storefront.CheckoutLineItemInput> arrayList =
+                data.stream().map(cartItem ->
+                        new Storefront.CheckoutLineItemInput(cartItem.quality, new ID(cartItem.id)))
+                        .collect(Collectors.toCollection(ArrayList::new));
+        return new Storefront.CheckoutCreateInput()
+                .setLineItemsInput(Input.value(arrayList));
     }
 
     public void checkout(String checkoutId, String s, GiftCheckListener giftCheckListener) {
@@ -183,7 +192,7 @@ public class CartRepository {
                                 giftCheckListener.exist(String.valueOf(response.data().getCheckoutGiftCardApply()
                                         .getCheckout().getAppliedGiftCards()
                                         .get(0).getBalance()));
-                            }else{
+                            } else {
                                 giftCheckListener.illegal(response.data().getCheckoutGiftCardApply().getUserErrors().get(0).getMessage());
                             }
                         }
@@ -198,18 +207,68 @@ public class CartRepository {
                 });
     }
 
-    public interface QueryListener {
-        void onSuccess(ID id);
+    public void shippingMethods() {
+        Storefront.QueryRootQuery query = Storefront.query(rootQuery -> rootQuery
+                .node(checkoutId, nodeQuery -> nodeQuery
+                        .onCheckout(checkoutQuery -> checkoutQuery
+                                .availableShippingRates(availableShippingRatesQuery -> availableShippingRatesQuery
+                                        .ready()
+                                        .shippingRates(shippingRateQuery -> shippingRateQuery
+                                                .handle()
+                                                .price()
+                                                .title()
+                                        )
+                                )
+                        )
+                )
+        );
+        client.queryGraph(query)
+                .enqueue(new GraphCall.Callback<Storefront.QueryRoot>() {
+                    @Override
+                    public void onResponse(@android.support.annotation.NonNull GraphResponse<Storefront.QueryRoot> response) {
+                        if (shippingListener == null) {
+                            return;
+                        }
+                        Storefront.Checkout check = (Storefront.Checkout) response.data().getNode();
+                        if (check != null) {
+                            List<Storefront.ShippingRate> shippingRates = check.getAvailableShippingRates().getShippingRates();
+                            shippingListener.onSuccess(shippingRates);
+                        } else {
+                            shippingListener.onError(WhatsApplication.getContext().getString(R.string.no_shipping_currently));
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@android.support.annotation.NonNull GraphError error) {
+                        if (shippingListener == null) {
+                            return;
+                        }
+                        shippingListener.onError(error.getMessage());
+                    }
+                });
+    }
+
+    public interface ShippingListener {
+        void onSuccess(List<Storefront.ShippingRate> shippingRates);
+
         void onError(String message);
     }
 
-    public interface GiftCheckListener{
+    public interface QueryListener {
+        void onSuccess(ID id);
+
+        void onError(String message);
+    }
+
+    public interface GiftCheckListener {
         void exist(String balance);
+
         void illegal(String message);
     }
 
     public interface UpdateCheckoutListener {
         void onSuccess(String url);
+
         void onError(String message);
     }
 }

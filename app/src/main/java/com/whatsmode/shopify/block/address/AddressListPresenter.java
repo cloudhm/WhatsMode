@@ -32,7 +32,7 @@ public class AddressListPresenter extends BaseRxPresenter<AddressListContract.Vi
         addSubscribe(AddressRepository.create().getAddressListObservable(AccountManager.getCustomerAccessToken(),query)
                 .map(m -> {
                     Storefront.MailingAddress defaultAddress = m.getDefaultAddress();
-                    String defaultId = defaultAddress.getId().toString();
+                    String defaultId = getDefaultId(defaultAddress);
                     Storefront.MailingAddressConnection addresses = m.getAddresses();
                     Address.sHasNextPage = addresses.getPageInfo().getHasNextPage();
                     List<Storefront.MailingAddressEdge> edges = addresses.getEdges();
@@ -40,7 +40,8 @@ public class AddressListPresenter extends BaseRxPresenter<AddressListContract.Vi
                     if (edges != null && !edges.isEmpty()) {
                         for (Storefront.MailingAddressEdge edge : edges) {
                             Storefront.MailingAddress node = edge.getNode();
-                            Address address = new Address(node.getId().toString(),node.getAddress1(),node.getAddress2(),
+                            if(node == null) continue;
+                            Address address = new Address(String.valueOf(node.getId()),node.getAddress1(),node.getAddress2(),
                                     node.getCity(),node.getProvince(),node.getProvinceCode(),node.getCountry(),node.getCountryCode(),
                                     node.getCompany(),node.getFirstName(),node.getLastName(), node.getName(),
                                     node.getPhone(),node.getZip(),edge.getCursor());
@@ -87,14 +88,24 @@ public class AddressListPresenter extends BaseRxPresenter<AddressListContract.Vi
 
     }
 
+    private String getDefaultId(Storefront.MailingAddress defaultAddress){
+        if (defaultAddress == null || defaultAddress.getId() == null) {
+            return "";
+        }
+        return defaultAddress.getId().toString();
+    }
+
     @Override
     public void loadModeAddressList() {
         if(cursor == null) return;
         AddressQuery query = new AddressQuery(false, pageSize,cursor);
         AddressRepository.create().getAddressList(AccountManager.getCustomerAccessToken(),query)
                 .map(m -> {
-                    Address.sHasNextPage = m.getPageInfo().getHasNextPage();
-                    List<Storefront.MailingAddressEdge> edges = m.getEdges();
+                    Storefront.MailingAddress defaultAddress = m.getDefaultAddress();
+                    String defaultId = getDefaultId(defaultAddress);
+                    Storefront.MailingAddressConnection addresses = m.getAddresses();
+                    Address.sHasNextPage = addresses.getPageInfo().getHasNextPage();
+                    List<Storefront.MailingAddressEdge> edges = addresses.getEdges();
                     List<Address> addressList = new ArrayList<Address>();
                     if (edges != null && !edges.isEmpty()) {
                         for (Storefront.MailingAddressEdge edge : edges) {
@@ -103,6 +114,11 @@ public class AddressListPresenter extends BaseRxPresenter<AddressListContract.Vi
                                     node.getCity(),node.getProvince(),node.getProvinceCode(),node.getCountry(),node.getCountryCode(),
                                     node.getCompany(),node.getFirstName(),node.getLastName(), node.getName(),
                                     node.getPhone(),node.getZip(),edge.getCursor());
+                            if (TextUtils.equals(node.getId().toString(), defaultId)) {
+                                address.setDefault(true);
+                            }else{
+                                address.setDefault(false);
+                            }
                             addressList.add(address);
                         }
                     }

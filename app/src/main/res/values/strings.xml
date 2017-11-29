@@ -71,9 +71,8 @@
     <string name="pay">PAY</string>
     <string name="total_text">Subtotal</string>
     <string name="add_address">add shipping address</string>
-    <string name="subtotal">Subtotal</string>
     <string name="shipping_cost">Shipping(Standard Shipping)</string>
-    <string name="taxes">Taxes</string>
+    <string name="gift_card_hint">Gift card or Coupon code：</string>
 
     <array name="category">
         <item>APPAREL</item>

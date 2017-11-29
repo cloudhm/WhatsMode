@@ -28,7 +28,6 @@ import com.whatsmode.shopify.base.BaseActivity;
 import com.whatsmode.shopify.block.cart.BadgeActionProvider;
 import com.whatsmode.shopify.block.cart.JumpCartSelect;
 import com.whatsmode.shopify.ui.helper.ToolbarHelper;
-import com.zchu.log.Logger;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -86,7 +85,7 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
         title = getIntent().getStringExtra(EXTRA_TITLE);
         ToolbarHelper.initToolbarNoFix(this, R.id.toolbar, true, title);
         mWebView = (WebView) findViewById(R.id.webview);
-        mWebView.getSettings().setUserAgentString("mobile");
+        mWebView.getSettings().setUserAgentString("mobile-Android");
 
         btnAddToCart = (Button) findViewById(R.id.add_to_cart);
         btnAddToCart.setOnClickListener(this);

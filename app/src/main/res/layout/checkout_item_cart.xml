@@ -54,6 +54,16 @@
         android:textSize="14sp" />
 
     <TextView
+        android:text="USD"
+        android:textSize="10sp"
+        android:textColor="@color/gray_d5d5d5"
+        android:layout_alignBottom="@+id/icon"
+        android:layout_toRightOf="@+id/price"
+        android:layout_marginLeft="3dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />w
+
+    <TextView
         android:id="@+id/checkout_count"
         android:layout_width="wrap_content"
         android:layout_alignParentRight="true"

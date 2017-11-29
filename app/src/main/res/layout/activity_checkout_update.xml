@@ -157,7 +157,7 @@
                     android:gravity="left|center_vertical"
                     android:paddingLeft="15dp"
                     android:singleLine="true"
-                    android:text="ABCDEFGHI"
+                    android:hint="@string/gift_card_hint"
                     android:textColor="@color/gray_333333"
                     android:textSize="14sp" />
 
@@ -168,12 +168,14 @@
                     android:gravity="center_vertical"
                     android:paddingLeft="15dp"
                     android:paddingRight="3dp"
-                    android:text="-$0.21"
+                    android:text=""
                     android:textColor="@color/btn_sure"
                     android:textSize="14sp" />
 
                 <TextView
+                    android:id="@+id/gift_unit"
                     android:layout_width="wrap_content"
+                    android:visibility="gone"
                     android:layout_height="wrap_content"
                     android:text="USD"
                     android:textColor="@color/btn_sure"
@@ -186,7 +188,7 @@
                     android:layout_marginLeft="30dp"
                     android:background="@color/gray_333333"
                     android:gravity="center"
-                    android:text="APPLY"
+                    android:text="Apply"
                     android:textColor="@color/white"
                     android:textSize="14sp" />
             </LinearLayout>
@@ -204,6 +206,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="30dp"
                 android:background="@color/white"
                 android:orientation="vertical">
 

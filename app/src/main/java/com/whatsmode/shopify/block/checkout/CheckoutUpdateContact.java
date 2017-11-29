@@ -22,11 +22,23 @@ public class CheckoutUpdateContact {
 
         Address getAddress();
 
-        void jumpToGiftSelect();
+        void checkGiftCard();
+
+        void jumpToLogin();
+
+        void jumpToSelectAddress();
+
+        void showGiftCardLegal(String balance);
+
+        void showGiftIllegal(String message);
     }
 
     interface Presenter extends MvpPresenter<View> {
 
         void onClickView(android.view.View v);
+
+        void checkGiftCard(String cardNum, ID id);
+
+        void checkShippingMethods(ID id);
     }
 }

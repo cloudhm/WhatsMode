@@ -89,6 +89,10 @@ public class SettingInfoPresenter extends BaseRxPresenter<SettingInfoContract.Vi
     @Override
     public void signout() {
         MyRepository.create().signout(AccountManager.getCustomerAccessToken(),new SignoutFragment())
+                .map(t -> {
+                    AccountManager.getInstance().writeCustomerAccessToken(null);
+                    return t;
+                })
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new SingleObserver<String>() {
                     @Override

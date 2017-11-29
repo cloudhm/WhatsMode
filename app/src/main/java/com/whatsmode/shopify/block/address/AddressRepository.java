@@ -34,7 +34,7 @@ public class AddressRepository {
         return new AddressRepository();
     }
 
-    public Single<Storefront.MailingAddressConnection> getAddressList(String customerAccessToken, Storefront.CustomerQueryDefinition queryDef){
+    public Single<Storefront.Customer> getAddressList(String customerAccessToken, Storefront.CustomerQueryDefinition queryDef){
         QueryGraphCall call = mGraphClient.queryGraph(Storefront.query(q ->  q.customer(customerAccessToken, queryDef)))
                 .cachePolicy(HttpCachePolicy.NETWORK_FIRST.expireAfter(20, TimeUnit.MINUTES));
 
@@ -47,7 +47,7 @@ public class AddressRepository {
                     }
                 })
                 .map(Storefront.QueryRoot::getCustomer)
-                .map(Storefront.Customer::getAddresses)
+                //.map(Storefront.Customer::getAddresses)
                 .subscribeOn(Schedulers.io());
     }
 

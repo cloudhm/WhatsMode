@@ -124,7 +124,7 @@ public class AddEditAddressActivity extends MvpActivity<AddEditAddressPresenter>
         if (mAddress == null) {
             mAddress = new Address(null,address1,address2,city,province,null,country,null,null,firstName,lastName,null,phone,zip,null);
         }else {
-            if (TextUtils.isEmpty(mAddress.getId())) {
+            if (TextUtils.isEmpty(mAddress.getId()) && mType == TYPE_EDIT_ADDRESS) {
                 SnackUtil.toastShow(this,"ID can't be empty");
                 return ;
             }

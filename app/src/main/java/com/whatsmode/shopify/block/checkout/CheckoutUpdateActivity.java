@@ -15,6 +15,7 @@ import com.whatsmode.library.util.ToastUtil;
 import com.whatsmode.shopify.AppNavigator;
 import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.block.WebActivity;
+import com.whatsmode.shopify.block.account.data.AccountManager;
 import com.whatsmode.shopify.block.address.Address;
 import com.whatsmode.shopify.block.cart.CartItem;
 import com.whatsmode.shopify.block.cart.CartItemLists;
@@ -30,7 +31,6 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
     public ID id;
     private CartItemLists dataSource;
     private LinearLayout layoutContainer;
-    private ToolbarHelper.ToolbarHolder toolbarHolder;
 
     @NonNull
     @Override
@@ -48,7 +48,7 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
         if (getIntent().hasExtra(EXTRA_BUNDLE)) {
             dataSource = (CartItemLists) getIntent().getBundleExtra(EXTRA_BUNDLE).getSerializable(EXTRA_ITEMS);
         }
-        toolbarHolder = ToolbarHelper.initToolbarNoFix(this, R.id.toolbar, true, "CHECK OUT");
+        ToolbarHelper.ToolbarHolder toolbarHolder = ToolbarHelper.initToolbarNoFix(this, R.id.toolbar, true, "CHECK OUT");
         toolbarHolder.titleView.setVisibility(View.VISIBLE);
         layoutContainer = (LinearLayout) findViewById(R.id.container);
         addItemToLayout();
@@ -56,7 +56,7 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
 
     private void addItemToLayout() {
         if(dataSource == null || ListUtils.isEmpty(dataSource.cartItems))
-        return;
+            return;
         for (CartItem i : dataSource.cartItems) {
             View view = LayoutInflater.from(this).inflate(R.layout.item_cart, null);
             TextView tvName = (TextView) view.findViewById(R.id.description);

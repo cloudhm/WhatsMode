@@ -84,6 +84,6 @@ public class CheckoutUpdatePresenter extends BaseRxPresenter<CheckoutUpdateConta
 
     @Override
     public void checkShippingMethods(ID id) {
-        // TODO: 2017/11/29  
+        // TODO: 2017/11/29
     }
 }

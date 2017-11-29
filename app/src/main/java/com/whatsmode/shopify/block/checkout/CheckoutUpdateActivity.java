@@ -30,8 +30,10 @@ import com.whatsmode.shopify.block.address.AddressListActivity;
 import com.whatsmode.shopify.block.cart.CartItem;
 import com.whatsmode.shopify.block.cart.CartItemLists;
 import com.whatsmode.shopify.common.Constant;
+import com.whatsmode.shopify.common.KeyConstant;
 import com.whatsmode.shopify.mvp.MvpActivity;
 import com.whatsmode.shopify.ui.helper.ToolbarHelper;
+import com.zchu.log.Logger;
 
 import java.io.IOException;
 import java.util.List;
@@ -50,11 +52,14 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
     private RelativeLayout addressDetailLayout;
     private Address mCurrentAddr;
     private boolean mCreateState;
-    public  int REQUEST_CODE_ADDRESS = 1001;
+    public  static final int REQUEST_CODE_ADDRESS = 1001;
     private EditText etGiftCard;
     private TextView mTvGiftAmount;
     private TextView mTvGiftUnit;
     private Double mBalance;
+    private TextView mTvName;
+    private TextView mTvPhone;
+    private TextView mTvAddressDetail;
 
     @NonNull
     @Override
@@ -72,6 +77,10 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
 
         addAddressLayout = (LinearLayout) findViewById(R.id.add_address);
         findViewById(R.id.iv_add).setOnClickListener(this);
+
+        mTvName = (TextView) findViewById(R.id.name);
+        mTvPhone = (TextView) findViewById(R.id.phone);
+        mTvAddressDetail = (TextView) findViewById(R.id.detail_address);
 
         findViewById(R.id.check_card).setOnClickListener(this);
         addressDetailLayout = (RelativeLayout) findViewById(R.id.address_detail);
@@ -119,8 +128,31 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case REQUEST_CODE_ADDRESS:
+                    mCurrentAddr = (Address) data.getSerializableExtra(KeyConstant.KEY_EXTRA_SELECT_ADDRESS);
+                    fillAddress();
+                    Logger.e(mCurrentAddr);
+                    break;
+            }
+        }
+    }
+
     private void fillAddress() {
         // TODO: 2017/11/29
+        if (mCurrentAddr == null) {
+            return;
+        }
+        mTvName.setText(mCurrentAddr.getName());
+        mTvPhone.setText(new StringBuilder()
+                .append(mCurrentAddr.getAddress1())
+                .append(mCurrentAddr.getAddress2())
+                .append(mCurrentAddr.getCity())
+                .append(mCurrentAddr.getCountry()));
     }
 
     private void addItemToLayout() {

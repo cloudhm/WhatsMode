@@ -55,6 +55,18 @@
     <string name="checkout">CHECKOUT</string>
     <string name="amount_all">Subtotal:</string>
     <string name="unit">US$</string>
+    <string name="address">Address</string>
+    <string name="product">Product</string>
+    <string name="price_information">Price Information</string>
+    <string name="subtotal">Subtotal</string>
+    <string name="shipping_standard_shipping">Shipping(Standard Shipping)</string>
+    <string name="taxes">Taxes</string>
+    <string name="coupon">Coupon</string>
+    <string name="total">Total</string>
+    <string name="order_">Order#</string>
+    <string name="dollar_sign">$</string>
+    <string name="sku_">SKU:</string>
+    <string name="order_details">Order Details</string>
     <string name="share">SHARE</string>
 
     <array name="category">

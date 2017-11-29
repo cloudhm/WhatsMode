@@ -1,17 +1,12 @@
 package com.whatsmode.shopify.block.me;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.shopify.buy3.Storefront;
 import com.whatsmode.library.exception.APIException;
-import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.base.BaseRxPresenter;
 import com.whatsmode.shopify.block.account.data.AccountManager;
 import com.whatsmode.shopify.block.address.Address;
 import com.whatsmode.shopify.block.address.LoadType;
-import com.whatsmode.shopify.block.cart.CartItem;
 import com.whatsmode.shopify.common.Constant;
-import com.whatsmode.shopify.ui.helper.CommonAdapter;
-import com.whatsmode.shopify.ui.helper.CommonViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +39,7 @@ public class OrderListPresenter extends BaseRxPresenter<OrderListContract.View> 
                             List<LineItem> lineItem = getLineItem(node.getLineItems());
                             Address orderAddress = getOrderAddress(node.getShippingAddress());
                             Order order = new Order(node.getCustomerUrl(),node.getEmail(),node.getId().toString(),
-                                    node.getOrderNumber(),node.getPhone(),orderAddress,node.getSubtotalPrice(),
+                                    node.getOrderNumber(),node.getPhone(),node.getProcessedAt(),orderAddress,node.getSubtotalPrice(),
                                     node.getTotalPrice(),node.getTotalRefunded(),node.getTotalShippingPrice(),
                                     node.getTotalTax(),edge.getCursor(),lineItem);
                             orders.add(order);
@@ -96,7 +91,7 @@ public class OrderListPresenter extends BaseRxPresenter<OrderListContract.View> 
                             List<LineItem> lineItem = getLineItem(node.getLineItems());
                             Address orderAddress = getOrderAddress(node.getShippingAddress());
                             Order order = new Order(node.getCustomerUrl(),node.getEmail(),node.getId().toString(),
-                                    node.getOrderNumber(),node.getPhone(),orderAddress,node.getSubtotalPrice(),
+                                    node.getOrderNumber(),node.getPhone(),node.getProcessedAt(),orderAddress,node.getSubtotalPrice(),
                                     node.getTotalPrice(),node.getTotalRefunded(),node.getTotalShippingPrice(),
                                     node.getTotalTax(),edge.getCursor(),lineItem);
                             orders.add(order);
@@ -143,8 +138,10 @@ public class OrderListPresenter extends BaseRxPresenter<OrderListContract.View> 
                 Storefront.OrderLineItem node = edge.getNode();
                 Storefront.ProductVariant variant = node.getVariant();
                 if (variant != null) {
+                    List<Storefront.SelectedOption> selectedOptions = variant.getSelectedOptions();
                     lineItem.setVariant(new LineItem.Variant(variant.getAvailableForSale(),variant.getTitle(),
-                            variant.getSku(),variant.getPrice(),new LineItem.Variant.Image(variant.getImage() == null ? null : variant.getImage().getSrc())));
+                            variant.getSku(),variant.getPrice()
+                            ,new LineItem.Variant.Image(variant.getImage() == null ? null : variant.getImage().getSrc()),getSelectedOptions(selectedOptions)));
                 }
                 lineItem.setQuantity(node.getQuantity());
                 lineItem.setTitle(node.getTitle());
@@ -156,6 +153,17 @@ public class OrderListPresenter extends BaseRxPresenter<OrderListContract.View> 
             }
         }
         return items;
+    }
+
+    private List<LineItem.Variant.SelectedOptions> getSelectedOptions(List<Storefront.SelectedOption> selectedOptions){
+        List<LineItem.Variant.SelectedOptions> optionses = new ArrayList<>();
+        if (selectedOptions != null && !selectedOptions.isEmpty()) {
+            for (Storefront.SelectedOption selectedOption : selectedOptions) {
+                LineItem.Variant.SelectedOptions options = new LineItem.Variant.SelectedOptions(selectedOption.getName(),selectedOption.getValue());
+                optionses.add(options);
+            }
+        }
+        return optionses;
     }
 
     private Address getOrderAddress(Storefront.MailingAddress node){
@@ -203,7 +211,8 @@ public class OrderListPresenter extends BaseRxPresenter<OrderListContract.View> 
         public void define(Storefront.OrderLineItemConnectionQuery query) {
             query.pageInfo(info -> info.hasPreviousPage().hasNextPage())
                     .edges(queyDef ->  queyDef.cursor()
-                            .node(q -> q.variant(qd -> qd.availableForSale().title().sku().price().image(args -> args.maxHeight(100).maxWidth(100).crop(Storefront.CropRegion.CENTER), quey -> quey.src()))
+                            .node(q -> q.variant(qd -> qd.availableForSale().title().sku().price().selectedOptions(s -> s.name().value())
+                                    .image(args -> args.maxHeight(150).maxWidth(100).crop(Storefront.CropRegion.CENTER), quey -> quey.src()))
                                     .quantity().title().customAttributes(a -> a.value().key())));
         }
     }

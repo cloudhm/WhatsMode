@@ -11,10 +11,12 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import com.whatsmode.library.util.SnackUtil;
 import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.block.account.LoginActivity;
+import com.whatsmode.shopify.block.address.Address;
 import com.whatsmode.shopify.block.address.AddressListActivity;
 import com.whatsmode.shopify.block.address.LoadType;
 import com.whatsmode.shopify.common.KeyConstant;
@@ -32,6 +34,9 @@ public class MyFragment extends MvpFragment<MyContract.Presenter> implements MyC
     private TabLayout mTabLayout;
     private ViewPager mVpBody;
     private ArrayList<Fragment> mFragments;
+    private TextView mViewAddress;
+    private TextView mName;
+    private TextView mEmail;
 
     public static MyFragment newInstance(){
         MyFragment fragment = new MyFragment();
@@ -44,11 +49,15 @@ public class MyFragment extends MvpFragment<MyContract.Presenter> implements MyC
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         view.findViewById(R.id.avatar).setOnClickListener(this);
-        view.findViewById(R.id.view_address).setOnClickListener(this);
+        mViewAddress = (TextView) view.findViewById(R.id.view_address);
+        mViewAddress.setOnClickListener(this);
+        mName = (TextView) view.findViewById(R.id.name);
+        mEmail = (TextView) view.findViewById(R.id.email);
         view.findViewById(R.id.order_history).setOnClickListener(this);
         mTabLayout = (TabLayout) view.findViewById(R.id.tabs);
         mVpBody = (ViewPager) view.findViewById(R.id.vp_body);
         initViewPager();
+        mPresenter.getCustomer();
     }
 
     @NonNull
@@ -82,6 +91,23 @@ public class MyFragment extends MvpFragment<MyContract.Presenter> implements MyC
     @Override
     public void onError(int code, String msg) {
         SnackUtil.toastShow(getContext(),msg);
+
+    }
+
+    @Override
+    public void showCustomer(Customer customer) {
+        mName.setText(customer.getLastName() + customer.getFirstName());
+        mEmail.setText(customer.getEmail());
+        Address defaultAddress = customer.getDefaultAddress();
+        if (defaultAddress != null) {
+            StringBuffer buffer = new StringBuffer();
+            buffer.append(defaultAddress.getAddress1()).append(" ").append(defaultAddress.getAddress2()).append(" ")
+                    .append(defaultAddress.getCity()).append(" ").append(defaultAddress.getProvince()).append(" ")
+                    .append(defaultAddress.getCountry());
+            mViewAddress.setText(buffer.toString());
+        }else{
+            mViewAddress.setText("add address");
+        }
     }
 
 
@@ -94,7 +120,7 @@ public class MyFragment extends MvpFragment<MyContract.Presenter> implements MyC
 
             mTabLayout.addTab(mTabLayout.newTab().setText(titles.get(0)));
 
-            mTabLayout.setTabTextColors(getResources().getColor(R.color.white), getResources().getColor(R.color.colorAccent));
+            mTabLayout.setTabTextColors(getResources().getColor(R.color.white), getResources().getColor(R.color.black));
 
 
             mFragments = new ArrayList<Fragment>();

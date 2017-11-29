@@ -23,14 +23,30 @@ public class LineItemAdapter extends CommonAdapter<LineItem> {
         LineItem.Variant variant = item.getVariant();
         String price = String.valueOf(variant == null ? 0 : variant.getPrice());
         helper.setText(R.id.title,item.getTitle())
-                .setText(R.id.price,price)
-                .setText(R.id.quantity,String.valueOf(item.getQuantity()));
+                .setText(R.id.price,mContext.getString(R.string.dollar_sign) + price)
+                .setText(R.id.quantity,"x"+String.valueOf(item.getQuantity()))
+                .setText(R.id.sku,mContext.getString(R.string.sku_) + (variant == null ? "" : variant.getSku()))
+                .setText(R.id.model,getSelectOptions(variant != null ? variant.getSelectedOptions() : null));
         String src = null;
         if ((src = getSrc(variant)) != null) {
             Glide.with(mContext).load(src).placeholder(R.mipmap.ic_launcher).into((ImageView) helper.getView(R.id.image_view));
         }else{
             Glide.with(mContext).load(R.mipmap.ic_launcher).placeholder(R.mipmap.ic_launcher).into((ImageView) helper.getView(R.id.image_view));
         }
+    }
+
+    private String getSelectOptions(List<LineItem.Variant.SelectedOptions> selectedOptions){
+        if (selectedOptions == null) {
+            return "";
+        }
+        StringBuilder builder = new StringBuilder();
+        for (LineItem.Variant.SelectedOptions selectedOption : selectedOptions) {
+            builder.append(selectedOption.getValue()).append("/");
+        }
+        if (builder.length() > 1) {
+            builder.replace(builder.length() - 1 ,builder.length() - 0,"");
+        }
+        return builder.toString();
     }
 
     private String getSrc(LineItem.Variant variant){

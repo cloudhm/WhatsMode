@@ -3,6 +3,8 @@ package com.whatsmode.library.util;
 import android.content.Context;
 import android.view.inputmethod.InputMethodManager;
 
+import org.joda.time.DateTime;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -37,5 +39,13 @@ public class Util {
         InputMethodManager imm = (InputMethodManager) context.getSystemService(INPUT_METHOD_SERVICE);
 
         imm.toggleSoftInput(0, visible ? InputMethodManager.HIDE_NOT_ALWAYS : InputMethodManager.RESULT_SHOWN);
+    }
+
+    public static final String[] sManth = {"January","February","March","April","May","June","July","August","September","October","November","December"};
+
+    public static String dateTimeToString(DateTime dateTime){
+        String s = dateTime.toString(" dd,yyyy HH:mm a");
+        int monthOfYear = dateTime.getMonthOfYear();
+        return sManth[monthOfYear] + s;
     }
 }

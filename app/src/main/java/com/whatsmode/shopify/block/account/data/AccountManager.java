@@ -1,5 +1,7 @@
 package com.whatsmode.shopify.block.account.data;
 
+import android.text.TextUtils;
+
 import com.whatsmode.library.util.PreferencesUtil;
 import com.whatsmode.library.util.SerializableUtil;
 import com.whatsmode.library.util.SnackUtil;
@@ -67,5 +69,9 @@ public class AccountManager {
 
     public static String getUsername(){
         return getUserInfo() == null ? null : getUserInfo().getUsername();
+    }
+
+    public static boolean isLoginStatus(){
+        return !TextUtils.isEmpty(getCustomerAccessToken());
     }
 }

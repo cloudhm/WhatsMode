@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 import com.whatsmode.shopify.block.address.Address;
 
+import org.joda.time.DateTime;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
@@ -23,7 +25,7 @@ public class Order implements Serializable{
     //lineItems
     private Integer orderNumber;
     private String phone;
-    //processedAt
+    private DateTime processedAt;
     private Address shippingAddress;
     private BigDecimal subtotalPrice;
     private BigDecimal totalPrice;
@@ -33,7 +35,7 @@ public class Order implements Serializable{
     private String cursor;
     private List<LineItem> lineItems;
 
-    public Order(String customerUrl, String email, String id, Integer orderNumber, String phone,
+    public Order(String customerUrl, String email, String id, Integer orderNumber, String phone,DateTime processedAt,
                  Address shippingAddress, BigDecimal subtotalPrice, BigDecimal totalPrice,
                  BigDecimal totalRefunded, BigDecimal totalShippingPrice, BigDecimal totalTax,
                  String cursor,List<LineItem> lineItems) {
@@ -42,6 +44,7 @@ public class Order implements Serializable{
         this.id = id;
         this.orderNumber = orderNumber;
         this.phone = phone;
+        this.processedAt = processedAt;
         this.shippingAddress = shippingAddress;
         this.subtotalPrice = subtotalPrice;
         this.totalPrice = totalPrice;
@@ -175,23 +178,12 @@ public class Order implements Serializable{
         this.lineItems = lineItems;
     }
 
-    @Override
-    public String toString() {
-        return "Order{" +
-                "customerUrl='" + customerUrl + '\'' +
-                ", email='" + email + '\'' +
-                ", id='" + id + '\'' +
-                ", orderNumber=" + orderNumber +
-                ", phone='" + phone + '\'' +
-                ", shippingAddress=" + shippingAddress +
-                ", subtotalPrice=" + subtotalPrice +
-                ", totalPrice=" + totalPrice +
-                ", totalRefunded=" + totalRefunded +
-                ", totalShippingPrice=" + totalShippingPrice +
-                ", totalTax=" + totalTax +
-                ", cursor='" + cursor + '\'' +
-                ", lineItems=" + lineItems +
-                '}';
+    public DateTime getProcessedAt() {
+        return processedAt;
+    }
+
+    public void setProcessedAt(DateTime processedAt) {
+        this.processedAt = processedAt;
     }
 
     @Override
@@ -208,6 +200,8 @@ public class Order implements Serializable{
         if (orderNumber != null ? !orderNumber.equals(order.orderNumber) : order.orderNumber != null)
             return false;
         if (phone != null ? !phone.equals(order.phone) : order.phone != null) return false;
+        if (processedAt != null ? !processedAt.equals(order.processedAt) : order.processedAt != null)
+            return false;
         if (shippingAddress != null ? !shippingAddress.equals(order.shippingAddress) : order.shippingAddress != null)
             return false;
         if (subtotalPrice != null ? !subtotalPrice.equals(order.subtotalPrice) : order.subtotalPrice != null)
@@ -232,6 +226,7 @@ public class Order implements Serializable{
         result = 31 * result + (id != null ? id.hashCode() : 0);
         result = 31 * result + (orderNumber != null ? orderNumber.hashCode() : 0);
         result = 31 * result + (phone != null ? phone.hashCode() : 0);
+        result = 31 * result + (processedAt != null ? processedAt.hashCode() : 0);
         result = 31 * result + (shippingAddress != null ? shippingAddress.hashCode() : 0);
         result = 31 * result + (subtotalPrice != null ? subtotalPrice.hashCode() : 0);
         result = 31 * result + (totalPrice != null ? totalPrice.hashCode() : 0);
@@ -243,4 +238,23 @@ public class Order implements Serializable{
         return result;
     }
 
+    @Override
+    public String toString() {
+        return "Order{" +
+                "customerUrl='" + customerUrl + '\'' +
+                ", email='" + email + '\'' +
+                ", id='" + id + '\'' +
+                ", orderNumber=" + orderNumber +
+                ", phone='" + phone + '\'' +
+                ", processedAt=" + processedAt +
+                ", shippingAddress=" + shippingAddress +
+                ", subtotalPrice=" + subtotalPrice +
+                ", totalPrice=" + totalPrice +
+                ", totalRefunded=" + totalRefunded +
+                ", totalShippingPrice=" + totalShippingPrice +
+                ", totalTax=" + totalTax +
+                ", cursor='" + cursor + '\'' +
+                ", lineItems=" + lineItems +
+                '}';
+    }
 }

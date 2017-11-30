@@ -35,6 +35,7 @@ import com.whatsmode.shopify.ui.helper.BaseFragmentAdapter;
 import com.whatsmode.shopify.ui.helper.CategoryAdapter;
 import com.whatsmode.shopify.ui.helper.ToolbarHelper;
 import com.whatsmode.shopify.ui.widget.BottomBar;
+import com.whatsmode.shopify.ui.widget.BottomBarItem;
 import com.whatsmode.shopify.ui.widget.NoScrollViewPager;
 
 import org.greenrobot.eventbus.EventBus;
@@ -49,6 +50,7 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
     private Toolbar toolbar;
     private TextView toolbarTitle;
     private BottomBar bottomBar;
+    private BottomBarItem bottomBarItem;
     private ImageView ivMenu;
     private MenuItem menuItemSearch;
     private MenuItem menuEdit;
@@ -70,8 +72,10 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
         ivLogo = (ImageView) findViewById(R.id.logo);
         ivLogo.setVisibility(View.VISIBLE);
         bottomBar = (BottomBar)findViewById(R.id.bottomBar);
+        bottomBarItem = (BottomBarItem) findViewById(R.id.cart_bottom_bar);
         getPresenter().initViewPage(getSupportFragmentManager());
         EventBus.getDefault().register(this);
+        defineCartTitle();
     }
 
     @Subscribe
@@ -154,6 +158,7 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
         try {
             List<CartItem> cartItemList = (List<CartItem>) PreferencesUtil.getObject(WhatsApplication.getContext(), Constant.CART_LOCAL);
             toolbarTitle.setText(ListUtils.isEmpty(cartItemList) ? "My Cart" : "My Cart(" + cartItemList.size() + ")");
+            bottomBarItem.setBadge(ListUtils.isEmpty(cartItemList) ? 0 : cartItemList.size());
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {

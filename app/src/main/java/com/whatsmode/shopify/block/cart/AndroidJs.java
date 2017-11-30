@@ -49,9 +49,9 @@ public class AndroidJs extends Object {
             cartItem.url = link;
             cartItem.icon = productVariantImage;
             cartItem.name = title;
+            //gid://shopify/ProductVariant/{productVariant_id}
             String encrpId = "gid://shopify/ProductVariant/" + productVariantID;
             cartItem.id  = new String(Base64.encode(encrpId.getBytes(), Base64.DEFAULT));
-            Logger.e("--id--" + cartItem.id);
             List<CartItem> cartItemList = (List<CartItem>) PreferencesUtil.getObject
                     (WhatsApplication.getContext(), Constant.CART_LOCAL);
             if (ListUtils.isEmpty(cartItemList)) {
@@ -72,7 +72,7 @@ public class AndroidJs extends Object {
                 }
             }
             PreferencesUtil.putObject(WhatsApplication.getContext(), Constant.CART_LOCAL, cartItemList);
-            EventBus.getDefault().post(new RxRefreshCartList()); // 發送rx消息通知購物車更新
+            EventBus.getDefault().post(cartItem); // 發送rx消息通知購物車更新
         } catch (Exception e) {
             e.printStackTrace();
         }

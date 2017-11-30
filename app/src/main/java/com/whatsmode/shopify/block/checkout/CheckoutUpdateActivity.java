@@ -148,14 +148,12 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
                     fillAddress();
                     showLoading();
                     mPresenter.bindAddress(id, mCurrentAddr);
-                    Logger.e(mCurrentAddr);
                     break;
             }
         }
     }
 
     private void fillAddress() {
-        // TODO: 2017/11/29
         if (mCurrentAddr == null) {
             return;
         }

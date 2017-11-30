@@ -34,5 +34,7 @@ public class CartContact{
         void saveCart(List<CartItem> data);
 
         void onClickView(android.view.View v);
+
+        boolean isSelectAll();
     }
 }

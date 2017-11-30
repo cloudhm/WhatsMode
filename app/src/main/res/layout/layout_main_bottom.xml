@@ -29,9 +29,11 @@
         app:bbi_textColorSelected="@color/black" />
 
     <com.whatsmode.shopify.ui.widget.BottomBarItem
+        android:id="@+id/cart_bottom_bar"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
+        app:bbi_tv_badge="true"
         app:bbi_iconNormal="@drawable/nav_cart"
         app:bbi_iconSelected="@drawable/nav_cart_select"
         app:bbi_text="@string/tabThird"

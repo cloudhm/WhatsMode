@@ -4,6 +4,7 @@
         <attr name="bbi_iconNormal" format="reference" />
         <attr name="bbi_iconSelected" format="reference" />
         <attr name="bbi_text" format="string" />
+        <attr name="bbi_tv_badge" format="boolean" />
         <attr name="bbi_textSize" format="dimension" />
         <attr name="bbi_textColorNormal" format="color" />
         <attr name="bbi_textColorSelected" format="color" />

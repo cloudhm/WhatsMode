@@ -18,6 +18,7 @@ public class BottomBarItem extends RelativeLayout {
 
     private ImageView iconView;
     private TextView textView;
+    private TextView badgeView;
 
     private Drawable mIconNormal;
     private Drawable mIconSelected;
@@ -25,6 +26,7 @@ public class BottomBarItem extends RelativeLayout {
     private int mTextSize = 9;//sp
     private int mTextColorNormal = 0xFF909090;
     private int mTextColorSelected = 0xff1976D2;
+    private boolean tvBadge;
 
     public BottomBarItem(Context context) {
         this(context, null);
@@ -53,6 +55,7 @@ public class BottomBarItem extends RelativeLayout {
         mTextSize = a.getDimensionPixelSize(R.styleable.BottomBarItem_bbi_textSize, mTextSize);
         mTextColorNormal = a.getColor(R.styleable.BottomBarItem_bbi_textColorNormal, mTextColorNormal);
         mTextColorSelected = a.getColor(R.styleable.BottomBarItem_bbi_textColorSelected, mTextColorSelected);
+        tvBadge = a.getBoolean(R.styleable.BottomBarItem_bbi_tv_badge, false);
         a.recycle();
 
         initView();
@@ -66,7 +69,14 @@ public class BottomBarItem extends RelativeLayout {
         textView = (TextView) findViewById(R.id.bottomBar_item_textView);
         textView.setText(mText);
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP,mTextSize);
+        badgeView = (TextView) findViewById(R.id.tv_badge);
+        badgeView.setVisibility(tvBadge?VISIBLE:GONE);
         setSelectedState(isSelected());
+    }
+
+    public void setBadge(int i) {
+        badgeView.setText(String.valueOf(i));
+        badgeView.setVisibility(i == 0 ? GONE:VISIBLE);
     }
 
     @Override

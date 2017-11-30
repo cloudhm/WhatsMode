@@ -68,8 +68,11 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
                         .load(item.getIcon())
                         .asBitmap()
                         .centerCrop()
+                        .placeholder(R.drawable.defaut_product)
+                        .error(R.drawable.defaut_product)
                         .into(ivIcon);
                 helper.setText(R.id.description, item.name)
+                        .setText(R.id.sizeAndColor,item.getColorAndSize())
                         .setText(R.id.price, new StringBuilder("$").append(String.valueOf(item.getPrice())))
                         .setText(R.id.quality, String.valueOf(item.quality));
                 TextView tvQuality = helper.getView(R.id.quality);
@@ -135,7 +138,7 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
         }
     }
 
-    private boolean selectAll;
+    public boolean selectAll;
 
     @Override
     public void onClickView(View v) {
@@ -159,6 +162,11 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
                 getView().showDeleteDialog();
                 break;
         }
+    }
+
+    @Override
+    public boolean isSelectAll() {
+        return selectAll;
     }
 
     private void checkOut(List<CartItem> data) {

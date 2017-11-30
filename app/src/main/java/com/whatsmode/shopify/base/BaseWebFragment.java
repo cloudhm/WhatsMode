@@ -76,7 +76,6 @@ public class BaseWebFragment extends BaseFragment {
                 }else{
                     view.loadUrl(url);
                 }
-                Logger.e("---override---" + url);
                 return true;
             }
         });

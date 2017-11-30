@@ -168,7 +168,7 @@ public class CartRepository {
     private Storefront.CheckoutCreateInput generateInput(List<CartItem> data) {
         ArrayList<Storefront.CheckoutLineItemInput> arrayList =
                 data.stream().map(cartItem ->
-                        new Storefront.CheckoutLineItemInput(cartItem.quality, new ID(cartItem.id)))
+                        new Storefront.CheckoutLineItemInput(cartItem.quality, new ID(cartItem.getId().replace("\n",""))))
                         .collect(Collectors.toCollection(ArrayList::new));
         return new Storefront.CheckoutCreateInput()
                 .setLineItemsInput(Input.value(arrayList));

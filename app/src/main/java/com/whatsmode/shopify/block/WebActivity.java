@@ -27,6 +27,7 @@ import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.base.BaseActivity;
 import com.whatsmode.shopify.block.cart.AndroidJs;
 import com.whatsmode.shopify.block.cart.BadgeActionProvider;
+import com.whatsmode.shopify.block.cart.CartItem;
 import com.whatsmode.shopify.block.cart.JumpCartSelect;
 import com.whatsmode.shopify.block.cart.RxRefreshCartList;
 import com.whatsmode.shopify.ui.helper.ToolbarHelper;
@@ -103,7 +104,7 @@ public class WebActivity extends BaseActivity{
     }
 
     @Subscribe
-    public void receive(RxRefreshCartList list) {
+    public void receive(CartItem list) {
         if (mActionProvider != null) {
             runOnUiThread(() -> mActionProvider.initIcon());
 

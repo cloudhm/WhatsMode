@@ -65,9 +65,12 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
 
 
     @Subscribe
-    public void receive(RxRefreshCartList list) {
+    public void receive(CartItem list) {
         mPresenter.doLoadData(true);
         checkSpanner();
+        if (mPresenter.isSelectAll()) {
+            onCheckSelect(true,list);
+        }
     }
 
     @Override
@@ -208,6 +211,9 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
 
     @Override
     public void checkSpanner() {
+        if (getActivity() == null) {
+            return;
+        }
         getActivity().runOnUiThread(() -> {
             if (mAdapter != null && !ListUtils.isEmpty(mAdapter.getData())) {
                 rlSpannerCheck.setVisibility(View.VISIBLE);

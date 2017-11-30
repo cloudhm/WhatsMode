@@ -66,7 +66,6 @@ public class BaseWebFragment extends BaseFragment {
             public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
                 super.onReceivedError(view, request, error);
                 mProgressBar.setVisibility(View.GONE);
-                Logger.e("---error---" + request.getUrl());
             }
 
             public boolean shouldOverrideUrlLoading(WebView view, String url){

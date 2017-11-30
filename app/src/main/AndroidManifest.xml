@@ -38,7 +38,6 @@
             android:launchMode="singleTask"
             android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait"
-                  android:theme="@style/StatusImmersion"
             >
 
         </activity>
@@ -80,7 +79,9 @@
                   android:screenOrientation="portrait"
                   android:theme="@style/StatusImmersion"
             />
-        <activity android:name=".block.checkout.CheckoutUpdateActivity" />
+        <activity android:name=".block.checkout.CheckoutUpdateActivity"
+            android:screenOrientation="portrait"
+            />
 
         <activity android:name=".block.account.SplashActivity"
                   android:screenOrientation="portrait"

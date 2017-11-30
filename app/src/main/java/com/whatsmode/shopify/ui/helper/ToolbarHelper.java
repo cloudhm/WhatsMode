@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.whatsmode.library.util.DisplayUtil;
 import com.whatsmode.shopify.R;
+import com.zchu.log.Logger;
 
 public class ToolbarHelper {
 
@@ -20,7 +21,7 @@ public class ToolbarHelper {
     public static ToolbarHolder initToolbar(@NonNull final AppCompatActivity activity, @IdRes int toolbarId, boolean canBack, @Nullable CharSequence title) {
         ToolbarHolder toolbarHolder = new ToolbarHolder();
         Toolbar toolbar = (Toolbar) activity.findViewById(toolbarId);
-        toolbar.getLayoutParams().height= 48+ DisplayUtil.getStateBarHeight(activity);
+        toolbar.getLayoutParams().height = (int) (activity.getResources().getDimension(R.dimen.toolbar_height)) + DisplayUtil.getStateBarHeight(activity);
         toolbar.setPadding(0, DisplayUtil.getStateBarHeight(activity),0,0);
         toolbar.requestLayout();
         toolbarHolder.toolbar=toolbar;

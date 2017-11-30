@@ -2,6 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     android:orientation="vertical">
 
     <include layout="@layout/view_toolbar_main" />
@@ -9,122 +11,373 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
-
+        android:layout_weight="1"
+        android:fillViewport="true">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/select_address"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:background="@color/colorAccent"
-                android:gravity="center"
-                android:text="select address"
-                android:textColor="@color/black"
-                android:textSize="16sp" />
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp">
 
-            <TextView
-                android:id="@+id/select_method"
+                <LinearLayout
+                    android:id="@+id/add_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="106dp"
+                    android:background="@color/white"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:id="@+id/iv_add"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="26dp"
+                        android:src="@drawable/icon_add" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="4dp"
+                        android:text="@string/add_address"
+                        android:textColor="@color/gray_bbb" />
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:id="@+id/sign_in"
+                    android:layout_width="match_parent"
+                    android:layout_height="106dp"
+                    android:background="@color/white"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:id="@+id/sign_in_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/icon_login" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/address_detail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:padding="15dp">
+
+                    <TextView
+                        android:id="@+id/name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Zhong Chao"
+                        android:textColor="@color/gray_333333"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/phone"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/name"
+                        android:layout_marginTop="4dp"
+                        android:text="12818485107"
+                        android:textColor="@color/gray_bbb"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/detail_address"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/phone"
+                        android:layout_marginTop="4dp"
+                        android:ellipsize="end"
+                        android:maxLines="3"
+                        android:text="4114 Sepulveda Blvd,Culver City,Culver City "
+                        android:textColor="@color/gray_bbb"
+                        android:textSize="14sp" />
+
+                    <ImageView
+                        android:id="@+id/edit"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_alignParentRight="true"
+                        android:src="@drawable/icon_edit" />
+
+                    <View
+                        android:id="@+id/line"
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:layout_below="@+id/detail_address"
+                        android:layout_marginTop="15dp"
+                        android:background="@color/separator" />
+
+
+                    <RelativeLayout
+                        android:id="@+id/shipping_method_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/line"
+                        android:paddingTop="15dp">
+
+                        <TextView
+                            android:id="@+id/text_ship"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Shipping method"
+                            android:textColor="@color/gray_bbb"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/shiping_method"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:text="Standard Shipping  >"
+                            android:textColor="@color/gray_333333"
+                            android:textSize="14sp" />
+                    </RelativeLayout>
+                </RelativeLayout>
+            </RelativeLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginTop="2dp"
-                android:background="@color/colorAccent"
-                android:gravity="center"
-                android:text="select pay method" />
-            <TextView
-                android:id="@+id/select_gift"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginTop="2dp"
-                android:background="@color/colorAccent"
-                android:gravity="center"
-                android:text="select gift method" />
+                android:layout_height="45dp"
+                android:background="@color/white"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/gift_card_edit"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:gravity="left|center_vertical"
+                    android:paddingLeft="15dp"
+                    android:singleLine="true"
+                    android:hint="@string/gift_card_hint"
+                    android:textColor="@color/gray_333333"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/gift_amount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="3dp"
+                    android:text=""
+                    android:textColor="@color/btn_sure"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/gift_unit"
+                    android:layout_width="wrap_content"
+                    android:visibility="gone"
+                    android:layout_height="wrap_content"
+                    android:text="USD"
+                    android:textColor="@color/btn_sure"
+                    android:textSize="10dp" />
+
+                <TextView
+                    android:id="@+id/check_card"
+                    android:layout_width="90dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="30dp"
+                    android:background="@color/gray_333333"
+                    android:gravity="center"
+                    android:text="Apply"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+
             <LinearLayout
                 android:id="@+id/container"
                 android:layout_width="match_parent"
-                android:orientation="vertical"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:background="@color/white"
+                android:orientation="vertical" />
 
-            <View
-                android:layout_width="match_parent"
-                android:background="@color/separator"
-                android:layout_height="0.5dp" />
+
             <LinearLayout
-                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:id="@+id/product_total"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="30dp"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:gravity="right"
-                    android:paddingRight="13dp"
-                    android:paddingTop="13dp"
-                    android:paddingBottom="13dp"
-                    android:text="Subtotal: 商品總計"
-                    android:textSize="14sp"
-                    android:textColor="@color/black"
-                    android:layout_height="wrap_content" />
-                <TextView
-                    android:id="@+id/transport_crash"
+                    android:layout_height="48dp"
+                    android:orientation="horizontal"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:text="@string/subtotal"
+                        android:textColor="@color/gray_bbb"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/subtotal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="$14.97"
+                        android:textColor="@color/gray_333333"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="2dp"
+                        android:text="USD"
+                        android:textColor="@color/gray_d5d5d5"
+                        android:textSize="10dp" />
+                </LinearLayout>
+
+                <View
                     android:layout_width="match_parent"
-                    android:gravity="right"
-                    android:paddingRight="13dp"
-                    android:paddingTop="13dp"
-                    android:paddingBottom="13dp"
-                    android:text="Shipping: 郵費"
-                    android:textSize="14sp"
-                    android:textColor="@color/black"
-                    android:layout_height="wrap_content" />
-                <TextView
-                    android:id="@+id/total"
+                    android:layout_height="2dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@color/separator" />
+
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:gravity="right"
-                    android:paddingRight="13dp"
-                    android:paddingTop="13dp"
-                    android:paddingBottom="13dp"
-                    android:text="Total:"
-                    android:textSize="14sp"
-                    android:textColor="@color/black"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="48dp"
+                    android:orientation="horizontal"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:text="@string/shipping_cost"
+                        android:textColor="@color/gray_bbb"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/shipping_cost"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="+$10.00"
+                        android:textColor="@color/gray_333333"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="2dp"
+                        android:text="USD"
+                        android:textColor="@color/gray_d5d5d5"
+                        android:textSize="10dp" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@color/separator" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:orientation="horizontal"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:text="@string/taxes"
+                        android:textColor="@color/gray_bbb"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/taxes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="+$0.00"
+                        android:textColor="@color/gray_333333"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="2dp"
+                        android:text="USD"
+                        android:textColor="@color/gray_d5d5d5"
+                        android:textSize="10dp" />
+                </LinearLayout>
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:background="@color/separator"
-                android:layout_height="0.5dp" />
-            <TextView
-                android:layout_width="match_parent"
-                android:padding="13dp"
-                android:text="@string/custom_know"
-                android:layout_height="wrap_content" />
         </LinearLayout>
     </ScrollView>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:background="@color/colorPrimaryDark"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/total_count"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="right|center_vertical"
-            android:paddingRight="23dp"
-            android:text="total:USD 251" />
+        android:background="@color/white">
 
         <TextView
             android:id="@+id/pay"
+            android:layout_width="140dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:background="@color/gray_333333"
+            android:gravity="center"
+            android:text="@string/pay"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/total_count"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:background="@color/white"
-            android:gravity="center"
-            android:padding="18dp"
-            android:text="PAY" />
-    </LinearLayout>
+            android:layout_marginRight="13dp"
+            android:layout_toLeftOf="@+id/pay"
+            android:gravity="center_vertical"
+            android:text="$14.97"
+            android:textColor="@color/colorAccent"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/total_text"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="7dp"
+            android:layout_toLeftOf="@+id/total_count"
+            android:gravity="center_vertical"
+            android:text="@string/total_text" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="13dp"
+            android:layout_toLeftOf="@+id/pay"
+            android:text="USD"
+            android:textSize="10sp" />
+    </RelativeLayout>
 </LinearLayout>

@@ -8,7 +8,6 @@ import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.transition.Visibility;
 import android.support.v4.view.MenuItemCompat;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -22,25 +21,15 @@ import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ProgressBar;
 
-import com.whatsmode.library.rx.RxBus;
-import com.whatsmode.library.rx.RxUtil;
-import com.whatsmode.library.util.ListUtils;
-import com.whatsmode.library.util.PreferencesUtil;
 import com.whatsmode.library.util.RegexUtils;
 import com.whatsmode.shopify.AppNavigator;
 import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.base.BaseActivity;
 import com.whatsmode.shopify.block.cart.BadgeActionProvider;
-import com.whatsmode.shopify.block.cart.CartItem;
 import com.whatsmode.shopify.block.cart.JumpCartSelect;
-import com.whatsmode.shopify.common.Constant;
 import com.whatsmode.shopify.ui.helper.ToolbarHelper;
-import com.zchu.log.Logger;
 
 import org.greenrobot.eventbus.EventBus;
-
-import java.io.IOException;
-import java.util.List;
 
 
 public class WebActivity extends BaseActivity implements View.OnClickListener {
@@ -60,7 +49,6 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
     private String title;
     private MenuItem menuItemShare;
     private MenuItem menuItemCart;
-    private BadgeActionProvider mActionProvider;
 
 
     public static Intent newIntent(Context context,String title, String url) {
@@ -75,7 +63,7 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
         getMenuInflater().inflate(R.menu.main_web, menu);
         menuItemShare = menu.findItem(R.id.action_share);
         menuItemCart = menu.findItem(R.id.action_cart);
-        mActionProvider = (BadgeActionProvider) MenuItemCompat.getActionProvider(menuItemCart);
+        BadgeActionProvider mActionProvider = (BadgeActionProvider) MenuItemCompat.getActionProvider(menuItemCart);
         mActionProvider.setOnClickListener(0, what -> {
             AppNavigator.jumpToMain(this);
             EventBus.getDefault().post(new JumpCartSelect());
@@ -95,14 +83,13 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.page_web);
         title = getIntent().getStringExtra(EXTRA_TITLE);
-        ToolbarHelper.initToolbarNoFix(this, R.id.toolbar, true, title);
+        ToolbarHelper.initToolbar(this, R.id.toolbar, true, title);
         mWebView = (WebView) findViewById(R.id.webview);
-        mWebView.getSettings().setUserAgentString("mobile");
+        mWebView.getSettings().setUserAgentString("mobile-Android");
 
         btnAddToCart = (Button) findViewById(R.id.add_to_cart);
         btnAddToCart.setOnClickListener(this);
         mProgressBar = (ProgressBar) findViewById(R.id.indeterminateBar);
-        ToolbarHelper.initToolbarNoFix(this, R.id.toolbar, true, "");
         url = getIntent().getStringExtra(EXTRA_URL);
         if (!TextUtils.isEmpty(url)){
             initWebTitle();
@@ -149,14 +136,12 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
             @Override
             public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
                 super.onReceivedError(view, errorCode, description, failingUrl);
-                Logger.e("--webError--" + failingUrl);
                 mProgressBar.setVisibility(View.GONE);
             }
             @TargetApi(Build.VERSION_CODES.M)
             @Override
             public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
                 super.onReceivedError(view, request, error);
-                Logger.e("--webError--" + request.getUrl());
                 mProgressBar.setVisibility(View.GONE);
             }
 
@@ -175,7 +160,6 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
             @TargetApi(Build.VERSION_CODES.LOLLIPOP)
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                Logger.e("---url---" + request.getUrl());
                 return shouldOverrideUrlLoading(view, request.getUrl().toString());
             }
         });

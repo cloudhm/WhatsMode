@@ -51,7 +51,7 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
     private BottomBar bottomBar;
     private ImageView ivMenu;
     private MenuItem menuItemSearch;
-    private MenuItem menuItemDelete;
+    private MenuItem menuEdit;
     private MenuItem mTempMenu;
     private BaseFragmentAdapter fragmentAdapter;
     private ImageView ivLogo;
@@ -59,16 +59,16 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        StatusBarUtil.StatusBarLightMode(this);
         vpContent = (NoScrollViewPager) findViewById(R.id.vp_content);
         vpContent.setOffscreenPageLimit(3);
         ivMenu = (ImageView) findViewById(R.id.menu);
         ivMenu.setVisibility(View.VISIBLE);
         ivMenu.setOnClickListener(this);
-        ToolbarHelper.ToolbarHolder toolbarHolder = ToolbarHelper.initToolbarNoFix(this, R.id.toolbar, false, null);
+        ToolbarHelper.ToolbarHolder toolbarHolder = ToolbarHelper.initToolbar(this, R.id.toolbar, false, null);
         toolbar = toolbarHolder.toolbar;
         toolbarTitle = toolbarHolder.titleView;
         ivLogo = (ImageView) findViewById(R.id.logo);
+        ivLogo.setVisibility(View.VISIBLE);
         bottomBar = (BottomBar)findViewById(R.id.bottomBar);
         getPresenter().initViewPage(getSupportFragmentManager());
         EventBus.getDefault().register(this);
@@ -90,7 +90,7 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
         getMenuInflater().inflate(R.menu.main, menu);
         menuItemSearch = menu.findItem(R.id.action_search);
         menuItemSearch.setVisible(true);
-        menuItemDelete = menu.findItem(R.id.action_delete);
+        menuEdit = menu.findItem(R.id.action_edit);
         getPresenter().setPageSelected(0);
         return super.onCreateOptionsMenu(menu);
     }
@@ -152,7 +152,7 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
 
     @Override
     public void switch2Cart() {
-        switchMenu(menuItemDelete);
+        switchMenu(menuEdit);
         ivMenu.setVisibility(View.GONE);
         ivLogo.setVisibility(View.GONE);
         toolbarTitle.setVisibility(View.VISIBLE);
@@ -210,9 +210,9 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
     @Override
     public void deleteCart() {
         CartFragment item = (CartFragment) fragmentAdapter.getItem(2);
-        String title = menuItemDelete.getTitle().toString();
-        menuItemDelete.setTitle(title.equalsIgnoreCase(getString(R.string.edit)) ? R.string.done : R.string.edit);
-        item.deleteCartItems(menuItemDelete.getTitle().toString());
+        String title = menuEdit.getTitle().toString();
+        menuEdit.setTitle(title.equals(getString(R.string.edit)) ? R.string.done : R.string.edit);
+        item.deleteCartItems(menuEdit.getTitle().toString());
     }
 
     @Override

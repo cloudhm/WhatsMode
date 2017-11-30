@@ -63,7 +63,7 @@ class MainPresenter extends MvpBasePresenter<MainContact.View> implements MainCo
                     getView().showSearch();
                 }
                 return true;
-            case R.id.action_delete:
+            case R.id.action_edit:
                 if (isViewAttached()) {
                     getView().deleteCart();
                 }

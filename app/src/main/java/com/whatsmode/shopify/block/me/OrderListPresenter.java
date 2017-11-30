@@ -140,7 +140,7 @@ public class OrderListPresenter extends BaseRxPresenter<OrderListContract.View> 
                 if (variant != null) {
                     List<Storefront.SelectedOption> selectedOptions = variant.getSelectedOptions();
                     lineItem.setVariant(new LineItem.Variant(variant.getAvailableForSale(),variant.getTitle(),
-                            variant.getSku(),variant.getPrice()
+                            variant.getSku(),variant.getPrice(),variant.getCompareAtPrice()
                             ,new LineItem.Variant.Image(variant.getImage() == null ? null : variant.getImage().getSrc()),getSelectedOptions(selectedOptions)));
                 }
                 lineItem.setQuantity(node.getQuantity());

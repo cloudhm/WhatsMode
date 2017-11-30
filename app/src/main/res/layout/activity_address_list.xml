@@ -1,30 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:fitsSystemWindows="true"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
-    <include
+    <android.support.v7.widget.Toolbar
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/toolbar"
-        layout="@layout/toolbar"/>
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/white"
+        app:navigationIcon="@drawable/btn_return"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:contentInsetStartWithNavigation="0dp" >
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_gravity="center"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sp_18"
+            android:text="@string/order_details"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </android.support.v7.widget.Toolbar>
+
+    <FrameLayout
+        android:layout_below="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/empty"
+        android:visibility="gone"
+        android:orientation="vertical"
+        android:layout_gravity="center|center_vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_gravity="center"
+            android:src="@drawable/icon_address_empty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:text="@string/address_list_empty_prompt"
+            android:textSize="@dimen/sp_16"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_marginTop="24dp"
+            android:textColor="@color/gray_bbbbbb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/add_addresses_for_empty"
+            android:text="@string/add_address_for_empty"
+            android:textSize="@dimen/sp_18"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp"
+            android:paddingTop="18dp"
+            android:paddingBottom="18dp"
+            android:background="@drawable/add_addresses_shape"
+            android:layout_marginTop="42dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+    <RelativeLayout
+        android:id="@+id/content"
+        android:visibility="visible"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <Button
+        android:id="@+id/add_address"
+        android:text="@string/add_a_new_address"
+        android:layout_alignParentBottom="true"
+        android:background="@color/gray_333333"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_18"
+        android:textStyle="bold"
+        android:textAllCaps="false"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe"
-        android:layout_below="@+id/toolbar"
+        android:layout_above="@+id/add_address"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:overScrollMode="never"
-        android:layout_below="@id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <Button
-        android:id="@+id/add_address"
-        android:text="add new address"
-        android:layout_alignParentBottom="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+    </RelativeLayout>
+
+    </FrameLayout>
 
 </RelativeLayout>

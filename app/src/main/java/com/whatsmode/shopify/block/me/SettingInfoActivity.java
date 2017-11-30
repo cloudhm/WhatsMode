@@ -1,14 +1,10 @@
 package com.whatsmode.shopify.block.me;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -16,7 +12,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.google.android.gms.common.api.Api;
 import com.whatsmode.library.exception.APIException;
 import com.whatsmode.library.util.SnackUtil;
 import com.whatsmode.shopify.AppNavigator;
@@ -41,6 +36,7 @@ public class SettingInfoActivity extends MvpActivity<SettingInfoContract.Present
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting_info);
+        StatusBarUtil.StatusBarLightMode(this);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
 
         mFirstName = (EditText) findViewById(R.id.first_name);
@@ -57,7 +53,7 @@ public class SettingInfoActivity extends MvpActivity<SettingInfoContract.Present
 
     private void init(){
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setTitle("Setting");
+        getSupportActionBar().setTitle("");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
@@ -106,7 +102,8 @@ public class SettingInfoActivity extends MvpActivity<SettingInfoContract.Present
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.change_password:
-                changePassword();
+                //changePassword();
+                startActivity(new Intent(this,ChangePasswordActivity.class));
                 break;
             case R.id.sign_out:
                 mPresenter.signout();

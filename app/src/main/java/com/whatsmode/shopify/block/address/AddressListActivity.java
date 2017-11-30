@@ -10,12 +10,16 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.whatsmode.library.exception.APIException;
 import com.whatsmode.library.util.SnackUtil;
 import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.block.account.LoginActivity;
+import com.whatsmode.shopify.block.me.StatusBarUtil;
 import com.whatsmode.shopify.common.KeyConstant;
 import com.whatsmode.shopify.mvp.MvpActivity;
 import com.whatsmode.shopify.ui.helper.LoadingDialog;
@@ -30,6 +34,8 @@ import java.util.List;
 
 public class AddressListActivity extends MvpActivity<AddressListPresenter> implements AddressListContract.View, View.OnClickListener {
 
+    private static final int REQUEST_ADD_ADDRESS_CODE = 0X11;
+
     public static final int TYPE_SELECT = 1;
     public static final int TYPE_VIEW = 2;
 
@@ -42,15 +48,23 @@ public class AddressListActivity extends MvpActivity<AddressListPresenter> imple
     List<Address> mList;
     private SwipeRefreshLayout mSwipe;
     private Toolbar mToolbar;
+    private TextView mAddAddressesForEmpty;
+    private RelativeLayout mContent;
+    private LinearLayout mEmpty;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_address_list);
+        StatusBarUtil.StatusBarLightMode(this);
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mSwipe = (SwipeRefreshLayout) findViewById(R.id.swipe);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mAddAddressesForEmpty = (TextView) findViewById(R.id.add_addresses_for_empty);
+        mContent = (RelativeLayout) findViewById(R.id.content);
+        mEmpty = (LinearLayout) findViewById(R.id.empty);
         findViewById(R.id.add_address).setOnClickListener(this);
+        findViewById(R.id.add_addresses_for_empty).setOnClickListener(this);
         mType = getIntent().getIntExtra(KeyConstant.KEY_TYPE_ADDRESS,TYPE_SELECT);
         init();
         initRecycler();
@@ -134,10 +148,14 @@ public class AddressListActivity extends MvpActivity<AddressListPresenter> imple
         if(mAddressListAdapter == null || isDestroyed()) return;
         completeRefresh();
         hideLoading();
+        mContent.setVisibility(View.VISIBLE);
+        mEmpty.setVisibility(View.GONE);
         switch (type) {
             case LoadType.TYPE_REFRESH_SUCCESS:
                 if (addresses.isEmpty()) {
-                    SnackUtil.toastShow(this,"address list is empty");
+                    //SnackUtil.toastShow(this,"address list is empty");
+                    mContent.setVisibility(View.GONE);
+                    mEmpty.setVisibility(View.VISIBLE);
                 }
                 mAddressListAdapter.refresh(addresses);
                 break;
@@ -187,8 +205,20 @@ public class AddressListActivity extends MvpActivity<AddressListPresenter> imple
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.add_address:
-                startActivity(new Intent(this,AddEditAddressActivity.class));
+            case R.id.add_addresses_for_empty:
+                Intent intent = new Intent(this, AddEditAddressActivity.class);
+                startActivityForResult(intent,REQUEST_ADD_ADDRESS_CODE);
                 break;
+
+
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_ADD_ADDRESS_CODE && resultCode == RESULT_OK) {
+            mPresenter.refreshAddressList();
         }
     }
 }

@@ -31,6 +31,11 @@ public class AddressListAdapter extends CommonAdapter<Address> {
                 .addOnClickListener(R.id.update)
                 .addOnClickListener(R.id.is_default)
                 .setChecked(R.id.is_default,item.isDefault());
+        if (item.isDefault()) {
+            helper.setText(R.id.is_default_desc,R.string.default_address);
+        }else{
+            helper.setText(R.id.is_default_desc,R.string.set_as_default);
+        }
     }
 
     public void refresh(List<Address> list) {

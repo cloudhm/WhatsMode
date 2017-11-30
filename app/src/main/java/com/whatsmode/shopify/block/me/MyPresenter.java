@@ -196,7 +196,7 @@ public class MyPresenter extends BaseRxPresenter<MyContract.View> implements MyC
                 if (variant != null) {
                     List<Storefront.SelectedOption> selectedOptions = variant.getSelectedOptions();
                     lineItem.setVariant(new LineItem.Variant(variant.getAvailableForSale(),variant.getTitle(),
-                            variant.getSku(),variant.getPrice()
+                            variant.getSku(),variant.getPrice(),variant.getCompareAtPrice()
                             ,new LineItem.Variant.Image(variant.getImage() == null ? null : variant.getImage().getSrc()),getSelectedOptions(selectedOptions)));
                 }
                 lineItem.setQuantity(node.getQuantity());
@@ -267,7 +267,7 @@ public class MyPresenter extends BaseRxPresenter<MyContract.View> implements MyC
         public void define(Storefront.OrderLineItemConnectionQuery query) {
             query.pageInfo(info -> info.hasPreviousPage().hasNextPage())
                     .edges(queyDef ->  queyDef.cursor()
-                            .node(q -> q.variant(qd -> qd.availableForSale().title().sku().price().selectedOptions(s -> s.name().value())
+                            .node(q -> q.variant(qd -> qd.availableForSale().compareAtPrice().title().sku().price().selectedOptions(s -> s.name().value())
                                     .image(args -> args.maxHeight(150).maxWidth(100).crop(Storefront.CropRegion.CENTER), quey -> quey.src()))
                                     .quantity().title().customAttributes(a -> a.value().key())));
         }

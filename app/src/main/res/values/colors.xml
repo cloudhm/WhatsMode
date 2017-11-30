@@ -16,5 +16,6 @@
     <color name="btn_sure">#E60A5B</color>
     <color name="gray_bbb">#bbbbbb</color>
     <color name="amount_color">#151515</color>
+    <color name="sign_out">#E60A5B</color>
 
 </resources>

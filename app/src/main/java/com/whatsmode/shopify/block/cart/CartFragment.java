@@ -22,6 +22,11 @@ import com.whatsmode.shopify.AppNavigator;
 import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.base.BaseListFragment;
 import com.whatsmode.shopify.block.WebActivity;
+import com.whatsmode.shopify.block.main.MainActivity;
+import com.zchu.log.Logger;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +39,7 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
     private Button btnDelete;
     private Button btnCheckout;
     private TextView totalTv;
+    private RelativeLayout rlSpannerCheck;
 
     public static CartFragment newInstance() {
         return new CartFragment();
@@ -42,7 +48,7 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        RelativeLayout rlSpannerCheck = (RelativeLayout) view.findViewById(R.id.spanner_layout);
+        rlSpannerCheck = (RelativeLayout) view.findViewById(R.id.spanner_layout);
         btnCheckout = (Button) view.findViewById(R.id.checkOut);
         ImageView ivCheckAll = (ImageView) view.findViewById(R.id.checkOut_select);
         ivCheckAll.setOnClickListener(this);
@@ -53,10 +59,15 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
         btnDelete = (Button) view.findViewById(R.id.delete);
         btnDelete.setOnClickListener(this);
 
-        rlSpannerCheck.setVisibility(View.VISIBLE);
-
         btnCheckout.setOnClickListener(this);
-        RxBus.getInstance().register(RxRefreshCartList.class);
+        EventBus.getDefault().register(this);
+    }
+
+
+    @Subscribe
+    public void receive(RxRefreshCartList list) {
+        mPresenter.doLoadData(true);
+        checkSpanner();
     }
 
     @Override
@@ -82,8 +93,6 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
             }
             if (mAdapter != null && !ListUtils.isEmpty(mAdapter.getData())) {
                 mPresenter.saveCart(mAdapter.getData());
-            }else{
-                mPresenter.saveCart(CartItem.mockItem());
             }
         }
     }
@@ -171,6 +180,7 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
                             mPresenter.saveCart(mAdapter.getData());
                             tvTotal.setText("0.0");
                             checkItem.clear();
+                            checkSpanner();
                         }).setMessage(R.string.confirm_delete)
                         .setTitle(R.string.delete)
                         .create();
@@ -189,10 +199,24 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
                     mPresenter.saveCart(mAdapter.getData());
                     checkItem.remove(item);
                     checkTotal();
+                    checkSpanner();
                 })
                 .setTitle(R.string.delete)
                 .create();
         alertDialog.show();
+    }
+
+    @Override
+    public void checkSpanner() {
+        getActivity().runOnUiThread(() -> {
+            if (mAdapter != null && !ListUtils.isEmpty(mAdapter.getData())) {
+                rlSpannerCheck.setVisibility(View.VISIBLE);
+            }else{
+                rlSpannerCheck.setVisibility(View.GONE);
+            }
+            MainActivity activity = (MainActivity) getActivity();
+            activity.defineCartTitle();
+        });
     }
 
 

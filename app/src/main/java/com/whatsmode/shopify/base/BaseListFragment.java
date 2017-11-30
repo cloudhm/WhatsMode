@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
@@ -14,12 +15,14 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.whatsmode.library.util.ScreenUtils;
 import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.WhatsApplication;
+import com.whatsmode.shopify.common.Constant;
 import com.whatsmode.shopify.mvp.MvpFragment;
 import com.whatsmode.shopify.ui.helper.LoadingDialog;
 import com.whatsmode.shopify.ui.helper.OnLoadMoreListener;
 import com.whatsmode.shopify.ui.helper.OnRefreshListener;
 import com.whatsmode.shopify.ui.helper.RecycleViewDivider;
 import com.whatsmode.shopify.ui.widget.SwipeToLoadLayout;
+import com.zchu.log.Logger;
 
 
 public abstract class BaseListFragment<P extends BaseListContract.Presenter> extends MvpFragment<P> implements OnRefreshListener, OnLoadMoreListener, BaseListContract.View {
@@ -98,6 +101,10 @@ public abstract class BaseListFragment<P extends BaseListContract.Presenter> ext
     @Override
     public void setAdapter(BaseQuickAdapter adapter) {
         this.mAdapter = adapter;
+        if (Constant.CART_FRAGMENT_NAME.equals(this.getClass().getName())) {
+            View empty = LayoutInflater.from(getActivity()).inflate(R.layout.empty_cart, null);
+            mAdapter.setEmptyView(empty);
+        }
         recyclerView.setAdapter(adapter);
     }
 

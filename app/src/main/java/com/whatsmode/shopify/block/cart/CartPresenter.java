@@ -50,6 +50,7 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
                         } else {
                             getView().showTheEnd();
                         }
+                        getView().checkSpanner();
                     }
                 });
     }
@@ -69,6 +70,7 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
                         .centerCrop()
                         .into(ivIcon);
                 helper.setText(R.id.description, item.name)
+                        .setText(R.id.price, new StringBuilder("$").append(String.valueOf(item.getPrice())))
                         .setText(R.id.quality, String.valueOf(item.quality));
                 TextView tvQuality = helper.getView(R.id.quality);
                 helper.getView(R.id.reduce).setOnClickListener(v -> {
@@ -99,14 +101,11 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
                 helper.itemView.setOnClickListener(v -> {
                     getView().jumpToDetail(item);
                 });
-                helper.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View v) {
-                        if (isViewAttached()) {
-                            getView().deleteItem(item);
-                        }
-                        return true;
+                helper.itemView.setOnLongClickListener(v -> {
+                    if (isViewAttached()) {
+                        getView().deleteItem(item);
                     }
+                    return true;
                 });
             }
         };

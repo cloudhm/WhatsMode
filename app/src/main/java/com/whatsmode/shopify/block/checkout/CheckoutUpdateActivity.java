@@ -195,7 +195,7 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
                     .into(icon);
             TextView tvPrice = (TextView) view.findViewById(R.id.price);
             TextView tvFontSize = (TextView) view.findViewById(R.id.sizeAndColor);
-            tvFontSize.setText(i.getSize());
+            tvFontSize.setText(i.getColorAndSize());
             tvPrice.setText(new StringBuilder("$").append(i.getPrice()));
             TextView tvCount = (TextView) view.findViewById(R.id.checkout_count);
             tvCount.setText(new StringBuilder("x").append(String.valueOf(i.getQuality())));

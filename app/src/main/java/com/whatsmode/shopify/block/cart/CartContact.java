@@ -26,6 +26,8 @@ public class CartContact{
         void showDeleteDialog();
 
         void deleteItem(CartItem item);
+
+        void checkSpanner();
     }
 
     interface Presenter extends BaseListContract.Presenter<View> {

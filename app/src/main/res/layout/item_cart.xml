@@ -58,14 +58,13 @@
         android:layout_toRightOf="@+id/icon"
         android:ellipsize="end"
         android:maxLines="1"
-        android:text="$4.99 "
+        android:text=""
         android:textColor="@color/gray_333333"
         android:textSize="14sp" />
 
     <LinearLayout
         android:id="@+id/operation_layout"
         android:layout_width="120dp"
-        android:visibility="gone"
         android:layout_height="30dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"

@@ -150,13 +150,7 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
         toolbarTitle.setVisibility(View.GONE);
     }
 
-    @Override
-    public void switch2Cart() {
-        switchMenu(menuEdit);
-        ivMenu.setVisibility(View.GONE);
-        ivLogo.setVisibility(View.GONE);
-        toolbarTitle.setVisibility(View.VISIBLE);
-        toolbar.setVisibility(View.VISIBLE);
+    public void defineCartTitle(){
         try {
             List<CartItem> cartItemList = (List<CartItem>) PreferencesUtil.getObject(WhatsApplication.getContext(), Constant.CART_LOCAL);
             toolbarTitle.setText(ListUtils.isEmpty(cartItemList) ? "My Cart" : "My Cart(" + cartItemList.size() + ")");
@@ -165,7 +159,16 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+    }
 
+    @Override
+    public void switch2Cart() {
+        switchMenu(menuEdit);
+        ivMenu.setVisibility(View.GONE);
+        ivLogo.setVisibility(View.GONE);
+        toolbarTitle.setVisibility(View.VISIBLE);
+        toolbar.setVisibility(View.VISIBLE);
+        defineCartTitle();
     }
 
     @Override

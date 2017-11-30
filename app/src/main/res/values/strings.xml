@@ -109,6 +109,8 @@
     <string name="update_address">Update address</string>
     <string name="update_address_success">Update address success</string>
     <string name="add_address_success">Add address success</string>
+    <string name="plz_select_address">please select your address</string>
+    <string name="cart_empty_now">Your cart is currently empty！</string>
 
     <array name="category">
         <item>APPAREL</item>

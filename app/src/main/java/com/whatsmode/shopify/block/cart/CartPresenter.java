@@ -9,11 +9,9 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.shopify.graphql.support.ID;
 import com.whatsmode.library.util.ListUtils;
 import com.whatsmode.library.util.PreferencesUtil;
-import com.whatsmode.library.util.ScreenUtils;
 import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.WhatsApplication;
 import com.whatsmode.shopify.base.BaseRxPresenter;
-import com.whatsmode.shopify.block.account.data.AccountManager;
 import com.whatsmode.shopify.common.Constant;
 import com.whatsmode.shopify.ui.helper.CommonAdapter;
 import com.whatsmode.shopify.ui.helper.CommonViewHolder;
@@ -52,6 +50,7 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
                         } else {
                             getView().showTheEnd();
                         }
+                        getView().checkSpanner();
                     }
                 });
     }
@@ -63,12 +62,18 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
             @Override
             protected void convert(CommonViewHolder helper, CartItem item) {
                 ImageView ivIcon  = helper.getView(R.id.icon);
+                View line = helper.getView(R.id.separator);
+                line.setVisibility(helper.getAdapterPosition() == cartItems.size() -1 ? View.GONE:View.VISIBLE);
                 Glide.with(WhatsApplication.getContext())
                         .load(item.getIcon())
                         .asBitmap()
                         .centerCrop()
+                        .placeholder(R.drawable.defaut_product)
+                        .error(R.drawable.defaut_product)
                         .into(ivIcon);
                 helper.setText(R.id.description, item.name)
+                        .setText(R.id.sizeAndColor,item.getColorAndSize())
+                        .setText(R.id.price, new StringBuilder("$").append(String.valueOf(item.getPrice())))
                         .setText(R.id.quality, String.valueOf(item.quality));
                 TextView tvQuality = helper.getView(R.id.quality);
                 helper.getView(R.id.reduce).setOnClickListener(v -> {
@@ -99,14 +104,11 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
                 helper.itemView.setOnClickListener(v -> {
                     getView().jumpToDetail(item);
                 });
-                helper.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View v) {
-                        if (isViewAttached()) {
-                            getView().deleteItem(item);
-                        }
-                        return true;
+                helper.itemView.setOnLongClickListener(v -> {
+                    if (isViewAttached()) {
+                        getView().deleteItem(item);
                     }
+                    return true;
                 });
             }
         };
@@ -115,17 +117,12 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
 
     @Override
     public void doLoadMoreData() {
-        io.reactivex.Observable.create((ObservableOnSubscribe<List<CartItem>>) e -> e.onNext(CartItem.mockItem()))
+        io.reactivex.Observable.create((ObservableOnSubscribe<List<CartItem>>)
+                e -> e.onNext(CartItem.mockItem()))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(cartItems1 -> {
                     if (mAdapter != null && isViewAttached()) {
-//                        if (mAdapter.getData().size() > 20) {
-//                            getView().showTheEnd();
-//                        } else {
-//                            getView().showContent(false);
-//                            mAdapter.addData(CartItem.mockItem());
-//                        }
                         getView().showTheEnd();
                     }
                 });
@@ -141,7 +138,7 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
         }
     }
 
-    private boolean selectAll;
+    public boolean selectAll;
 
     @Override
     public void onClickView(View v) {
@@ -167,6 +164,11 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
         }
     }
 
+    @Override
+    public boolean isSelectAll() {
+        return selectAll;
+    }
+
     private void checkOut(List<CartItem> data) {
         if (!ListUtils.isEmpty(data)) {
             if (isViewAttached()) {
@@ -175,7 +177,6 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
             CartRepository.create().parameter(data).checkoutListener(new CartRepository.QueryListener() {
                 @Override
                 public void onSuccess(ID id) {
-                    // TODO: 2017/11/23  save  checkoutID
                     if (isViewAttached()) {
                         getView().hideLoading();
                         getView().showSuccess(id);
@@ -191,6 +192,7 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
                 }
             }).execute();
         } else {
+            if(isViewAttached())
             getView().showError(WhatsApplication.getContext().getString(R.string.plz_select_products));
         }
     }

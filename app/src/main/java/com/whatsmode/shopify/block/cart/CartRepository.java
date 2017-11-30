@@ -117,6 +117,7 @@ public class CartRepository {
                 });
     }
 
+    // get checkout ID
     void execute() {
 
         Storefront.MutationQuery query = Storefront.mutation(mutationQuery -> mutationQuery
@@ -167,7 +168,7 @@ public class CartRepository {
     private Storefront.CheckoutCreateInput generateInput(List<CartItem> data) {
         ArrayList<Storefront.CheckoutLineItemInput> arrayList =
                 data.stream().map(cartItem ->
-                        new Storefront.CheckoutLineItemInput(cartItem.quality, new ID(cartItem.id)))
+                        new Storefront.CheckoutLineItemInput(cartItem.quality, new ID(cartItem.getId().replace("\n",""))))
                         .collect(Collectors.toCollection(ArrayList::new));
         return new Storefront.CheckoutCreateInput()
                 .setLineItemsInput(Input.value(arrayList));
@@ -218,7 +219,7 @@ public class CartRepository {
                                                 .price()
                                                 .title()
                                         )
-                                )
+                                ).webUrl()
                         )
                 )
         );
@@ -232,7 +233,7 @@ public class CartRepository {
                         Storefront.Checkout check = (Storefront.Checkout) response.data().getNode();
                         if (check != null) {
                             List<Storefront.ShippingRate> shippingRates = check.getAvailableShippingRates().getShippingRates();
-                            shippingListener.onSuccess(shippingRates);
+                            shippingListener.onSuccess(shippingRates,check.getWebUrl());
                         } else {
                             shippingListener.onError(WhatsApplication.getContext().getString(R.string.no_shipping_currently));
                         }
@@ -249,7 +250,7 @@ public class CartRepository {
     }
 
     public interface ShippingListener {
-        void onSuccess(List<Storefront.ShippingRate> shippingRates);
+        void onSuccess(List<Storefront.ShippingRate> shippingRates,String url);
 
         void onError(String message);
     }

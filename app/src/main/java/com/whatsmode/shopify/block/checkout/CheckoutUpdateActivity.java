@@ -53,7 +53,7 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
     private RelativeLayout addressDetailLayout;
     private Address mCurrentAddr;
     private boolean mCreateState;
-    public  static final int REQUEST_CODE_ADDRESS = 1001;
+    public static final int REQUEST_CODE_ADDRESS = 1001;
     private EditText etGiftCard;
     private TextView mTvGiftAmount;
     private TextView mTvGiftUnit;
@@ -64,6 +64,7 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
     private TextView mTvShippingMethod;
     private Double shippingCost;
     private TextView mTvShippingCost;
+    public String webUrl;
 
     @NonNull
     @Override
@@ -91,6 +92,7 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
 
         mTvShippingMethod = (TextView) findViewById(R.id.shiping_method);
         findViewById(R.id.check_card).setOnClickListener(this);
+        findViewById(R.id.pay).setOnClickListener(this);
         addressDetailLayout = (RelativeLayout) findViewById(R.id.address_detail);
         getParseData();
         ToolbarHelper.ToolbarHolder toolbarHolder = ToolbarHelper.initToolbar(this, R.id.toolbar, true, "CHECK OUT");
@@ -122,14 +124,14 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
         if (AccountManager.isLoginStatus()) {
             signInLayout.setVisibility(View.GONE);
             addAddressLayout.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             signInLayout.setVisibility(View.VISIBLE);
             addAddressLayout.setVisibility(View.GONE);
         }
         if (mCurrentAddr == null) {
             addAddressLayout.setVisibility(View.VISIBLE);
             addressDetailLayout.setVisibility(View.GONE);
-        }else{
+        } else {
             addAddressLayout.setVisibility(View.GONE);
             addressDetailLayout.setVisibility(View.VISIBLE);
             fillAddress();
@@ -145,15 +147,13 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
                     mCurrentAddr = (Address) data.getSerializableExtra(KeyConstant.KEY_EXTRA_SELECT_ADDRESS);
                     fillAddress();
                     showLoading();
-                    mPresenter.bindAddress(id,mCurrentAddr);
-                    Logger.e(mCurrentAddr);
+                    mPresenter.bindAddress(id, mCurrentAddr);
                     break;
             }
         }
     }
 
     private void fillAddress() {
-        // TODO: 2017/11/29
         if (mCurrentAddr == null) {
             return;
         }
@@ -167,14 +167,14 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
     }
 
     private void addItemToLayout() {
-        if(dataSource == null || ListUtils.isEmpty(dataSource.cartItems))
+        if (dataSource == null || ListUtils.isEmpty(dataSource.cartItems))
             return;
         TextView tvTitle = new TextView(this);
         try {
             List<CartItem> cartItems = (List<CartItem>) PreferencesUtil.getObject(this, Constant.CART_LOCAL);
             tvTitle.setText("Product(" + (ListUtils.isEmpty(cartItems) ? 0 : cartItems.size()) + ")");
-            tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP,18);
-            tvTitle.setPadding(ScreenUtils.dip2px(this,15),ScreenUtils.dip2px(this,15),ScreenUtils.dip2px(this,15),0);
+            tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+            tvTitle.setPadding(ScreenUtils.dip2px(this, 15), ScreenUtils.dip2px(this, 15), ScreenUtils.dip2px(this, 15), 0);
             tvTitle.setTextColor(Color.BLACK);
             layoutContainer.addView(tvTitle);
         } catch (IOException e) {
@@ -193,7 +193,7 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
                     .into(icon);
             TextView tvPrice = (TextView) view.findViewById(R.id.price);
             TextView tvFontSize = (TextView) view.findViewById(R.id.sizeAndColor);
-            tvFontSize.setText(i.getSize());
+            tvFontSize.setText(i.getColorAndSize());
             tvPrice.setText(new StringBuilder("$").append(i.getPrice()));
             TextView tvCount = (TextView) view.findViewById(R.id.checkout_count);
             tvCount.setText(new StringBuilder("x").append(String.valueOf(i.getQuality())));
@@ -210,7 +210,7 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
     public static Intent newIntent(Context context, ID id, CartItemLists cartItemList) {
         Intent intent = new Intent(context, CheckoutUpdateActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable(EXTRA_ITEMS,cartItemList);
+        bundle.putSerializable(EXTRA_ITEMS, cartItemList);
         intent.putExtra(EXTRA_BUNDLE, bundle);
         intent.putExtra(EXTRA_ID, id);
         return intent;
@@ -222,13 +222,27 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
     }
 
     @Override
-    public ID getCheckoutId() {return id;}
+    public ID getCheckoutId() {
+        return id;
+    }
 
     @Override
-    public void showSuccess(String url) {runOnUiThread(() -> {hideLoading();AppNavigator.jumpToWebActivity(CheckoutUpdateActivity.this, WebActivity.STATE_PAY, url);});}
+    public void jumpToPay() {
+        if (mCurrentAddr == null) {
+            ToastUtil.showToast(getString(R.string.plz_select_address));
+        } else if (!TextUtils.isEmpty(webUrl)) {
+            AppNavigator.jumpToWebActivity(CheckoutUpdateActivity.this, WebActivity.STATE_PAY, webUrl);
+            finish();
+        }
+    }
 
     @Override
-    public void showError(String message) {runOnUiThread(() -> {hideLoading();ToastUtil.showToast(message);});}
+    public void showError(String message) {
+        runOnUiThread(() -> {
+            hideLoading();
+            ToastUtil.showToast(message);
+        });
+    }
 
     @Override
     public void showLoading() {
@@ -240,17 +254,16 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
         runOnUiThread(() -> super.hideLoading());
     }
 
-    @Override
-    public Address getAddress() {
-        return new Address("", "guiping road", "minhangqu", "Alabama", "Alabama", "", "United States",
-                "", "", "z", "ym", "zym", "13333333333", "35201", "");
-    }
 
     @Override
     public void checkGiftCard() {
-        showLoading();
         String cardNum = etGiftCard.getText().toString();
-        mPresenter.checkGiftCard(cardNum,id);
+        if (!TextUtils.isEmpty(cardNum)) {
+            showLoading();
+            mPresenter.checkGiftCard(cardNum, id);
+        }else{
+            ToastUtil.showToast(getString(R.string.plz_fill_card_num));
+        }
     }
 
     @Override
@@ -261,7 +274,7 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
     @Override
     public void jumpToSelectAddress() {
         Intent intent = new Intent(this, AddressListActivity.class);
-        startActivityForResult(intent,REQUEST_CODE_ADDRESS);
+        startActivityForResult(intent, REQUEST_CODE_ADDRESS);
     }
 
     @Override
@@ -278,17 +291,20 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
 
     @Override
     public void showGiftIllegal(String message) {
-        runOnUiThread(() ->{
+        runOnUiThread(() -> {
             hideLoading();
-            ToastUtil.showToast(message);});
+            ToastUtil.showToast(message);
+        });
     }
 
     @Override
-    public void onShippingResponse(List<Storefront.ShippingRate> shippingRates) {
+    public void onShippingResponse(List<Storefront.ShippingRate> shippingRates, String url) {
         runOnUiThread(() -> {
+            hideLoading();
             if (ListUtils.isEmpty(shippingRates)) {
                 return;
             }
+            webUrl = url;
             mTvShippingMethod.setText(shippingRates.get(0).getTitle());
             shippingCost = shippingRates.get(0).getPrice().doubleValue();
             mTvShippingCost.setText(new StringBuilder("+$").append(String.valueOf(shippingCost)));

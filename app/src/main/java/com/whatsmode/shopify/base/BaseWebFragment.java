@@ -45,7 +45,6 @@ public class BaseWebFragment extends BaseFragment {
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                Logger.e("---finish---" + url);
                 mProgressBar.setVisibility(View.GONE);
             }
 
@@ -77,7 +76,6 @@ public class BaseWebFragment extends BaseFragment {
                 }else{
                     view.loadUrl(url);
                 }
-                Logger.e("---override---" + url);
                 return true;
             }
         });

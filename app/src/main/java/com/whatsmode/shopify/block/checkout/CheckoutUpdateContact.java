@@ -15,15 +15,11 @@ public class CheckoutUpdateContact {
 
         ID getCheckoutId();
 
-        void showSuccess(String url);
-
         void showError(String message);
 
         void showLoading();
 
         void hideLoading();
-
-        Address getAddress();
 
         void checkGiftCard();
 
@@ -35,7 +31,9 @@ public class CheckoutUpdateContact {
 
         void showGiftIllegal(String message);
 
-        void onShippingResponse(List<Storefront.ShippingRate> shippingRates);
+        void onShippingResponse(List<Storefront.ShippingRate> shippingRates,String url);
+
+        void jumpToPay();
     }
 
     interface Presenter extends MvpPresenter<View> {

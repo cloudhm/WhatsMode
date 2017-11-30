@@ -13,8 +13,24 @@ public class CartItem implements Serializable{
     String icon = "https://img14.360buyimg.com/da/jfs/t4024/266/968344120/18745/d610233c/5863a879Nb8f02aeb.jpg";
     String id;
     Double price;
-    String color;
-    String size;
+    Double comparePrice;
+    String colorAndSize;
+
+    public String getColorAndSize() {
+        return colorAndSize;
+    }
+
+    public void setColorAndSize(String colorAndSize) {
+        this.colorAndSize = colorAndSize;
+    }
+
+    public Double getComparePrice() {
+        return comparePrice;
+    }
+
+    public void setComparePrice(Double comparePrice) {
+        this.comparePrice = comparePrice;
+    }
 
     public String getIcon() {
         return icon;
@@ -22,22 +38,6 @@ public class CartItem implements Serializable{
 
     public void setIcon(String icon) {
         this.icon = icon;
-    }
-
-    public String getColor() {
-        return color;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
-    }
-
-    public String getSize() {
-        return size;
-    }
-
-    public void setSize(String size) {
-        this.size = size;
     }
 
     public Double getPrice() {
@@ -86,6 +86,9 @@ public class CartItem implements Serializable{
         this.price = price;
         this.url = url;
         this.id = id;
+    }
+
+    public CartItem() {
     }
 
     static List<CartItem> mockItem(){

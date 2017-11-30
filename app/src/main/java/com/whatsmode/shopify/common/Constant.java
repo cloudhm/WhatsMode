@@ -21,6 +21,7 @@ public class Constant {
     public static final int KEY_ACCOUNT_DISMISS = 0x4444;
     public static final String URL_SEARCH = "https://whatsmode.com/search";
     public static final String CART_LOCAL = "cart_local";
+    public static final String CART_FRAGMENT_NAME = "com.whatsmode.shopify.block.cart.CartFragment";
 
 
     static {

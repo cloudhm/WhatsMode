@@ -11,7 +11,6 @@ import com.whatsmode.shopify.common.Constant;
 import com.zchu.log.Logger;
 
 import org.greenrobot.eventbus.EventBus;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;

@@ -70,6 +70,8 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
         checkSpanner();
         if (mPresenter.isSelectAll()) {
             onCheckSelect(true,list);
+            // FIXME: 2017/11/30
+            checkTotal();
         }
     }
 

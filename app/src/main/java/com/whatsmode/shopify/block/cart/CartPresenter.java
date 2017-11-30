@@ -77,9 +77,9 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
                         .setText(R.id.quality, String.valueOf(item.quality));
                 TextView tvQuality = helper.getView(R.id.quality);
                 helper.getView(R.id.reduce).setOnClickListener(v -> {
-                    int quality = Math.max(0, Integer.parseInt(tvQuality.getText().toString())- 1);
+                    int quality = Math.max(1, Integer.parseInt(tvQuality.getText().toString())- 1);
                     item.quality = quality;
-                    tvQuality.setText(String.valueOf(quality));
+                    tvQuality.setText(String.valueOf(item.quality));
                     if (isViewAttached()) {
                         getView().checkTotal();
                     }

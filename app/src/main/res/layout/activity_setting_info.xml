@@ -5,20 +5,50 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
-    <include layout="@layout/toolbar"/>
+    <android.support.v7.widget.Toolbar
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/white"
+        app:navigationIcon="@drawable/btn_return"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:contentInsetStartWithNavigation="0dp" >
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_gravity="center"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sp_18"
+            android:text="@string/settings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </android.support.v7.widget.Toolbar>
+
+    <ScrollView
+        android:background="@color/separator"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:orientation="vertical"
+            android:background="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
     <LinearLayout
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:paddingTop="12dp"
         android:paddingBottom="12dp"
+        android:background="@color/white"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
             android:text="@string/first_name"
             android:textSize="@dimen/sp_14"
-            android:textColor="@color/black"
+            android:textColor="@color/gray_bbbbbb"
             android:layout_gravity="center_vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
@@ -28,14 +58,17 @@
             android:textSize="@dimen/sp_14"
             android:layout_marginLeft="18dp"
             android:background="@null"
-            android:layout_gravity="center_vertical"
+            android:gravity="end"
+            android:layout_gravity="center_vertical|end"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
     </LinearLayout>
 
     <View
-        android:background="@color/black"
+        android:background="@color/separator"
         android:layout_width="match_parent"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:layout_height="2px"/>
 
     <LinearLayout
@@ -49,7 +82,7 @@
         <TextView
             android:text="@string/last_name"
             android:textSize="@dimen/sp_14"
-            android:textColor="@color/black"
+            android:textColor="@color/gray_bbbbbb"
             android:layout_gravity="center_vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
@@ -59,14 +92,17 @@
             android:textSize="@dimen/sp_14"
             android:layout_marginLeft="18dp"
             android:background="@null"
-            android:layout_gravity="center_vertical"
+            android:gravity="end"
+            android:layout_gravity="center_vertical|end"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
     </LinearLayout>
 
     <View
-        android:background="@color/black"
+        android:background="@color/separator"
         android:layout_width="match_parent"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:layout_height="2px"/>
 
     <LinearLayout
@@ -80,26 +116,29 @@
         <TextView
             android:text="@string/email"
             android:textSize="@dimen/sp_14"
-            android:textColor="@color/black"
+            android:textColor="@color/gray_bbbbbb"
             android:layout_gravity="center_vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <EditText
             android:id="@+id/email"
-            android:textColor="@color/black"
+            android:textColor="@color/gray_bbbbbb"
             android:textSize="@dimen/sp_14"
             android:layout_marginLeft="18dp"
             android:enabled="false"
             android:background="@null"
-            android:layout_gravity="center_vertical"
+            android:gravity="end"
+            android:layout_gravity="center_vertical|end"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
     </LinearLayout>
 
     <View
-        android:background="@color/gray_d5d5d5"
+        android:background="@color/separator"
         android:layout_width="match_parent"
-        android:layout_height="8dp"/>
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_height="2px"/>
 
     <TextView
         android:id="@+id/change_password"
@@ -108,48 +147,100 @@
         android:paddingTop="12dp"
         android:paddingBottom="12dp"
         android:textSize="@dimen/sp_14"
-        android:textColor="@color/black"
+        android:textColor="@color/gray_bbbbbb"
         android:paddingLeft="16dp"
+        android:drawableRight="@drawable/button_right"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
     <View
-    android:background="@color/gray_d5d5d5"
+    android:background="@color/separator"
     android:layout_width="match_parent"
     android:layout_height="8dp"/>
 
-    <TextView
-        android:id="@+id/clear_cache"
-        android:text="@string/clear_cache"
-        android:paddingRight="16dp"
-        android:paddingTop="12dp"
-        android:paddingBottom="12dp"
-        android:textSize="@dimen/sp_14"
-        android:paddingLeft="16dp"
-        android:textColor="@color/black"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/clear_cache"
+            android:text="@string/clear_cache"
+            android:paddingRight="16dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:textSize="@dimen/sp_14"
+            android:paddingLeft="16dp"
+            android:textColor="@color/gray_bbbbbb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/cache_size"
+            android:text="0 M"
+            android:paddingRight="16dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:textSize="@dimen/sp_14"
+            android:paddingLeft="16dp"
+            android:textColor="@color/black"
+            android:layout_gravity="end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </FrameLayout>
 
     <View
-        android:background="@color/gray_d5d5d5"
+        android:background="@color/separator"
         android:layout_width="match_parent"
-        android:layout_height="18dp"/>
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_height="2px"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/push_notification"
+            android:text="@string/push_notification"
+            android:paddingRight="16dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:textSize="@dimen/sp_14"
+            android:paddingLeft="16dp"
+            android:textColor="@color/gray_bbbbbb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <Switch
+            android:id="@+id/push_switch"
+            android:paddingRight="8dp"
+            android:layout_gravity="center_vertical|end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </FrameLayout>
+
+    <View
+        android:background="@color/separator"
+        android:layout_width="match_parent"
+        android:layout_height="38dp"/>
 
     <TextView
         android:id="@+id/sign_out"
         android:text="@string/sign_out"
         android:paddingRight="16dp"
-        android:paddingTop="12dp"
-        android:paddingBottom="12dp"
+        android:paddingTop="14dp"
+        android:paddingBottom="14dp"
         android:gravity="center"
-        android:textSize="@dimen/sp_14"
-        android:textColor="@color/black"
+        android:textSize="@dimen/sp_16"
+        android:textColor="@color/sign_out"
+        android:textStyle="bold"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
     <View
-        android:background="@color/gray_d5d5d5"
+        android:background="@color/separator"
         android:layout_width="match_parent"
         android:layout_height="18dp"/>
-
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

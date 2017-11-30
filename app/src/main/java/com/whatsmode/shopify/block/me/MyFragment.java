@@ -9,11 +9,19 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.text.Layout;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.whatsmode.library.exception.APIException;
 import com.whatsmode.library.util.SnackUtil;
+import com.whatsmode.shopify.AppNavigator;
 import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.block.account.LoginActivity;
 import com.whatsmode.shopify.block.address.Address;
@@ -29,7 +37,7 @@ import java.util.List;
  * Created by tom on 17-11-20.
  */
 
-public class MyFragment extends MvpFragment<MyContract.Presenter> implements MyContract.View, View.OnClickListener {
+public class MyFragment extends MvpFragment<MyContract.Presenter> implements MyContract.View, View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, BaseQuickAdapter.RequestLoadMoreListener, BaseQuickAdapter.OnItemClickListener {
 
     private TabLayout mTabLayout;
     private ViewPager mVpBody;
@@ -37,6 +45,10 @@ public class MyFragment extends MvpFragment<MyContract.Presenter> implements MyC
     private TextView mViewAddress;
     private TextView mName;
     private TextView mEmail;
+    private SwipeRefreshLayout mSwipe;
+    private OrderListAdapter mOrderListAdapter;
+    private List<Order> mList;
+    private RecyclerView mRecyclerView;
 
     public static MyFragment newInstance(){
         MyFragment fragment = new MyFragment();
@@ -48,16 +60,39 @@ public class MyFragment extends MvpFragment<MyContract.Presenter> implements MyC
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        mSwipe = (SwipeRefreshLayout) view.findViewById(R.id.swipe);
+        mSwipe.setOnRefreshListener(this);
+
+        /**/
+        initRecyclerView();
+        mPresenter.getCustomer();
+        mPresenter.refreshOrderList();
+    }
+
+    private void initRecyclerView() {
+        mList = new ArrayList<>();
+        mOrderListAdapter = new OrderListAdapter(
+                R.layout.item_order_item, mList
+        );
+        View header = LayoutInflater.from(getActivity()).inflate(R.layout.header_my, null);
+        findView(header);
+        mOrderListAdapter.addHeaderView(header,0);
+        mOrderListAdapter.setFragment(this);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerView.setAdapter(mOrderListAdapter);
+        mOrderListAdapter.setOnLoadMoreListener(this);
+        mOrderListAdapter.setOnItemClickListener(this);
+
+    }
+
+    private void findView(View view){
         view.findViewById(R.id.avatar).setOnClickListener(this);
         mViewAddress = (TextView) view.findViewById(R.id.view_address);
         mViewAddress.setOnClickListener(this);
         mName = (TextView) view.findViewById(R.id.name);
         mEmail = (TextView) view.findViewById(R.id.email);
-        view.findViewById(R.id.order_history).setOnClickListener(this);
-        mTabLayout = (TabLayout) view.findViewById(R.id.tabs);
-        mVpBody = (ViewPager) view.findViewById(R.id.vp_body);
-        initViewPager();
-        mPresenter.getCustomer();
     }
 
     @NonNull
@@ -88,14 +123,25 @@ public class MyFragment extends MvpFragment<MyContract.Presenter> implements MyC
         }
     }
 
+    public void completeRefresh() {
+        if (mSwipe != null && mSwipe.isRefreshing()) {
+            mSwipe.setRefreshing(false);
+        }
+    }
+
     @Override
     public void onError(int code, String msg) {
         SnackUtil.toastShow(getContext(),msg);
-
+        completeRefresh();
+        if (code == APIException.CODE_SESSION_EXPIRE) {
+            AppNavigator.jumpToLogin(getActivity());
+        }
     }
 
     @Override
     public void showCustomer(Customer customer) {
+        completeRefresh();
+        if(customer == null) return;
         mName.setText(customer.getLastName() + customer.getFirstName());
         mEmail.setText(customer.getEmail());
         Address defaultAddress = customer.getDefaultAddress();
@@ -110,104 +156,55 @@ public class MyFragment extends MvpFragment<MyContract.Presenter> implements MyC
         }
     }
 
-
-    List<String> titles;
-    private void initViewPager() {
-        try {
-
-            titles = new ArrayList<>();
-            titles.add("Order");
-
-            mTabLayout.addTab(mTabLayout.newTab().setText(titles.get(0)));
-
-            mTabLayout.setTabTextColors(getResources().getColor(R.color.white), getResources().getColor(R.color.black));
-
-
-            mFragments = new ArrayList<Fragment>();
-            Bundle bundle = new Bundle();
-            OrderListFragment orderListFragment = new OrderListFragment();
-            mFragments.add(orderListFragment);
-            TabFragmentPagerAdapter tabFragmentPagerAdapter = new TabFragmentPagerAdapter(
-                    getChildFragmentManager(), mFragments);
-            mVpBody.setAdapter(new TabFragmentPagerAdapter(
-                    getChildFragmentManager(), mFragments));
-            mVpBody.setCurrentItem(0);
-            mVpBody.setOnPageChangeListener(new MyOnPageChangeListener());
-
-
-            mTabLayout.setupWithViewPager(mVpBody);
-            mTabLayout.setTabsFromPagerAdapter(tabFragmentPagerAdapter);
-
-        } catch (Exception e) {
-            Log.e("initViewPager", "initViewPager", e);
+    @Override
+    public void showContent(@LoadType.checker int type, @NonNull List<Order> orders) {
+        if(mOrderListAdapter == null) return;
+        completeRefresh();
+        switch (type) {
+            case LoadType.TYPE_REFRESH_SUCCESS:
+                if (orders.isEmpty()) {
+                    SnackUtil.toastShow(getActivity(),"order list is empty");
+                    mList.clear();
+                    mOrderListAdapter.notifyDataSetChanged();
+                    return;
+                }
+                mList.clear();
+                mList.addAll(orders);
+                mOrderListAdapter.notifyDataSetChanged();
+                //mOrderListAdapter.refresh(orders);
+                break;
+            case LoadType.TYPE_LOAD_MORE_SUCCESS:
+                mOrderListAdapter.addData(orders);
+                break;
         }
-
-    }
-
-    public class TabFragmentPagerAdapter extends FragmentPagerAdapter {
-        ArrayList<Fragment> mFragmentsList;
-
-        public TabFragmentPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        public TabFragmentPagerAdapter(FragmentManager fm, ArrayList<Fragment> fragmentsList) {
-            super(fm);
-            mFragmentsList = fragmentsList;
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return mFragmentsList.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return mFragmentsList.size();
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return titles.get(position);
+        if (Order.sHasNextPage) {
+            mOrderListAdapter.loadMoreComplete();
+        }else {
+            mOrderListAdapter.loadMoreEnd();
         }
     }
 
-    public class TabOnClickListener implements View.OnClickListener {
-        private int index = 0;
 
-        public TabOnClickListener(int i) {
-        }
+    @Override
+    public void onRefresh() {
+        mPresenter.getCustomer();
+        mPresenter.refreshOrderList();
+    }
 
-        @Override
-        public void onClick(View v) {
+
+    @Override
+    public void onLoadMoreRequested() {
+        if (Order.sHasNextPage) {
+            mPresenter.loadMoreOrderList();
         }
     }
 
-    public class MyOnPageChangeListener implements ViewPager.OnPageChangeListener {
-
-        @Override
-        public void onPageSelected(int arg0) {
-
-            switch (arg0) {
-                case 0:
-
-                    break;
-                case 1:
-
-                    break;
-                case 2:
-
-                    break;
-
-            }
-        }
-
-        @Override
-        public void onPageScrolled(int arg0, float arg1, int arg2) {
-        }
-
-        @Override
-        public void onPageScrollStateChanged(int arg0) {
-        }
+    @Override
+    public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+        Order order = mList.get(position);
+        Intent intent = new Intent(getActivity(),OrderDetailsActivity.class);
+        intent.putExtra(KeyConstant.KEY_ORDER, order);
+        startActivity(intent);
     }
+
 }

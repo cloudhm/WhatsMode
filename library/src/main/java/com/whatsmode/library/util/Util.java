@@ -5,6 +5,8 @@ import android.view.inputmethod.InputMethodManager;
 
 import org.joda.time.DateTime;
 
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -46,6 +48,17 @@ public class Util {
     public static String dateTimeToString(DateTime dateTime){
         String s = dateTime.toString(" dd,yyyy HH:mm a");
         int monthOfYear = dateTime.getMonthOfYear();
-        return sManth[monthOfYear] + s;
+        return sManth[monthOfYear - 1] + s;
+    }
+
+    public static String convertInputStreamToString(InputStream  is) throws Exception{
+        byte[] buf = new byte[1024];
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+        for (int i; (i = is.read(buf)) != -1;) {
+            baos.write(buf, 0, i);
+        }
+        String data = baos.toString("UTF-8");
+        return data;
     }
 }

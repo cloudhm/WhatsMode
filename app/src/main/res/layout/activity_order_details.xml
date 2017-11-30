@@ -81,6 +81,7 @@
         android:layout_height="wrap_content">
         <ImageView
             android:id="@+id/shipping_image"
+            android:visibility="gone"
             android:src="@drawable/order_receive"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
@@ -88,17 +89,17 @@
         <TextView
             android:id="@+id/shipping_name"
             android:textSize="@dimen/sp_16"
-            android:textColor="@color/black"
+            android:textColor="@color/gray_bbbbbb"
             android:layout_toRightOf="@+id/shipping_image"
             android:layout_alignTop="@+id/shipping_image"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="0dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
         <TextView
             android:id="@+id/shipping_address"
             android:textSize="@dimen/sp_16"
-            android:textColor="@color/black"
+            android:textColor="@color/gray_bbbbbb"
             android:layout_below="@+id/shipping_name"
             android:layout_alignLeft="@+id/shipping_name"
             android:layout_width="wrap_content"
@@ -253,6 +254,7 @@
         android:layout_height="1dp"/>
 
     <FrameLayout
+        android:visibility="gone"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:paddingTop="16dp"
@@ -278,6 +280,7 @@
     </FrameLayout>
 
     <View
+        android:visibility="gone"
         android:background="@color/separator"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"

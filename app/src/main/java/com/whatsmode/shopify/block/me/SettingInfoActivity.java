@@ -7,6 +7,8 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -40,6 +42,7 @@ public class SettingInfoActivity extends MvpActivity<SettingInfoContract.Present
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting_info);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
+
         mFirstName = (EditText) findViewById(R.id.first_name);
         mLastName = (EditText) findViewById(R.id.last_name);
         mEmail = (EditText) findViewById(R.id.email);
@@ -110,6 +113,7 @@ public class SettingInfoActivity extends MvpActivity<SettingInfoContract.Present
                 break;
         }
     }
+
 
     private void changePassword() {
         Dialog dialog = new Dialog(this);

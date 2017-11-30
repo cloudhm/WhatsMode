@@ -9,6 +9,7 @@ import android.widget.HeaderViewListAdapter;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.whatsmode.library.util.ScreenUtils;
 import com.whatsmode.library.util.Util;
 import com.whatsmode.shopify.R;
@@ -31,16 +32,15 @@ public class OrderListAdapter extends CommonAdapter<Order> {
 
     @Override
     public CommonViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        CommonViewHolder commonViewHolder = super.onCreateViewHolder(parent, viewType);
-        commonViewHolder.itemView.setClickable(false);
-        return commonViewHolder;
+
+        return super.onCreateViewHolder(parent, viewType);
     }
 
     @Override
     protected void convert(CommonViewHolder helper, Order item) {
         List<LineItem> lineItems = item.getLineItems();
         helper.setText(R.id.order_num, "Order#"+String.valueOf(item.getOrderNumber()))
-            .setText(R.id.price,"Total:$"+String.valueOf(item.getTotalPrice().intValue()))
+            .setText(R.id.price,"Total:$"+String.valueOf(item.getTotalPrice().doubleValue()))
             .setText(R.id.items,String.valueOf(lineItems == null ? 0 : lineItems.size()) + " items");
 
         ClickRecyclerView recyclerView = helper.getView(R.id.recycler_view);
@@ -50,15 +50,17 @@ public class OrderListAdapter extends CommonAdapter<Order> {
         recyclerView.setOnRecyclerClickLinstener(new ClickRecyclerView.OnRecyclerClickLinstener() {
             @Override
             public void onRecyclerClick() {
-                mOrderListFragment.onItemClick(OrderListAdapter.this,helper.itemView, helper.getLayoutPosition());
+                int position = helper.getLayoutPosition() - getHeaderLayoutCount();
+                mMyFragment.onItemClick(OrderListAdapter.this,helper.itemView,position);
             }
         });
+
     }
 
-    OrderListFragment mOrderListFragment;
+    MyFragment mMyFragment;
 
-    public void setFragment(OrderListFragment orderListFragment) {
-        mOrderListFragment = orderListFragment;
+    public void setFragment(MyFragment myFragment) {
+        mMyFragment = myFragment;
     }
 
     class ImageAdapter extends CommonAdapter<LineItem>{
@@ -69,6 +71,7 @@ public class OrderListAdapter extends CommonAdapter<Order> {
 
         @Override
         public CommonViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            if(viewType == BaseQuickAdapter.HEADER_VIEW) super.onCreateViewHolder(parent,viewType);
             CommonViewHolder commonViewHolder = super.onCreateViewHolder(parent, viewType);
             ImageView imageView = commonViewHolder.getView(R.id.image_view);
             ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();

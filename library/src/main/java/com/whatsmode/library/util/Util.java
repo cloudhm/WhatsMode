@@ -46,6 +46,6 @@ public class Util {
     public static String dateTimeToString(DateTime dateTime){
         String s = dateTime.toString(" dd,yyyy HH:mm a");
         int monthOfYear = dateTime.getMonthOfYear();
-        return sManth[monthOfYear] + s;
+        return sManth[monthOfYear - 1] + s;
     }
 }

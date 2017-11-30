@@ -1,6 +1,8 @@
 package com.whatsmode.shopify.block.me;
 
+import android.graphics.Paint;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.whatsmode.shopify.R;
@@ -22,11 +24,14 @@ public class LineItemAdapter extends CommonAdapter<LineItem> {
     protected void convert(CommonViewHolder helper, LineItem item) {
         LineItem.Variant variant = item.getVariant();
         String price = String.valueOf(variant == null ? 0 : variant.getPrice());
+        String compareAtPrice = String.valueOf(variant == null ? 0 : variant.getCompareAtPrice());
         helper.setText(R.id.title,item.getTitle())
                 .setText(R.id.price,mContext.getString(R.string.dollar_sign) + price)
                 .setText(R.id.quantity,"x"+String.valueOf(item.getQuantity()))
                 .setText(R.id.sku,mContext.getString(R.string.sku_) + (variant == null ? "" : variant.getSku()))
-                .setText(R.id.model,getSelectOptions(variant != null ? variant.getSelectedOptions() : null));
+                .setText(R.id.model,getSelectOptions(variant != null ? variant.getSelectedOptions() : null))
+                .setText(R.id.original_price,mContext.getString(R.string.dollar_sign) + compareAtPrice + mContext.getString(R.string.usd));
+        ((TextView)helper.getView(R.id.original_price)).getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
         String src = null;
         if ((src = getSrc(variant)) != null) {
             Glide.with(mContext).load(src).placeholder(R.mipmap.ic_launcher).into((ImageView) helper.getView(R.id.image_view));

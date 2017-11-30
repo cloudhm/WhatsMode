@@ -24,21 +24,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * no use
  * Created by tom on 17-11-21.
  */
 
-public class OrderListFragment extends MvpFragment<OrderListPresenter> implements OrderListContract.View, SwipeRefreshLayout.OnRefreshListener, BaseQuickAdapter.RequestLoadMoreListener, BaseQuickAdapter.OnItemClickListener {
+public class OrderListFragment extends MvpFragment<OrderListPresenter> implements OrderListContract.View, BaseQuickAdapter.RequestLoadMoreListener, BaseQuickAdapter.OnItemClickListener {
 
     private OrderListAdapter mOrderListAdapter;
     private List<Order> mList;
     private RecyclerView mRecyclerView;
-    private SwipeRefreshLayout mSwipe;
+    //private SwipeRefreshLayout mSwipe;
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
-        mSwipe = (SwipeRefreshLayout) view.findViewById(R.id.swipe);
+        //mSwipe = (SwipeRefreshLayout) view.findViewById(R.id.swipe);
         initRecycler();
         mPresenter.refreshOrderList();
     }
@@ -48,13 +49,12 @@ public class OrderListFragment extends MvpFragment<OrderListPresenter> implement
         mOrderListAdapter = new OrderListAdapter(
                 R.layout.item_order_item, mList
         );
-        mOrderListAdapter.setFragment(this);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mOrderListAdapter);
         mOrderListAdapter.setOnLoadMoreListener(this);
         mOrderListAdapter.setOnItemClickListener(this);
-        mSwipe.setOnRefreshListener(this);
+        //mSwipe.setOnRefreshListener(this);
     }
 
     @NonNull
@@ -63,16 +63,16 @@ public class OrderListFragment extends MvpFragment<OrderListPresenter> implement
         return new OrderListPresenter();
     }
 
-    public void completeRefresh(){
+    /*public void completeRefresh(){
         if (mSwipe != null && mSwipe.isRefreshing()) {
             mSwipe.setRefreshing(false);
         }
-    }
+    }*/
 
     @Override
     public void showContent(@LoadType.checker int type, @NonNull List<Order> orders) {
         if(mOrderListAdapter == null) return;
-        completeRefresh();
+        //completeRefresh();
         switch (type) {
             case LoadType.TYPE_REFRESH_SUCCESS:
                 if (orders.isEmpty()) {
@@ -96,7 +96,7 @@ public class OrderListFragment extends MvpFragment<OrderListPresenter> implement
 
     @Override
     public void onError(int code, String msg) {
-        completeRefresh();
+       // completeRefresh();
         SnackUtil.toastShow(getContext(),msg);
         if (code == APIException.CODE_SESSION_EXPIRE) {
             AppNavigator.jumpToLogin(getActivity());
@@ -108,7 +108,6 @@ public class OrderListFragment extends MvpFragment<OrderListPresenter> implement
         return R.layout.fragment_order_list;
     }
 
-    @Override
     public void onRefresh() {
         mPresenter.refreshOrderList();
     }
@@ -127,4 +126,5 @@ public class OrderListFragment extends MvpFragment<OrderListPresenter> implement
         intent.putExtra(KeyConstant.KEY_ORDER, order);
         startActivity(intent);
     }
+
 }

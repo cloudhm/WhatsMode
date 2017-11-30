@@ -17,5 +17,6 @@
     <color name="gray_bbb">#bbbbbb</color>
     <color name="gray_f3">#f3f3f3</color>
     <color name="amount_color">#151515</color>
+    <color name="sign_out">#E60A5B</color>
 
 </resources>

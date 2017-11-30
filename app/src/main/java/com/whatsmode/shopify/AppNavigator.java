@@ -34,7 +34,9 @@ public class AppNavigator {
     }
 
     public static void jumpToLogin(Activity activity) {
-        activity.startActivity(new Intent(activity,LoginActivity.class));
+        Intent intent = new Intent(activity, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        activity.startActivity(intent);
     }
 
     public static void jumpToGiftActivity(Activity activity, ID checkoutId) {

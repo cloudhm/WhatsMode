@@ -104,6 +104,7 @@ public class LineItem implements Serializable{
         private String title;
         private String sku;
         private BigDecimal price;
+        private BigDecimal compareAtPrice;
         private Image image;
         private List<SelectedOptions> selectedOptions;
 
@@ -118,11 +119,12 @@ public class LineItem implements Serializable{
         public Variant() {
         }
 
-        public Variant(boolean availableForSale, String title, String sku, BigDecimal price, Image image, List<SelectedOptions> selectedOptions) {
+        public Variant(boolean availableForSale, String title, String sku, BigDecimal price,BigDecimal compareAtPrice, Image image, List<SelectedOptions> selectedOptions) {
             this.availableForSale = availableForSale;
             this.title = title;
             this.sku = sku;
             this.price = price;
+            this.compareAtPrice = compareAtPrice;
             this.image = image;
             this.selectedOptions = selectedOptions;
         }
@@ -157,6 +159,14 @@ public class LineItem implements Serializable{
 
         public void setPrice(BigDecimal price) {
             this.price = price;
+        }
+
+        public BigDecimal getCompareAtPrice() {
+            return compareAtPrice;
+        }
+
+        public void setCompareAtPrice(BigDecimal compareAtPrice) {
+            this.compareAtPrice = compareAtPrice;
         }
 
         public Image getImage() {

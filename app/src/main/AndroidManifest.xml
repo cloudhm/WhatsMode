@@ -30,6 +30,7 @@
         <activity android:name=".block.account.LoginActivity"
                   android:screenOrientation="portrait"
                   android:theme="@style/StatusImmersion"
+                  android:launchMode="singleTop"
                   android:windowSoftInputMode="adjustPan|adjustUnspecified"
             >
 
@@ -95,6 +96,11 @@
         </activity>
 
         <activity android:name=".block.me.SettingInfoActivity"
+                  android:screenOrientation="portrait"
+                  android:theme="@style/StatusImmersion"
+            />
+
+        <activity android:name=".block.me.ChangePasswordActivity"
                   android:screenOrientation="portrait"
                   android:theme="@style/StatusImmersion"
             />

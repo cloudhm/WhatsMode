@@ -47,9 +47,6 @@ public class CheckoutUpdatePresenter extends BaseRxPresenter<CheckoutUpdateConta
 
     @Override
     public void checkGiftCard(String cardNum, ID id) {
-        if (TextUtils.isEmpty(cardNum) || TextUtils.isEmpty(id.toString())) {
-            ToastUtil.showToast(R.string.plz_fill_card_num);
-        }else{
             CartRepository.create().checkout(id.toString(),cardNum, new CartRepository.GiftCheckListener() {
                 @Override
                 public void exist(String balance) {
@@ -65,7 +62,6 @@ public class CheckoutUpdatePresenter extends BaseRxPresenter<CheckoutUpdateConta
                     }
                 }
             });
-        }
     }
 
     @Override

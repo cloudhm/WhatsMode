@@ -259,9 +259,13 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
 
     @Override
     public void checkGiftCard() {
-        showLoading();
         String cardNum = etGiftCard.getText().toString();
-        mPresenter.checkGiftCard(cardNum, id);
+        if (!TextUtils.isEmpty(cardNum)) {
+            showLoading();
+            mPresenter.checkGiftCard(cardNum, id);
+        }else{
+            ToastUtil.showToast(getString(R.string.plz_fill_card_num));
+        }
     }
 
     @Override

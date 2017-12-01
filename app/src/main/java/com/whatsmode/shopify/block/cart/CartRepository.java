@@ -15,6 +15,7 @@ import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.WhatsApplication;
 import com.whatsmode.shopify.block.account.data.AccountManager;
 import com.whatsmode.shopify.block.address.Address;
+import com.zchu.log.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,9 +82,9 @@ public class CartRepository {
                 .setProvince(address.getProvince())
                 .setZip(address.getZip());
         Storefront.MutationQuery query = Storefront.mutation(mutationQuery
-                -> mutationQuery.checkoutEmailUpdate(checkoutId, AccountManager.getUsername(), emailUpdatePayloadQuery
+                -> mutationQuery.checkoutCustomerAssociate(checkoutId, AccountManager.getCustomerAccessToken(), emailUpdatePayloadQuery
                 -> emailUpdatePayloadQuery.checkout(checkoutQuery
-                -> checkoutQuery.webUrl()).userErrors(userErrorQuery
+                -> checkoutQuery.webUrl().email()).userErrors(userErrorQuery
                 -> userErrorQuery.field().message())).checkoutShippingAddressUpdate(input, checkoutId, shippingAddressUpdatePayloadQuery
                 -> shippingAddressUpdatePayloadQuery.checkout(checkoutQuery
                 -> checkoutQuery.webUrl().shippingAddress(new Storefront.MailingAddressQueryDefinition() {

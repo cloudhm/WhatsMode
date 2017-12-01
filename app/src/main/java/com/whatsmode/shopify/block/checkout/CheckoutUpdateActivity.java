@@ -40,7 +40,6 @@ import com.whatsmode.shopify.ui.helper.ToolbarHelper;
 import java.io.IOException;
 import java.util.List;
 
-import static com.whatsmode.shopify.block.address.AddEditAddressActivity.TYPE_ADD_ADDRESS;
 
 public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Presenter> implements CheckoutUpdateContact.View, View.OnClickListener {
 
@@ -165,6 +164,7 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case REQUEST_CODE_ADDRESS:
+                    if(data.hasExtra(KeyConstant.KEY_EXTRA_SELECT_ADDRESS))
                     mCurrentAddr = (Address) data.getSerializableExtra(KeyConstant.KEY_EXTRA_SELECT_ADDRESS);
                     fillAddress();
                     showLoading();
@@ -193,7 +193,13 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
         TextView tvTitle = new TextView(this);
         try {
             List<CartItem> cartItems = (List<CartItem>) PreferencesUtil.getObject(this, Constant.CART_LOCAL);
-            tvTitle.setText("Product(" + (ListUtils.isEmpty(cartItems) ? 0 : cartItems.size()) + ")");
+            int badge = 0;
+            if (!ListUtils.isEmpty(cartItems)) {
+                for (CartItem cartItem : cartItems) {
+                    badge += cartItem.getQuality();
+                }
+            }
+            tvTitle.setText("Product(" + badge + ")");
             tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
             tvTitle.setPadding(ScreenUtils.dip2px(this, 15), ScreenUtils.dip2px(this, 15), ScreenUtils.dip2px(this, 15), 0);
             tvTitle.setTextColor(Color.BLACK);

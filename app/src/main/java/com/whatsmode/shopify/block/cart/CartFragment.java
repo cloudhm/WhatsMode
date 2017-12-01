@@ -146,10 +146,17 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
     @Override
     public void checkTotal() {
         double total = 0.0;
+        int badge = 0;
         for (CartItem cartItem : checkItem) {
             total += cartItem.getPrice() * cartItem.quality;
         }
+        List<CartItem> totalData = mAdapter.getData();
+        for (CartItem cartItem : totalData) {
+            badge += cartItem.getQuality();
+        }
         tvTotal.setText(new StringBuilder(getString(R.string.unit)).append(Util.getFormatDouble(Math.max(total, 0.0))));
+        MainActivity activity = (MainActivity) getActivity();
+        activity.refreshBottomBar(badge);
     }
 
     @Override

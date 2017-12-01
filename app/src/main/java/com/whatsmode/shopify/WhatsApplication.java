@@ -30,6 +30,7 @@ public class WhatsApplication extends MobApplication {
         sContext = this;
 
         initGraphClient();
+        Thread.setDefaultUncaughtExceptionHandler(AppException.getAppExceptionHandler());
     }
 
     private void initGraphClient() {

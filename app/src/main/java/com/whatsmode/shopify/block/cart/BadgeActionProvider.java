@@ -55,7 +55,13 @@ public class BadgeActionProvider extends ActionProvider {
     public  void initIcon(){
         try {
             List<CartItem> object = (List<CartItem>) PreferencesUtil.getObject(WhatsApplication.getContext(), Constant.CART_LOCAL);
-            setBadge(ListUtils.isEmpty(object) ? 0 : object.size());
+            int badge = 0;
+            if (!ListUtils.isEmpty(object)) {
+                for (CartItem cartItem : object) {
+                    badge += cartItem.quality;
+                }
+            }
+            setBadge(badge);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {

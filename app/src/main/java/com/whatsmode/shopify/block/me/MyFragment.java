@@ -13,9 +13,11 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Layout;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -26,6 +28,7 @@ import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.block.account.LoginActivity;
 import com.whatsmode.shopify.block.address.Address;
 import com.whatsmode.shopify.block.address.AddressListActivity;
+import com.whatsmode.shopify.block.address.AddressUtil;
 import com.whatsmode.shopify.block.address.LoadType;
 import com.whatsmode.shopify.common.KeyConstant;
 import com.whatsmode.shopify.mvp.MvpFragment;
@@ -49,6 +52,7 @@ public class MyFragment extends MvpFragment<MyContract.Presenter> implements MyC
     private OrderListAdapter mOrderListAdapter;
     private List<Order> mList;
     private RecyclerView mRecyclerView;
+    private ViewGroup mOrdeEmpty;
 
     public static MyFragment newInstance(){
         MyFragment fragment = new MyFragment();
@@ -76,8 +80,11 @@ public class MyFragment extends MvpFragment<MyContract.Presenter> implements MyC
                 R.layout.item_order_item, mList
         );
         View header = LayoutInflater.from(getActivity()).inflate(R.layout.header_my, null);
+        View headerOrderEmpty = LayoutInflater.from(getActivity()).inflate(R.layout.header_order_empty, null);
+        mOrdeEmpty = (ViewGroup) headerOrderEmpty.findViewById(R.id.order_empty);
         findView(header);
         mOrderListAdapter.addHeaderView(header,0);
+        mOrderListAdapter.addHeaderView(headerOrderEmpty,1);
         mOrderListAdapter.setFragment(this);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -145,12 +152,13 @@ public class MyFragment extends MvpFragment<MyContract.Presenter> implements MyC
         mName.setText(customer.getLastName() + customer.getFirstName());
         mEmail.setText(customer.getEmail());
         Address defaultAddress = customer.getDefaultAddress();
-        if (defaultAddress != null) {
-            StringBuffer buffer = new StringBuffer();
-            buffer.append(defaultAddress.getAddress1()).append(" ").append(defaultAddress.getAddress2()).append(" ")
-                    .append(defaultAddress.getCity()).append(" ").append(defaultAddress.getProvince()).append(" ")
-                    .append(defaultAddress.getCountry());
-            mViewAddress.setText(buffer.toString());
+        if (defaultAddress != null && defaultAddress.isDefault()) {
+            String joinAddress = AddressUtil.getJoinAddress(defaultAddress);
+            if (TextUtils.isEmpty(joinAddress)) {
+                mViewAddress.setText("add address");
+            }else {
+                mViewAddress.setText(joinAddress);
+            }
         }else{
             mViewAddress.setText("add address");
         }
@@ -160,9 +168,11 @@ public class MyFragment extends MvpFragment<MyContract.Presenter> implements MyC
     public void showContent(@LoadType.checker int type, @NonNull List<Order> orders) {
         if(mOrderListAdapter == null) return;
         completeRefresh();
+        mOrdeEmpty.setVisibility(View.GONE);
         switch (type) {
             case LoadType.TYPE_REFRESH_SUCCESS:
                 if (orders.isEmpty()) {
+                    mOrdeEmpty.setVisibility(View.VISIBLE);
                     SnackUtil.toastShow(getActivity(),"order list is empty");
                     mList.clear();
                     mOrderListAdapter.notifyDataSetChanged();

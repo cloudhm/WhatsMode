@@ -4,12 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -22,9 +22,7 @@ import com.whatsmode.shopify.block.account.LoginActivity;
 import com.whatsmode.shopify.block.me.StatusBarUtil;
 import com.whatsmode.shopify.common.KeyConstant;
 import com.whatsmode.shopify.mvp.MvpActivity;
-import com.whatsmode.shopify.ui.helper.LoadingDialog;
 
-import java.security.Key;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +32,7 @@ import java.util.List;
 
 public class AddressListActivity extends MvpActivity<AddressListPresenter> implements AddressListContract.View, View.OnClickListener {
 
-    private static final int REQUEST_ADD_ADDRESS_CODE = 0X11;
+    private static final int REQUEST_ADD_UPDATE_ADDRESS_CODE = 0X11;
 
     public static final int TYPE_SELECT = 1;
     public static final int TYPE_VIEW = 2;
@@ -117,11 +115,20 @@ public class AddressListActivity extends MvpActivity<AddressListPresenter> imple
                     Intent intent = new Intent(AddressListActivity.this,AddEditAddressActivity.class);
                     intent.putExtra(KeyConstant.KEY_ADDRESS,mList.get(position));
                     intent.putExtra(KeyConstant.KEY_ADD_EDIT_ADDRESS, AddEditAddressActivity.TYPE_EDIT_ADDRESS);
-                    startActivity(intent);
+                    startActivityForResult(intent,REQUEST_ADD_UPDATE_ADDRESS_CODE);
                 } else if (view.getId() == R.id.is_default) {
-                    String id = mList.get(position).getId();
-                    mPresenter.updateDefaultAddress(id);
-                    showLoading();
+
+                    if (view instanceof CheckBox) {
+                        CheckBox checkBox = ((CheckBox)(view));
+                        if (checkBox.isChecked()) {
+                            String id = mList.get(position).getId();
+                            mPresenter.updateDefaultAddress(id);
+                            showLoading();
+                        }else{
+                            checkBox.setChecked(true);
+                        }
+                    }
+
                 }
             }
         });
@@ -207,7 +214,7 @@ public class AddressListActivity extends MvpActivity<AddressListPresenter> imple
             case R.id.add_address:
             case R.id.add_addresses_for_empty:
                 Intent intent = new Intent(this, AddEditAddressActivity.class);
-                startActivityForResult(intent,REQUEST_ADD_ADDRESS_CODE);
+                startActivityForResult(intent, REQUEST_ADD_UPDATE_ADDRESS_CODE);
                 break;
 
 
@@ -217,7 +224,7 @@ public class AddressListActivity extends MvpActivity<AddressListPresenter> imple
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_ADD_ADDRESS_CODE && resultCode == RESULT_OK) {
+        if (requestCode == REQUEST_ADD_UPDATE_ADDRESS_CODE && resultCode == RESULT_OK) {
             mPresenter.refreshAddressList();
         }
     }

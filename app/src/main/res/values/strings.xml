@@ -111,6 +111,8 @@
     <string name="add_address_success">Add address success</string>
     <string name="plz_select_address">please select your address</string>
     <string name="cart_empty_now">Your cart is currently empty！</string>
+    <string name="my_orders">My Orders</string>
+    <string name="order_empty_prompt">You haven\'t placed\n any orders yet.</string>
 
     <array name="category">
         <item>APPAREL</item>

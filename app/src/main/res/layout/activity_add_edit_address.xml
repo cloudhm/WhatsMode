@@ -227,13 +227,13 @@
                     android:layout_gravity="center_vertical"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
-                <EditText
+                <TextView
                     android:id="@+id/country"
                     android:textColor="@color/black"
                     android:textSize="@dimen/sp_14"
                     android:layout_marginLeft="18dp"
                     android:background="@null"
-                    android:gravity="end"
+                    android:gravity="end|center_vertical"
                     android:enabled="false"
                     android:singleLine="true"
                     android:textColorHint="@color/gray_bbbbbb"
@@ -270,13 +270,13 @@
                     android:layout_gravity="center_vertical"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
-                <EditText
+                <TextView
                     android:id="@+id/province"
                     android:textColor="@color/black"
                     android:textSize="@dimen/sp_14"
                     android:layout_marginLeft="18dp"
                     android:background="@null"
-                    android:gravity="end"
+                    android:gravity="end|center_vertical"
                     android:enabled="false"
                     android:focusable="false"
                     android:focusableInTouchMode="false"

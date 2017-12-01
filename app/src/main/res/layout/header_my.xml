@@ -72,6 +72,7 @@
     android:drawablePadding="12dp"
     android:drawableRight="@drawable/button_right"
     android:paddingRight="16dp"
+    android:singleLine="true"
     android:textColor="@color/gray_bbbbbb"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"/>
@@ -95,9 +96,10 @@
     <TextView
         android:textSize="16dp"
         android:textColor="@color/black"
-        android:text="Order"
-        android:gravity="center"
+        android:text="@string/my_orders"
+        android:gravity="start"
         android:padding="16dp"
+        android:textStyle="bold"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 

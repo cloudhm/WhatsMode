@@ -45,7 +45,7 @@ public class AddressListPresenter extends BaseRxPresenter<AddressListContract.Vi
                                     node.getCity(),node.getProvince(),node.getProvinceCode(),node.getCountry(),node.getCountryCode(),
                                     node.getCompany(),node.getFirstName(),node.getLastName(), node.getName(),
                                     node.getPhone(),node.getZip(),edge.getCursor());
-                            if (TextUtils.equals(node.getId().toString(), defaultId)) {
+                            if (TextUtils.equals(node.getId().toString(), defaultId) && !TextUtils.isEmpty(defaultId)) {
                                 address.setDefault(true);
                             }else{
                                 address.setDefault(false);
@@ -114,7 +114,7 @@ public class AddressListPresenter extends BaseRxPresenter<AddressListContract.Vi
                                     node.getCity(),node.getProvince(),node.getProvinceCode(),node.getCountry(),node.getCountryCode(),
                                     node.getCompany(),node.getFirstName(),node.getLastName(), node.getName(),
                                     node.getPhone(),node.getZip(),edge.getCursor());
-                            if (TextUtils.equals(node.getId().toString(), defaultId)) {
+                            if (TextUtils.equals(node.getId().toString(), defaultId) && !TextUtils.isEmpty(defaultId)) {
                                 address.setDefault(true);
                             }else{
                                 address.setDefault(false);

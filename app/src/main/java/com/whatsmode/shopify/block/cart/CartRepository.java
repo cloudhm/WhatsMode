@@ -15,7 +15,6 @@ import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.WhatsApplication;
 import com.whatsmode.shopify.block.account.data.AccountManager;
 import com.whatsmode.shopify.block.address.Address;
-import com.zchu.log.Logger;
 
 import java.util.ArrayList;
 import java.util.List;

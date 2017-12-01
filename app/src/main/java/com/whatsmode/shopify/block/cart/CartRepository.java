@@ -82,9 +82,9 @@ public class CartRepository {
                 .setProvince(address.getProvince())
                 .setZip(address.getZip());
         Storefront.MutationQuery query = Storefront.mutation(mutationQuery
-                -> mutationQuery.checkoutEmailUpdate(checkoutId, AccountManager.getUsername(), emailUpdatePayloadQuery
+                -> mutationQuery.checkoutCustomerAssociate(checkoutId, AccountManager.getCustomerAccessToken(), emailUpdatePayloadQuery
                 -> emailUpdatePayloadQuery.checkout(checkoutQuery
-                -> checkoutQuery.webUrl()).userErrors(userErrorQuery
+                -> checkoutQuery.webUrl().email()).userErrors(userErrorQuery
                 -> userErrorQuery.field().message())).checkoutShippingAddressUpdate(input, checkoutId, shippingAddressUpdatePayloadQuery
                 -> shippingAddressUpdatePayloadQuery.checkout(checkoutQuery
                 -> checkoutQuery.webUrl().shippingAddress(new Storefront.MailingAddressQueryDefinition() {
@@ -123,9 +123,8 @@ public class CartRepository {
         Storefront.MutationQuery query = Storefront.mutation(mutationQuery -> mutationQuery
                 .checkoutCreate(generateInput(dataSource), createPayloadQuery -> createPayloadQuery
                         .checkout(checkoutQuery -> checkoutQuery
-                                .webUrl()
-                        )
-                        .userErrors(userErrorQuery -> userErrorQuery
+                                .webUrl().totalPrice()
+                        ).userErrors(userErrorQuery -> userErrorQuery
                                 .field()
                                 .message()
                         )
@@ -148,7 +147,7 @@ public class CartRepository {
                     if (response.data().getCheckoutCreate().getCheckout() != null) {
                         if (mListener != null) {
                             ID checkoutID = response.data().getCheckoutCreate().getCheckout().getId();
-                            mListener.onSuccess(checkoutID);
+                            mListener.onSuccess(response.data().getCheckoutCreate().getCheckout().getTotalPrice().doubleValue(),checkoutID);
                         }
                     }
                 }
@@ -175,27 +174,34 @@ public class CartRepository {
     }
 
     public void checkout(String checkoutId, String s, GiftCheckListener giftCheckListener) {
-        Storefront.MutationQuery mutation = Storefront.mutation(mutationQuery -> mutationQuery.checkoutGiftCardApply(s, new ID(checkoutId), new Storefront.CheckoutGiftCardApplyPayloadQueryDefinition() {
-            @Override
-            public void define(Storefront.CheckoutGiftCardApplyPayloadQuery _queryBuilder) {
-                _queryBuilder.checkout(_queryBuilder13
+        Storefront.MutationQuery mutation = Storefront.mutation(mutationQuery -> mutationQuery.checkoutGiftCardApply(s,
+                new ID(checkoutId), _queryBuilder -> _queryBuilder.checkout(_queryBuilder13
                         -> _queryBuilder13.appliedGiftCards
                         (Storefront.AppliedGiftCardQuery::balance))
-                        .userErrors(Storefront.UserErrorQuery::message);
-            }
-        }));
+                        .userErrors(Storefront.UserErrorQuery::message)).checkoutDiscountCodeApply(s, new ID(checkoutId), new Storefront.CheckoutDiscountCodeApplyPayloadQueryDefinition() {
+                    @Override
+                    public void define(Storefront.CheckoutDiscountCodeApplyPayloadQuery _queryBuilder) {
+                        _queryBuilder.checkout(_queryBuilder1 -> _queryBuilder1.paymentDue().totalPrice().subtotalPrice())
+                                .userErrors(_queryBuilder12 -> _queryBuilder12.message());
+                    }
+                })
+        );
         client.mutateGraph(mutation)
                 .enqueue(new GraphCall.Callback<Storefront.Mutation>() {
                     @Override
                     public void onResponse(@android.support.annotation.NonNull GraphResponse<Storefront.Mutation> response) {
-                        if (giftCheckListener != null) {
-                            if (ListUtils.isEmpty(response.data().getCheckoutGiftCardApply().getUserErrors())) {
-                                giftCheckListener.exist(String.valueOf(response.data().getCheckoutGiftCardApply()
-                                        .getCheckout().getAppliedGiftCards()
-                                        .get(0).getBalance()));
-                            } else {
-                                giftCheckListener.illegal(response.data().getCheckoutGiftCardApply().getUserErrors().get(0).getMessage());
-                            }
+                        if (giftCheckListener == null) {
+                            return;
+                        }
+                        if (ListUtils.isEmpty(response.data().getCheckoutGiftCardApply().getUserErrors())) {
+                            giftCheckListener.exist(String.valueOf(response.data().getCheckoutGiftCardApply()
+                                    .getCheckout().getAppliedGiftCards().get(0).getBalance()));
+                        }else if(ListUtils.isEmpty(response.data().getCheckoutDiscountCodeApply().getUserErrors())){
+                            Storefront.Checkout checkout = response.data().getCheckoutDiscountCodeApply().getCheckout();
+                            giftCheckListener.exist(String.valueOf(response.data().getCheckoutDiscountCodeApply().getCheckout()
+                                    .getPaymentDue().doubleValue()));
+                        }else{
+                            giftCheckListener.illegal(WhatsApplication.getContext().getString(R.string.card_num_not_exist));
                         }
                     }
 
@@ -219,7 +225,7 @@ public class CartRepository {
                                                 .price()
                                                 .title()
                                         )
-                                ).webUrl()
+                                ).webUrl().totalTax()
                         )
                 )
         );
@@ -233,7 +239,8 @@ public class CartRepository {
                         Storefront.Checkout check = (Storefront.Checkout) response.data().getNode();
                         if (check != null) {
                             List<Storefront.ShippingRate> shippingRates = check.getAvailableShippingRates().getShippingRates();
-                            shippingListener.onSuccess(shippingRates,check.getWebUrl());
+                            shippingListener.onSuccess(check.getTotalTax().doubleValue(),shippingRates,check.getWebUrl());
+
                         } else {
                             shippingListener.onError(WhatsApplication.getContext().getString(R.string.no_shipping_currently));
                         }
@@ -250,13 +257,13 @@ public class CartRepository {
     }
 
     public interface ShippingListener {
-        void onSuccess(List<Storefront.ShippingRate> shippingRates,String url);
+        void onSuccess(Double tax,List<Storefront.ShippingRate> shippingRates,String url);
 
         void onError(String message);
     }
 
     public interface QueryListener {
-        void onSuccess(ID id);
+        void onSuccess(Double totalPrice,ID id);
 
         void onError(String message);
     }

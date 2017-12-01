@@ -22,7 +22,6 @@ import com.whatsmode.shopify.ui.helper.OnLoadMoreListener;
 import com.whatsmode.shopify.ui.helper.OnRefreshListener;
 import com.whatsmode.shopify.ui.helper.RecycleViewDivider;
 import com.whatsmode.shopify.ui.widget.SwipeToLoadLayout;
-import com.zchu.log.Logger;
 
 
 public abstract class BaseListFragment<P extends BaseListContract.Presenter> extends MvpFragment<P> implements OnRefreshListener, OnLoadMoreListener, BaseListContract.View {

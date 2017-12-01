@@ -13,14 +13,11 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
-import com.whatsmode.library.rx.Util;
 import com.whatsmode.library.util.RegexUtils;
 import com.whatsmode.shopify.AppNavigator;
 import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.block.WebActivity;
-import com.zchu.log.Logger;
 
 public class BaseWebFragment extends BaseFragment {
 
@@ -57,7 +54,6 @@ public class BaseWebFragment extends BaseFragment {
             @Override
             public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
                 super.onReceivedError(view, errorCode, description, failingUrl);
-                Logger.e("--receive--" + failingUrl);
                 mProgressBar.setVisibility(View.GONE);
             }
             @TargetApi(Build.VERSION_CODES.M)

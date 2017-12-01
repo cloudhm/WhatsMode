@@ -63,6 +63,7 @@
     <string name="taxes">Taxes</string>
     <string name="coupon">Coupon</string>
     <string name="total">Total</string>
+    <string name="total_price">Total:</string>
     <string name="order_">Order#</string>
     <string name="dollar_sign">$</string>
     <string name="sku_">SKU:</string>
@@ -114,6 +115,7 @@
     <string name="my_orders">My Orders</string>
     <string name="order_empty_prompt">You haven\'t placed\n any orders yet.</string>
     <string name="shipping_addresses">Shipping Addresses</string>
+    <string name="card_num_not_exist">card num is invalid</string>
 
     <array name="category">
         <item>APPAREL</item>

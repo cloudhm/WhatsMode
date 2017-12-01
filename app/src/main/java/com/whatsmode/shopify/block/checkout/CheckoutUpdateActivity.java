@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.shopify.buy3.Storefront;
 import com.shopify.graphql.support.ID;
+import com.whatsmode.library.rx.Util;
 import com.whatsmode.library.util.ListUtils;
 import com.whatsmode.library.util.PreferencesUtil;
 import com.whatsmode.library.util.ScreenUtils;
@@ -26,6 +27,7 @@ import com.whatsmode.shopify.AppNavigator;
 import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.block.WebActivity;
 import com.whatsmode.shopify.block.account.data.AccountManager;
+import com.whatsmode.shopify.block.address.AddEditAddressActivity;
 import com.whatsmode.shopify.block.address.Address;
 import com.whatsmode.shopify.block.address.AddressListActivity;
 import com.whatsmode.shopify.block.cart.CartItem;
@@ -34,16 +36,17 @@ import com.whatsmode.shopify.common.Constant;
 import com.whatsmode.shopify.common.KeyConstant;
 import com.whatsmode.shopify.mvp.MvpActivity;
 import com.whatsmode.shopify.ui.helper.ToolbarHelper;
-import com.zchu.log.Logger;
 
 import java.io.IOException;
 import java.util.List;
+
 
 public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Presenter> implements CheckoutUpdateContact.View, View.OnClickListener {
 
     private static final String EXTRA_ID = "id";
     private static final String EXTRA_ITEMS = "items";
     private static final String EXTRA_BUNDLE = "bundle";
+    private static final String EXTRA_PRICE = "price";
 
     public ID id;
     private CartItemLists dataSource;
@@ -57,7 +60,7 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
     private EditText etGiftCard;
     private TextView mTvGiftAmount;
     private TextView mTvGiftUnit;
-    private Double mBalance;
+    private Double discount;
     private TextView mTvName;
     private TextView mTvPhone;
     private TextView mTvAddressDetail;
@@ -65,6 +68,12 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
     private Double shippingCost;
     private TextView mTvShippingCost;
     public String webUrl;
+    private TextView mTvTax;
+    private Double totalPrice;
+    private TextView mTvTotal;
+    private Double taxCost;
+    private LinearLayout mLayoutCard;
+    private TextView mTvSubTotal;
 
     @NonNull
     @Override
@@ -88,12 +97,18 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
         mTvName = (TextView) findViewById(R.id.name);
         mTvPhone = (TextView) findViewById(R.id.phone);
         mTvAddressDetail = (TextView) findViewById(R.id.detail_address);
+        mTvTotal = (TextView) findViewById(R.id.total_count);
         mTvShippingCost = (TextView) findViewById(R.id.shipping_cost);
+        mTvTax = (TextView) findViewById(R.id.taxes);
+        mTvSubTotal = (TextView) findViewById(R.id.subtotal);
 
         mTvShippingMethod = (TextView) findViewById(R.id.shiping_method);
         findViewById(R.id.check_card).setOnClickListener(this);
         findViewById(R.id.pay).setOnClickListener(this);
         addressDetailLayout = (RelativeLayout) findViewById(R.id.address_detail);
+        mLayoutCard = (LinearLayout) findViewById(R.id.cardLayout);
+        addressDetailLayout.setOnClickListener(this);
+        findViewById(R.id.edit).setOnClickListener(this);
         getParseData();
         ToolbarHelper.ToolbarHolder toolbarHolder = ToolbarHelper.initToolbar(this, R.id.toolbar, true, "CHECK OUT");
         toolbarHolder.titleView.setVisibility(View.VISIBLE);
@@ -114,6 +129,11 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
         }
         if (getIntent().hasExtra(EXTRA_BUNDLE)) {
             dataSource = (CartItemLists) getIntent().getBundleExtra(EXTRA_BUNDLE).getSerializable(EXTRA_ITEMS);
+        }
+        if (getIntent().hasExtra(EXTRA_PRICE)) {
+            totalPrice = getIntent().getDoubleExtra(EXTRA_PRICE, 0.0);
+            mTvTotal.setText(new StringBuilder("$").append(totalPrice));
+            mTvSubTotal.setText(new StringBuilder("$").append(totalPrice));
         }
     }
 
@@ -144,6 +164,7 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case REQUEST_CODE_ADDRESS:
+                    if(data.hasExtra(KeyConstant.KEY_EXTRA_SELECT_ADDRESS))
                     mCurrentAddr = (Address) data.getSerializableExtra(KeyConstant.KEY_EXTRA_SELECT_ADDRESS);
                     fillAddress();
                     showLoading();
@@ -172,14 +193,18 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
         TextView tvTitle = new TextView(this);
         try {
             List<CartItem> cartItems = (List<CartItem>) PreferencesUtil.getObject(this, Constant.CART_LOCAL);
-            tvTitle.setText("Product(" + (ListUtils.isEmpty(cartItems) ? 0 : cartItems.size()) + ")");
+            int badge = 0;
+            if (!ListUtils.isEmpty(cartItems)) {
+                for (CartItem cartItem : cartItems) {
+                    badge += cartItem.getQuality();
+                }
+            }
+            tvTitle.setText("Product(" + badge + ")");
             tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
             tvTitle.setPadding(ScreenUtils.dip2px(this, 15), ScreenUtils.dip2px(this, 15), ScreenUtils.dip2px(this, 15), 0);
             tvTitle.setTextColor(Color.BLACK);
             layoutContainer.addView(tvTitle);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
         for (CartItem i : dataSource.cartItems) {
@@ -207,11 +232,12 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
         checkSignState();
     }
 
-    public static Intent newIntent(Context context, ID id, CartItemLists cartItemList) {
+    public static Intent newIntent(Context context, Double price,ID id, CartItemLists cartItemList) {
         Intent intent = new Intent(context, CheckoutUpdateActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable(EXTRA_ITEMS, cartItemList);
         intent.putExtra(EXTRA_BUNDLE, bundle);
+        intent.putExtra(EXTRA_PRICE, price);
         intent.putExtra(EXTRA_ID, id);
         return intent;
     }
@@ -234,6 +260,14 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
             AppNavigator.jumpToWebActivity(CheckoutUpdateActivity.this, WebActivity.STATE_PAY, webUrl);
             finish();
         }
+    }
+
+    @Override
+    public void jumpToModifyAddress() {
+        Intent intent = new Intent(this, AddEditAddressActivity.class);
+        intent.putExtra(KeyConstant.KEY_ADD_EDIT_ADDRESS,AddEditAddressActivity.TYPE_EDIT_ADDRESS);
+        intent.putExtra(KeyConstant.KEY_ADDRESS, mCurrentAddr);
+        startActivityForResult(intent,REQUEST_CODE_ADDRESS);
     }
 
     @Override
@@ -282,8 +316,9 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
         runOnUiThread(() -> {
             hideLoading();
             if (!TextUtils.isEmpty(balance)) {
-                mTvGiftAmount.setText(new StringBuilder("-$").append(balance));
-                this.mBalance = Double.parseDouble(balance);
+                this.discount = totalPrice - Double.parseDouble(balance);
+                mTvGiftAmount.setText(new StringBuilder("-$").append(Util.getFormatDouble(discount)));
+                mTvTotal.setText(new StringBuilder("$").append(Util.getFormatDouble(totalPrice + shippingCost + taxCost - discount)));
                 mTvGiftUnit.setVisibility(View.VISIBLE);
             }
         });
@@ -298,16 +333,20 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
     }
 
     @Override
-    public void onShippingResponse(List<Storefront.ShippingRate> shippingRates, String url) {
+    public void onShippingResponse(Double tax,List<Storefront.ShippingRate> shippingRates, String url) {
         runOnUiThread(() -> {
             hideLoading();
             if (ListUtils.isEmpty(shippingRates)) {
                 return;
             }
             webUrl = url;
+            this.taxCost = tax;
             mTvShippingMethod.setText(shippingRates.get(0).getTitle());
             shippingCost = shippingRates.get(0).getPrice().doubleValue();
+            mTvTax.setText(new StringBuilder("+$").append(tax));
             mTvShippingCost.setText(new StringBuilder("+$").append(String.valueOf(shippingCost)));
+            mTvTotal.setText(new StringBuilder("$").append(Util.getFormatDouble(totalPrice + shippingCost + tax)));
+            mLayoutCard.setVisibility(View.VISIBLE);
         });
     }
 }

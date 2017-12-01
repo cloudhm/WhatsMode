@@ -157,8 +157,14 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
     public void defineCartTitle(){
         try {
             List<CartItem> cartItemList = (List<CartItem>) PreferencesUtil.getObject(WhatsApplication.getContext(), Constant.CART_LOCAL);
-            toolbarTitle.setText(ListUtils.isEmpty(cartItemList) ? "My Cart" : "My Cart(" + cartItemList.size() + ")");
-            bottomBarItem.setBadge(ListUtils.isEmpty(cartItemList) ? 0 : cartItemList.size());
+            int badge = 0;
+            if (!ListUtils.isEmpty(cartItemList)) {
+                for (CartItem cartItem : cartItemList) {
+                    badge += cartItem.getQuality();
+                }
+            }
+            toolbarTitle.setText(ListUtils.isEmpty(cartItemList) ? "My Cart" : "My Cart(" + badge + ")");
+            bottomBarItem.setBadge(badge);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
@@ -260,5 +266,10 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
             TOUCH_TIME = System.currentTimeMillis();
             ToastUtil.showToast(getString(R.string.press_again_exist));
         }
+    }
+
+    public void refreshBottomBar(int i) {
+        toolbarTitle.setText(i == 0 ? "My Cart" : "My Cart(" + i + ")");
+        bottomBarItem.setBadge(i);
     }
 }

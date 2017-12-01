@@ -13,6 +13,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:fillViewport="true">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -20,8 +21,7 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="15dp">
+                android:layout_height="wrap_content">
 
                 <LinearLayout
                     android:id="@+id/add_address"
@@ -74,7 +74,7 @@
                         android:id="@+id/name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Zhong Chao"
+                        android:text=""
                         android:textColor="@color/gray_333333"
                         android:textSize="14sp" />
 
@@ -84,7 +84,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/name"
                         android:layout_marginTop="4dp"
-                        android:text="12818485107"
+                        android:text=""
                         android:textColor="@color/gray_bbb"
                         android:textSize="14sp" />
 
@@ -96,15 +96,16 @@
                         android:layout_marginTop="4dp"
                         android:ellipsize="end"
                         android:maxLines="3"
-                        android:text="4114 Sepulveda Blvd,Culver City,Culver City "
+                        android:text=""
                         android:textColor="@color/gray_bbb"
                         android:textSize="14sp" />
 
                     <ImageView
                         android:id="@+id/edit"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
+                        android:padding="7dp"
                         android:src="@drawable/icon_edit" />
 
                     <View
@@ -127,6 +128,7 @@
                             android:id="@+id/text_ship"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginRight="15dp"
                             android:text="Shipping method"
                             android:textColor="@color/gray_bbb"
                             android:textSize="14sp" />
@@ -136,18 +138,24 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
-                            android:text="Standard Shipping  >"
+                            android:ellipsize="end"
+                            android:singleLine="true"
+                            android:text=""
                             android:textColor="@color/gray_333333"
                             android:textSize="14sp" />
                     </RelativeLayout>
                 </RelativeLayout>
+
             </RelativeLayout>
 
             <LinearLayout
+                android:id="@+id/cardLayout"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
+                android:layout_marginTop="15dp"
                 android:background="@color/white"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
                 <EditText
                     android:id="@+id/gift_card_edit"
@@ -156,9 +164,9 @@
                     android:layout_weight="1"
                     android:background="@null"
                     android:gravity="left|center_vertical"
+                    android:hint="@string/gift_card_hint"
                     android:paddingLeft="15dp"
                     android:singleLine="true"
-                    android:hint="@string/gift_card_hint"
                     android:textColor="@color/gray_333333"
                     android:textSize="14sp" />
 
@@ -176,11 +184,11 @@
                 <TextView
                     android:id="@+id/gift_unit"
                     android:layout_width="wrap_content"
-                    android:visibility="gone"
                     android:layout_height="wrap_content"
                     android:text="USD"
                     android:textColor="@color/btn_sure"
-                    android:textSize="10dp" />
+                    android:textSize="10dp"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/check_card"
@@ -232,7 +240,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:text="$14.97"
+                        android:text=""
                         android:textColor="@color/gray_333333"
                         android:textSize="14sp" />
 
@@ -274,7 +282,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:text="+$10.00"
+                        android:text=""
                         android:textColor="@color/gray_333333"
                         android:textSize="14sp" />
 
@@ -316,7 +324,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:text="+$0.00"
+                        android:text=""
                         android:textColor="@color/gray_333333"
                         android:textSize="14sp" />
 
@@ -357,7 +365,7 @@
             android:layout_marginRight="13dp"
             android:layout_toLeftOf="@+id/pay"
             android:gravity="center_vertical"
-            android:text="$14.97"
+            android:text=""
             android:textColor="@color/colorAccent"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -369,7 +377,7 @@
             android:layout_marginRight="7dp"
             android:layout_toLeftOf="@+id/total_count"
             android:gravity="center_vertical"
-            android:text="@string/total_text" />
+            android:text="@string/total_price" />
 
         <TextView
             android:layout_width="wrap_content"

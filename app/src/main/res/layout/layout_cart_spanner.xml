@@ -28,7 +28,7 @@
         android:textColor="@color/white"
         android:textSize="14sp"
         android:layout_alignParentRight="true"
-        android:layout_width="140dp"
+        android:layout_width="120dp"
         android:text="@string/checkout"
         android:layout_height="48dp" />
 
@@ -59,7 +59,7 @@
         android:textColor="@color/white"
         android:textSize="14sp"
         android:layout_alignParentRight="true"
-        android:layout_width="140dp"
+        android:layout_width="120dp"
         android:text="@string/delete"
         android:layout_height="48dp" />
 </RelativeLayout>

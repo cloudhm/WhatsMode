@@ -23,7 +23,6 @@ import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.base.BaseListFragment;
 import com.whatsmode.shopify.block.WebActivity;
 import com.whatsmode.shopify.block.main.MainActivity;
-import com.zchu.log.Logger;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -70,6 +69,8 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
         checkSpanner();
         if (mPresenter.isSelectAll()) {
             onCheckSelect(true,list);
+            // FIXME: 2017/11/30
+            checkTotal();
         }
     }
 
@@ -127,9 +128,8 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
     }
 
     @Override
-    public void showSuccess(ID id) {
-        //AppNavigator.jumpToWebActivity(getActivity(), WebActivity.STATE_CHECKOUT,webUrl);
-        AppNavigator.jumpToCheckoutUpdateActivity(getActivity(),id,new CartItemLists(checkItem));
+    public void showSuccess(Double price,ID id) {
+        AppNavigator.jumpToCheckoutUpdateActivity(getActivity(),price,id,new CartItemLists(checkItem));
     }
 
     @Override
@@ -146,10 +146,17 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
     @Override
     public void checkTotal() {
         double total = 0.0;
+        int badge = 0;
         for (CartItem cartItem : checkItem) {
             total += cartItem.getPrice() * cartItem.quality;
         }
+        List<CartItem> totalData = mAdapter.getData();
+        for (CartItem cartItem : totalData) {
+            badge += cartItem.getQuality();
+        }
         tvTotal.setText(new StringBuilder(getString(R.string.unit)).append(Util.getFormatDouble(Math.max(total, 0.0))));
+        MainActivity activity = (MainActivity) getActivity();
+        activity.refreshBottomBar(badge);
     }
 
     @Override

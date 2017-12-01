@@ -1,11 +1,9 @@
 package com.whatsmode.shopify.block.checkout;
 
-import android.text.TextUtils;
 import android.view.View;
 
 import com.shopify.buy3.Storefront;
 import com.shopify.graphql.support.ID;
-import com.whatsmode.library.util.ToastUtil;
 import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.base.BaseRxPresenter;
 import com.whatsmode.shopify.block.address.Address;
@@ -29,6 +27,7 @@ public class CheckoutUpdatePresenter extends BaseRxPresenter<CheckoutUpdateConta
                 }
                 break;
             case R.id.iv_add:
+            case R.id.address_detail:
                 if (isViewAttached()) {
                     getView().jumpToSelectAddress();
                 }
@@ -41,6 +40,11 @@ public class CheckoutUpdatePresenter extends BaseRxPresenter<CheckoutUpdateConta
             case R.id.shipping_method_layout:
                 if(isViewAttached())
                 checkShippingMethods(getView().getCheckoutId());
+                break;
+            case R.id.edit:
+                if (isViewAttached()) {
+                    getView().jumpToModifyAddress();
+                }
                 break;
         }
     }
@@ -69,9 +73,9 @@ public class CheckoutUpdatePresenter extends BaseRxPresenter<CheckoutUpdateConta
         CartRepository.create().bindUser(id)
                 .shippingListener(new CartRepository.ShippingListener() {
                     @Override
-                    public void onSuccess(List<Storefront.ShippingRate> shippingRates,String url) {
+                    public void onSuccess(Double tax,List<Storefront.ShippingRate> shippingRates,String url) {
                         if (isViewAttached()) {
-                            getView().onShippingResponse(shippingRates,url);
+                            getView().onShippingResponse(tax,shippingRates,url);
                         }
                     }
 

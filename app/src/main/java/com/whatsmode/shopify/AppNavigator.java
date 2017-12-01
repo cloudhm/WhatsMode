@@ -25,8 +25,8 @@ public class AppNavigator {
         context.startActivity(WebActivity.newIntent(context, title,url));
     }
 
-    public static void jumpToCheckoutUpdateActivity(Context context, ID id, CartItemLists cartItemList){
-        context.startActivity(CheckoutUpdateActivity.newIntent(context,id,cartItemList));
+    public static void jumpToCheckoutUpdateActivity(Context context, Double price,ID id, CartItemLists cartItemList){
+        context.startActivity(CheckoutUpdateActivity.newIntent(context,price,id,cartItemList));
     }
 
     public static void jumpToMain(Activity activity) {

@@ -36,6 +36,8 @@ public class WhatsApplication extends MobApplication {
     private void initJPush() {
         JPushInterface.setDebugMode(true); 	// 设置开启日志,发布时请关闭日志
         JPushInterface.init(this);     		// 初始化 JPush
+        initGraphClient();
+        Thread.setDefaultUncaughtExceptionHandler(AppException.getAppExceptionHandler());
     }
 
     private void initGraphClient() {
@@ -57,7 +59,6 @@ public class WhatsApplication extends MobApplication {
     public void onCreate() {
         super.onCreate();
         sContext = this;
-        initGraphClient();
         initJPush();
     }
 

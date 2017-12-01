@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.whatsmode.library.util.DisplayUtil;
 import com.whatsmode.shopify.R;
-import com.zchu.log.Logger;
 
 public class ToolbarHelper {
 

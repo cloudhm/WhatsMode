@@ -11,7 +11,6 @@ import com.whatsmode.shopify.common.Constant;
 import com.zchu.log.Logger;
 
 import org.greenrobot.eventbus.EventBus;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -43,7 +42,7 @@ public class AndroidJs extends Object {
             }
             CartItem cartItem = new CartItem();
             cartItem.quality += quantity;
-            cartItem.price = Double.parseDouble(productVariantPrice);
+            cartItem.price = Double.parseDouble(productVariantPrice) / 100;
             cartItem.comparePrice = Double.parseDouble(productVariantCompareAtPrice);
             cartItem.colorAndSize = productVariantTitle;
             cartItem.url = link;

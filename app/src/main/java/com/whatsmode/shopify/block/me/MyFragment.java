@@ -168,12 +168,14 @@ public class MyFragment extends MvpFragment<MyContract.Presenter> implements MyC
     public void showContent(@LoadType.checker int type, @NonNull List<Order> orders) {
         if(mOrderListAdapter == null) return;
         completeRefresh();
-        mOrdeEmpty.setVisibility(View.GONE);
+        if (mOrdeEmpty.getVisibility() == View.VISIBLE) {
+            mOrdeEmpty.setVisibility(View.GONE);
+        }
         switch (type) {
             case LoadType.TYPE_REFRESH_SUCCESS:
                 if (orders.isEmpty()) {
                     mOrdeEmpty.setVisibility(View.VISIBLE);
-                    SnackUtil.toastShow(getActivity(),"order list is empty");
+                    //SnackUtil.toastShow(getActivity(),"order list is empty");
                     mList.clear();
                     mOrderListAdapter.notifyDataSetChanged();
                     return;

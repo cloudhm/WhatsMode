@@ -120,6 +120,9 @@ public class AddEditAddressActivity extends MvpActivity<AddEditAddressPresenter>
             mTitle.setText(R.string.update_address);
             getSupportActionBar().setTitle("");
         }
+
+        //requesr focus
+        mFirstName.requestFocus();
     }
 
     @NonNull

@@ -72,7 +72,7 @@ public class AddressListActivity extends MvpActivity<AddressListPresenter> imple
 
     private void init(){
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setTitle("地址列表");
+        getSupportActionBar().setTitle("");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 

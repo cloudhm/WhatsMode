@@ -69,4 +69,6 @@ dependencies {
     // optional library to help with Android Pay purchase flow
     compile 'com.shopify.mobilebuysdk:buy3-pay-support:1.0.2'
     compile 'com.contrarywind:Android-PickerView:3.2.7'
+
+    compile 'com.android.support:multidex:1.0.1'
 }

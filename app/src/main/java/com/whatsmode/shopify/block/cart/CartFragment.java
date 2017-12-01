@@ -23,7 +23,6 @@ import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.base.BaseListFragment;
 import com.whatsmode.shopify.block.WebActivity;
 import com.whatsmode.shopify.block.main.MainActivity;
-import com.zchu.log.Logger;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -129,9 +128,8 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
     }
 
     @Override
-    public void showSuccess(ID id) {
-        //AppNavigator.jumpToWebActivity(getActivity(), WebActivity.STATE_CHECKOUT,webUrl);
-        AppNavigator.jumpToCheckoutUpdateActivity(getActivity(),id,new CartItemLists(checkItem));
+    public void showSuccess(Double price,ID id) {
+        AppNavigator.jumpToCheckoutUpdateActivity(getActivity(),price,id,new CartItemLists(checkItem));
     }
 
     @Override

@@ -31,9 +31,11 @@ public class CheckoutUpdateContact {
 
         void showGiftIllegal(String message);
 
-        void onShippingResponse(List<Storefront.ShippingRate> shippingRates,String url);
+        void onShippingResponse(Double tax,List<Storefront.ShippingRate> shippingRates,String url);
 
         void jumpToPay();
+
+        void jumpToModifyAddress();
     }
 
     interface Presenter extends MvpPresenter<View> {

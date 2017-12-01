@@ -11,7 +11,7 @@ public class CartContact{
 
         void onCheckSelect(boolean selected, CartItem cartItems);
 
-        void showSuccess(ID webUrl);
+        void showSuccess(Double price,ID webUrl);
 
         void showError(String message);
 

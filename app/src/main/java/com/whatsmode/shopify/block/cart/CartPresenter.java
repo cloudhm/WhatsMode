@@ -176,10 +176,10 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
             }
             CartRepository.create().parameter(data).checkoutListener(new CartRepository.QueryListener() {
                 @Override
-                public void onSuccess(ID id) {
+                public void onSuccess(Double price,ID id) {
                     if (isViewAttached()) {
                         getView().hideLoading();
-                        getView().showSuccess(id);
+                        getView().showSuccess(price,id);
                     }
                 }
 

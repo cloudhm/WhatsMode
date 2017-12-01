@@ -42,7 +42,7 @@ public class AndroidJs extends Object {
             }
             CartItem cartItem = new CartItem();
             cartItem.quality += quantity;
-            cartItem.price = Double.parseDouble(productVariantPrice);
+            cartItem.price = Double.parseDouble(productVariantPrice) / 100;
             cartItem.comparePrice = Double.parseDouble(productVariantCompareAtPrice);
             cartItem.colorAndSize = productVariantTitle;
             cartItem.url = link;

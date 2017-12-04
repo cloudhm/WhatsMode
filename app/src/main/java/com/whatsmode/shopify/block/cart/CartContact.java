@@ -28,6 +28,8 @@ public class CartContact{
         void deleteItem(CartItem item);
 
         void checkSpanner();
+
+        void clearCheckItems(boolean selectAll);
     }
 
     interface Presenter extends BaseListContract.Presenter<View> {
@@ -37,6 +39,6 @@ public class CartContact{
 
         boolean isSelectAll();
 
-        void setSelectAll(boolean isSelectAll);
+        void setSelectAll(boolean isSelectAll,boolean isNotify);
     }
 }

@@ -126,11 +126,16 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
         if (selected) {
             checkItem.add(cartItems);
             if (checkItem.size() == mAdapter.getData().size()) {
-                mPresenter.setSelectAll(true);
+                mPresenter.setSelectAll(true,true);
                 ivCheckAll.setSelected(true);
             }
             currentTotal += cartItems.price * cartItems.quality;
         }else{
+            if (checkItem.size() == 1) {
+                mPresenter.setSelectAll(false,true);
+            }else{
+                mPresenter.setSelectAll(false,false);
+            }
             checkItem.remove(cartItems);
             ivCheckAll.setSelected(false);
             currentTotal -= cartItems.price * cartItems.quality;
@@ -247,6 +252,17 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
             MainActivity activity = (MainActivity) getActivity();
             activity.defineCartTitle();
         });
+    }
+
+    @Override
+    public void clearCheckItems(boolean selectAll) {
+        if (checkItem != null) {
+            checkItem.clear();
+            if (selectAll) {
+                checkItem.addAll(mAdapter.getData());
+            }
+            checkTotal();
+        }
     }
 
 

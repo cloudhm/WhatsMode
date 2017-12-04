@@ -104,5 +104,9 @@ public class CartItem implements Serializable{
         return cartItems;
     }
 
-
- }
+    @Override
+    public boolean equals(Object obj) {
+        CartItem cartItem = (CartItem) obj;
+        return getId().equals(cartItem.getId());
+    }
+}

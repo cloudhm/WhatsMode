@@ -23,6 +23,7 @@ import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.base.BaseListFragment;
 import com.whatsmode.shopify.block.WebActivity;
 import com.whatsmode.shopify.block.main.MainActivity;
+import com.zchu.log.Logger;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -217,7 +218,13 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
                     mAdapter.getData().remove(item);
                     mAdapter.notifyDataSetChanged();
                     mPresenter.saveCart(mAdapter.getData());
-                    checkItem.remove(item);
+                    CartItem temp = null;
+                    for (CartItem cartItem : checkItem) {
+                        if (cartItem.getId().equals(item.getId())) {
+                            temp =  cartItem;
+                        }
+                    }
+                    checkItem.remove(temp);
                     checkTotal();
                     checkSpanner();
                 })

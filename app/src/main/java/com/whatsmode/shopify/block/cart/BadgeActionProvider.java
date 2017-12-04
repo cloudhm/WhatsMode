@@ -88,7 +88,7 @@ public class BadgeActionProvider extends ActionProvider {
     }
 
     public void setBadge(int i) {
-        mTvBadge.setText(String.valueOf(i));
+        mTvBadge.setText(i < 100 ?String.valueOf(i) :"..");
         mTvBadge.setVisibility(i == 0 ? View.GONE: View.VISIBLE);
     }
 }

@@ -15,7 +15,6 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import com.github.siyamed.shapeimageview.RoundedImageView;
 import com.innodroid.expandablerecycler.ExpandableRecyclerAdapter;
 import com.whatsmode.library.util.DensityUtil;
 import com.whatsmode.library.util.ListUtils;
@@ -28,7 +27,6 @@ import com.whatsmode.shopify.WhatsApplication;
 import com.whatsmode.shopify.block.WebActivity;
 import com.whatsmode.shopify.block.cart.CartFragment;
 import com.whatsmode.shopify.block.cart.CartItem;
-import com.whatsmode.shopify.block.me.StatusBarUtil;
 import com.whatsmode.shopify.block.cart.JumpCartSelect;
 import com.whatsmode.shopify.common.Constant;
 import com.whatsmode.shopify.mvp.MvpActivity;

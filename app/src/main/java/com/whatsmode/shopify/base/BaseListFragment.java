@@ -159,7 +159,7 @@ public abstract class BaseListFragment<P extends BaseListContract.Presenter> ext
                     , ScreenUtils.dip2px(getActivity(), 5)
                     , ScreenUtils.dip2px(getActivity(), 5)
                     , ScreenUtils.dip2px(getActivity(), 5));
-            textView.setTextColor(Color.BLUE);
+            textView.setTextColor(Color.BLACK);
             mAdapter.addFooterView(textView);
         }
         mSwipeToLoadLayout.postDelayed(() -> mSwipeToLoadLayout.setLoadMoreEnabled(false), 100);

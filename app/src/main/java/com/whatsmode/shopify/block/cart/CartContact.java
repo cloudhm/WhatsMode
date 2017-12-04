@@ -36,5 +36,7 @@ public class CartContact{
         void onClickView(android.view.View v);
 
         boolean isSelectAll();
+
+        void setSelectAll(boolean isSelectAll);
     }
 }

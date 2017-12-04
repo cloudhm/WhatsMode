@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.github.siyamed.shapeimageview.RoundedImageView;
 import com.innodroid.expandablerecycler.ExpandableRecyclerAdapter;
 import com.whatsmode.library.util.DensityUtil;
 import com.whatsmode.library.util.ListUtils;
@@ -204,6 +205,9 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
 
     private void initPopWindowView() {
         View customView = getLayoutInflater().inflate(R.layout.category_menu,null, false);
+        customView.findViewById(R.id.new_arrive).setOnClickListener(this);
+        customView.findViewById(R.id.discover).setOnClickListener(this);
+        customView.findViewById(R.id.sale).setOnClickListener(this);
         RecyclerView recycler = (RecyclerView) customView.findViewById(R.id.recycleView);
         CategoryAdapter adapter = new CategoryAdapter(this);
         adapter.setMode(ExpandableRecyclerAdapter.MODE_ACCORDION);
@@ -227,6 +231,12 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
         String title = menuEdit.getTitle().toString();
         menuEdit.setTitle(title.equals(getString(R.string.edit)) ? R.string.done : R.string.edit);
         item.deleteCartItems(menuEdit.getTitle().toString());
+    }
+
+    @Override
+    public void jumpToAds(int i) {
+        AppNavigator.jumpToWebActivity(this,getResources().getStringArray(R.array.pop_icon_name)[i]
+                ,getResources().getStringArray(R.array.pop_icon_link)[i]);
     }
 
     @Override

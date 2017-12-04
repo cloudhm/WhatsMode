@@ -169,6 +169,12 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
         return selectAll;
     }
 
+    @Override
+    public void setSelectAll(boolean isSelectAll) {
+        selectAll = isSelectAll;
+        mAdapter.notifyDataSetChanged();
+    }
+
     private void checkOut(List<CartItem> data) {
         if (!ListUtils.isEmpty(data)) {
             if (isViewAttached()) {

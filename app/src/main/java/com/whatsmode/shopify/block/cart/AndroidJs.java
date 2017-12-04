@@ -37,8 +37,8 @@ public class AndroidJs extends Object {
             String productVariantPrice = jsonObject.getString("productVariantPrice");
             String link = jsonObject.getString("link");
             int  quantity = 1;
-            if (jsonObject.has("quantity")) {
-                quantity = Integer.parseInt(jsonObject.getString("quantity"));
+            if (jsonObject.has("count")) {
+                quantity = Integer.parseInt(jsonObject.getString("count"));
             }
             CartItem cartItem = new CartItem();
             cartItem.quality += quantity;

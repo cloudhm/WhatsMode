@@ -40,7 +40,7 @@ public class BadgeActionProvider extends ActionProvider {
     public View onCreateActionView() {
         int size = getContext().getResources().getDimensionPixelSize(android.support.design.R.dimen.abc_action_bar_default_height_material);
 
-        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(size, size);
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(size + 10, size + 10);
         View view = LayoutInflater.from(getContext())
                 .inflate(R.layout.layout_cart_icon, null, false);
 

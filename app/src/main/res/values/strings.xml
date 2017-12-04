@@ -137,6 +137,17 @@
         <item>Skirts</item>
     </array>
 
+    <array name="pop_icon_name">
+        <item>News</item>
+        <item>Discover</item>
+        <item>Sale</item>
+    </array>
+
+    <array name="pop_icon_link">
+        <item>https://whatsmode.com/collections/new-arrival</item>
+        <item>https://whatsmode.com/pages/discover-new</item>
+        <item>https://whatsmode.com/collections/sale</item>
+    </array>
     <array name="subCategory_APPAREL_LINK">
         <item>/collections/tops-1</item>
         <item>/collections/dresses</item>

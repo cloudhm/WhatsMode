@@ -27,7 +27,6 @@ import com.whatsmode.shopify.WhatsApplication;
 import com.whatsmode.shopify.block.WebActivity;
 import com.whatsmode.shopify.block.cart.CartFragment;
 import com.whatsmode.shopify.block.cart.CartItem;
-import com.whatsmode.shopify.block.me.StatusBarUtil;
 import com.whatsmode.shopify.block.cart.JumpCartSelect;
 import com.whatsmode.shopify.common.Constant;
 import com.whatsmode.shopify.mvp.MvpActivity;
@@ -205,6 +204,9 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
 
     private void initPopWindowView() {
         View customView = getLayoutInflater().inflate(R.layout.category_menu,null, false);
+        customView.findViewById(R.id.new_arrive).setOnClickListener(this);
+        customView.findViewById(R.id.discover).setOnClickListener(this);
+        customView.findViewById(R.id.sale).setOnClickListener(this);
         RecyclerView recycler = (RecyclerView) customView.findViewById(R.id.recycleView);
         CategoryAdapter adapter = new CategoryAdapter(this);
         adapter.setMode(ExpandableRecyclerAdapter.MODE_ACCORDION);
@@ -228,6 +230,12 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
         String title = menuEdit.getTitle().toString();
         menuEdit.setTitle(title.equals(getString(R.string.edit)) ? R.string.done : R.string.edit);
         item.deleteCartItems(menuEdit.getTitle().toString());
+    }
+
+    @Override
+    public void jumpToAds(int i) {
+        AppNavigator.jumpToWebActivity(this,getResources().getStringArray(R.array.pop_icon_name)[i]
+                ,getResources().getStringArray(R.array.pop_icon_link)[i]);
     }
 
     @Override

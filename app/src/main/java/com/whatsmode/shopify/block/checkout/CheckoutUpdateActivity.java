@@ -164,7 +164,7 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case REQUEST_CODE_ADDRESS:
-                    if(data.hasExtra(KeyConstant.KEY_EXTRA_SELECT_ADDRESS))
+                    if(data != null && data.hasExtra(KeyConstant.KEY_EXTRA_SELECT_ADDRESS))
                     mCurrentAddr = (Address) data.getSerializableExtra(KeyConstant.KEY_EXTRA_SELECT_ADDRESS);
                     fillAddress();
                     showLoading();
@@ -191,11 +191,9 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
         if (dataSource == null || ListUtils.isEmpty(dataSource.cartItems))
             return;
         TextView tvTitle = new TextView(this);
-        try {
-            List<CartItem> cartItems = (List<CartItem>) PreferencesUtil.getObject(this, Constant.CART_LOCAL);
             int badge = 0;
-            if (!ListUtils.isEmpty(cartItems)) {
-                for (CartItem cartItem : cartItems) {
+            if (!ListUtils.isEmpty(dataSource.cartItems)) {
+                for (CartItem cartItem : dataSource.cartItems) {
                     badge += cartItem.getQuality();
                 }
             }
@@ -204,9 +202,6 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
             tvTitle.setPadding(ScreenUtils.dip2px(this, 15), ScreenUtils.dip2px(this, 15), ScreenUtils.dip2px(this, 15), 0);
             tvTitle.setTextColor(Color.BLACK);
             layoutContainer.addView(tvTitle);
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
         for (CartItem i : dataSource.cartItems) {
             View view = LayoutInflater.from(this).inflate(R.layout.checkout_item_cart, null);
             TextView tvName = (TextView) view.findViewById(R.id.description);

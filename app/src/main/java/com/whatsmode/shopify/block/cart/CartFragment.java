@@ -23,6 +23,7 @@ import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.base.BaseListFragment;
 import com.whatsmode.shopify.block.WebActivity;
 import com.whatsmode.shopify.block.main.MainActivity;
+import com.zchu.log.Logger;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -39,6 +40,7 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
     private Button btnCheckout;
     private TextView totalTv;
     private RelativeLayout rlSpannerCheck;
+    private ImageView ivCheckAll;
 
     public static CartFragment newInstance() {
         return new CartFragment();
@@ -49,7 +51,7 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
         super.onViewCreated(view, savedInstanceState);
         rlSpannerCheck = (RelativeLayout) view.findViewById(R.id.spanner_layout);
         btnCheckout = (Button) view.findViewById(R.id.checkOut);
-        ImageView ivCheckAll = (ImageView) view.findViewById(R.id.checkOut_select);
+        ivCheckAll = (ImageView) view.findViewById(R.id.checkOut_select);
         ivCheckAll.setOnClickListener(this);
         btnCheckout.setOnClickListener(this);
         tvTotal = (TextView) view.findViewById(R.id.total_count);
@@ -65,13 +67,17 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
 
     @Subscribe
     public void receive(CartItem list) {
-        mPresenter.doLoadData(true);
-        checkSpanner();
-        if (mPresenter.isSelectAll()) {
-            onCheckSelect(true,list);
-            // FIXME: 2017/11/30
-            checkTotal();
+        if (getActivity() == null) {
+            return;
         }
+        getActivity().runOnUiThread(() -> {
+            mPresenter.doLoadData(true);
+            checkSpanner();
+            if (mPresenter.isSelectAll()) {
+                onCheckSelect(true,list);
+                checkTotal();
+            }
+        });
     }
 
     @Override
@@ -119,9 +125,19 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
         }
         if (selected) {
             checkItem.add(cartItems);
+            if (checkItem.size() == mAdapter.getData().size()) {
+                mPresenter.setSelectAll(true,true);
+                ivCheckAll.setSelected(true);
+            }
             currentTotal += cartItems.price * cartItems.quality;
         }else{
+            if (checkItem.size() == 1) {
+                mPresenter.setSelectAll(false,true);
+            }else{
+                mPresenter.setSelectAll(false,false);
+            }
             checkItem.remove(cartItems);
+            ivCheckAll.setSelected(false);
             currentTotal -= cartItems.price * cartItems.quality;
         }
         tvTotal.setText(new StringBuilder(getString(R.string.unit)).append(Util.getFormatDouble(Math.max(0.0, currentTotal))));
@@ -207,7 +223,13 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
                     mAdapter.getData().remove(item);
                     mAdapter.notifyDataSetChanged();
                     mPresenter.saveCart(mAdapter.getData());
-                    checkItem.remove(item);
+                    CartItem temp = null;
+                    for (CartItem cartItem : checkItem) {
+                        if (cartItem.getId().equals(item.getId())) {
+                            temp =  cartItem;
+                        }
+                    }
+                    checkItem.remove(temp);
                     checkTotal();
                     checkSpanner();
                 })
@@ -230,6 +252,17 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
             MainActivity activity = (MainActivity) getActivity();
             activity.defineCartTitle();
         });
+    }
+
+    @Override
+    public void clearCheckItems(boolean selectAll) {
+        if (checkItem != null) {
+            checkItem.clear();
+            if (selectAll) {
+                checkItem.addAll(mAdapter.getData());
+            }
+            checkTotal();
+        }
     }
 
 

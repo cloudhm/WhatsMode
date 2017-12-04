@@ -18,7 +18,6 @@ import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Button;
 import android.widget.ProgressBar;
 
 import com.whatsmode.library.util.RegexUtils;
@@ -29,7 +28,7 @@ import com.whatsmode.shopify.block.cart.AndroidJs;
 import com.whatsmode.shopify.block.cart.BadgeActionProvider;
 import com.whatsmode.shopify.block.cart.CartItem;
 import com.whatsmode.shopify.block.cart.JumpCartSelect;
-import com.whatsmode.shopify.block.cart.RxRefreshCartList;
+import com.whatsmode.shopify.block.me.ShareUtil;
 import com.whatsmode.shopify.ui.helper.ToolbarHelper;
 
 import org.greenrobot.eventbus.EventBus;
@@ -77,6 +76,16 @@ public class WebActivity extends BaseActivity{
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_share:
+                ShareUtil.showShare(this,EXTRA_TITLE,"",EXTRA_URL,EXTRA_URL);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
 
@@ -105,10 +114,7 @@ public class WebActivity extends BaseActivity{
 
     @Subscribe
     public void receive(CartItem list) {
-        if (mActionProvider != null) {
-            runOnUiThread(() -> mActionProvider.initIcon());
-
-        }
+        if (mActionProvider != null) {runOnUiThread(() -> mActionProvider.initIcon());}
     }
 
     private void initToolBar() {

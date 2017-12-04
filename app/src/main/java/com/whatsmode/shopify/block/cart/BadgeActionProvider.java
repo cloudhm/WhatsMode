@@ -40,7 +40,7 @@ public class BadgeActionProvider extends ActionProvider {
     public View onCreateActionView() {
         int size = getContext().getResources().getDimensionPixelSize(android.support.design.R.dimen.abc_action_bar_default_height_material);
 
-        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(size, size);
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(size + 10, size + 10);
         View view = LayoutInflater.from(getContext())
                 .inflate(R.layout.layout_cart_icon, null, false);
 
@@ -88,7 +88,7 @@ public class BadgeActionProvider extends ActionProvider {
     }
 
     public void setBadge(int i) {
-        mTvBadge.setText(String.valueOf(i));
+        mTvBadge.setText(i < 100 ?String.valueOf(i) :"..");
         mTvBadge.setVisibility(i == 0 ? View.GONE: View.VISIBLE);
     }
 }

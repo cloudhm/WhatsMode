@@ -51,6 +51,7 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
                             getView().showTheEnd();
                         }
                         getView().checkSpanner();
+                        getView().clearCheckItems(selectAll);
                     }
                 });
     }
@@ -167,6 +168,13 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
     @Override
     public boolean isSelectAll() {
         return selectAll;
+    }
+
+    @Override
+    public void setSelectAll(boolean isSelectAll,boolean isNotify) {
+        selectAll = isSelectAll;
+        if(isNotify)
+        mAdapter.notifyDataSetChanged();
     }
 
     private void checkOut(List<CartItem> data) {

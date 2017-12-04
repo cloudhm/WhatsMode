@@ -18,10 +18,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.whatsmode.library.exception.APIException;
+import com.whatsmode.library.rx.RxBus;
 import com.whatsmode.library.util.SnackUtil;
 import com.whatsmode.shopify.AppNavigator;
 import com.whatsmode.shopify.R;
@@ -30,11 +33,17 @@ import com.whatsmode.shopify.block.address.Address;
 import com.whatsmode.shopify.block.address.AddressListActivity;
 import com.whatsmode.shopify.block.address.AddressUtil;
 import com.whatsmode.shopify.block.address.LoadType;
+import com.whatsmode.shopify.block.me.event.LoginEvent;
 import com.whatsmode.shopify.common.KeyConstant;
 import com.whatsmode.shopify.mvp.MvpFragment;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by tom on 17-11-20.
@@ -53,6 +62,8 @@ public class MyFragment extends MvpFragment<MyContract.Presenter> implements MyC
     private List<Order> mList;
     private RecyclerView mRecyclerView;
     private ViewGroup mOrdeEmpty;
+    private RelativeLayout mNoLoginL;
+    private Disposable mSubscribe;
 
     public static MyFragment newInstance(){
         MyFragment fragment = new MyFragment();
@@ -67,11 +78,27 @@ public class MyFragment extends MvpFragment<MyContract.Presenter> implements MyC
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         mSwipe = (SwipeRefreshLayout) view.findViewById(R.id.swipe);
         mSwipe.setOnRefreshListener(this);
+        mNoLoginL = (RelativeLayout) view.findViewById(R.id.no_login_l);
+        Button createAccount = (Button) view.findViewById(R.id.create_account);
+        Button logIn = (Button) view.findViewById(R.id.log_in);
+        createAccount.setOnClickListener(this);
+        logIn.setOnClickListener(this);
 
         /**/
         initRecyclerView();
         mPresenter.getCustomer();
         mPresenter.refreshOrderList();
+        initLoginListener();
+    }
+
+    private void initLoginListener() {
+        mSubscribe = RxBus.getInstance().register(LoginEvent.class)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(loginEvent -> {
+                    mPresenter.getCustomer();
+                    mPresenter.refreshOrderList();
+                });
     }
 
     private void initRecyclerView() {
@@ -127,6 +154,12 @@ public class MyFragment extends MvpFragment<MyContract.Presenter> implements MyC
             case R.id.order_history:
                 ShareUtil.showShare(getActivity(),"https://whatsmode.com/","/storage/emulated/0/adv/af20c843-4081-4bc1-b7f8-b73041672e55.png","https://whatsmode.com/","https://whatsmode.com/");
                 break;
+            case R.id.create_account:
+                AppNavigator.jumpToCreateAccount(getActivity());
+                break;
+            case R.id.log_in:
+                AppNavigator.jumpToLogin(getActivity());
+                break;
         }
     }
 
@@ -141,15 +174,26 @@ public class MyFragment extends MvpFragment<MyContract.Presenter> implements MyC
         SnackUtil.toastShow(getContext(),msg);
         completeRefresh();
         if (code == APIException.CODE_SESSION_EXPIRE) {
-            AppNavigator.jumpToLogin(getActivity());
+            //AppNavigator.jumpToLogin(getActivity());
+            mNoLoginL.setVisibility(View.VISIBLE);
+            mSwipe.setVisibility(View.GONE);
+        }else{
+            mNoLoginL.setVisibility(View.GONE);
+            mSwipe.setVisibility(View.VISIBLE);
         }
+    }
+
+    private void setContentVisible(){
+        mNoLoginL.setVisibility(View.GONE);
+        mSwipe.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void showCustomer(Customer customer) {
         completeRefresh();
+        setContentVisible();
         if(customer == null) return;
-        mName.setText(customer.getLastName() + customer.getFirstName());
+        mName.setText(customer.getLastName() + " " + customer.getFirstName());
         mEmail.setText(customer.getEmail());
         Address defaultAddress = customer.getDefaultAddress();
         if (defaultAddress != null && defaultAddress.isDefault()) {
@@ -167,6 +211,7 @@ public class MyFragment extends MvpFragment<MyContract.Presenter> implements MyC
     @Override
     public void showContent(@LoadType.checker int type, @NonNull List<Order> orders) {
         if(mOrderListAdapter == null) return;
+        setContentVisible();
         completeRefresh();
         if (mOrdeEmpty.getVisibility() == View.VISIBLE) {
             mOrdeEmpty.setVisibility(View.GONE);
@@ -219,4 +264,11 @@ public class MyFragment extends MvpFragment<MyContract.Presenter> implements MyC
         startActivity(intent);
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (mSubscribe != null && !mSubscribe.isDisposed()) {
+            mSubscribe.dispose();
+        }
+    }
 }

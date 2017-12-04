@@ -159,6 +159,7 @@
     android:layout_height="8dp"/>
 
     <FrameLayout
+        android:id="@+id/clear_cache_l"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView

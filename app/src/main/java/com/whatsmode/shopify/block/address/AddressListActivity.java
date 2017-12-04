@@ -216,8 +216,6 @@ public class AddressListActivity extends MvpActivity<AddressListPresenter> imple
                 Intent intent = new Intent(this, AddEditAddressActivity.class);
                 startActivityForResult(intent, REQUEST_ADD_UPDATE_ADDRESS_CODE);
                 break;
-
-
         }
     }
 

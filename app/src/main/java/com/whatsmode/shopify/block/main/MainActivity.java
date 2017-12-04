@@ -61,6 +61,7 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        StatusBarUtil.StatusBarLightMode(this);
         vpContent = (NoScrollViewPager) findViewById(R.id.vp_content);
         vpContent.setOffscreenPageLimit(3);
         ivMenu = (ImageView) findViewById(R.id.menu);

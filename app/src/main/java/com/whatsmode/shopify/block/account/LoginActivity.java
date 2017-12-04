@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.whatsmode.library.rx.RxBus;
 import com.whatsmode.library.util.SnackUtil;
 import com.whatsmode.library.util.Util;
 import com.whatsmode.shopify.AppNavigator;
@@ -28,6 +29,7 @@ import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.block.account.data.AccountManager;
 import com.whatsmode.shopify.block.me.MyFragment;
 import com.whatsmode.shopify.block.me.StatusBarUtil;
+import com.whatsmode.shopify.block.me.event.LoginEvent;
 import com.whatsmode.shopify.common.Constant;
 import com.whatsmode.shopify.common.KeyConstant;
 import com.whatsmode.shopify.mvp.MvpActivity;
@@ -115,8 +117,8 @@ public class LoginActivity extends MvpActivity<LoginPresenter> implements LoginC
     @Override
     public void loginSuccess() {
         setJPushAlias(AccountManager.getUsername());
+        RxBus.getInstance().post(new LoginEvent());
         hideLoading();
-        SnackUtil.toastShow(this,"登录成功");
         AppNavigator.jumpToMain(this);
         finish();
     }
@@ -151,7 +153,9 @@ public class LoginActivity extends MvpActivity<LoginPresenter> implements LoginC
                 startActivityForResult(intent, Constant.KEY_ACCOUNT_DISMISS);
                 break;
             case R.id.create_account:
-                startActivityForResult(new Intent(this,RegisterActivity.class),Constant.KEY_ACCOUNT_DISMISS);
+                Intent intentRegister = new Intent(this, RegisterActivity.class);
+                intentRegister.putExtra(KeyConstant.KEY_IN_LOGIN_JUMP,true);
+                startActivityForResult(intentRegister,Constant.KEY_ACCOUNT_DISMISS);
                 break;
         }
     }

@@ -8,11 +8,14 @@ import android.content.Intent;
 import com.shopify.graphql.support.ID;
 import com.whatsmode.shopify.block.WebActivity;
 import com.whatsmode.shopify.block.account.LoginActivity;
+import com.whatsmode.shopify.block.account.RegisterActivity;
 import com.whatsmode.shopify.block.cart.CartItem;
 import com.whatsmode.shopify.block.cart.CartItemLists;
 import com.whatsmode.shopify.block.checkout.CheckGiftCardActivity;
 import com.whatsmode.shopify.block.checkout.CheckoutUpdateActivity;
 import com.whatsmode.shopify.block.main.MainActivity;
+import com.whatsmode.shopify.block.splash.GuideActivity;
+import com.whatsmode.shopify.common.Constant;
 
 import java.util.List;
 
@@ -33,10 +36,18 @@ public class AppNavigator {
         activity.startActivity(MainActivity.newIntent(activity));
     }
 
+    public static void jumpToGuide(Activity activity) {
+        activity.startActivity(new Intent(activity, GuideActivity.class));
+    }
+
     public static void jumpToLogin(Activity activity) {
         Intent intent = new Intent(activity, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         activity.startActivity(intent);
+    }
+
+    public static void jumpToCreateAccount(Activity activity) {
+        activity.startActivityForResult(new Intent(activity,RegisterActivity.class), Constant.KEY_ACCOUNT_DISMISS);
     }
 
     public static void jumpToGiftActivity(Activity activity, ID checkoutId) {

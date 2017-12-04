@@ -112,7 +112,7 @@
             android:screenOrientation="portrait"
             />
 
-        <activity android:name=".block.account.SplashActivity"
+        <activity android:name=".block.splash.SplashActivity"
                   android:screenOrientation="portrait"
                   android:theme="@style/StatusImmersion"
             >
@@ -132,6 +132,13 @@
                   android:screenOrientation="portrait"
                   android:theme="@style/StatusImmersion"
             />
+
+        <activity android:name=".block.splash.GuideActivity"
+                  android:screenOrientation="portrait"
+                  android:theme="@style/StatusImmersion"
+            />
+
+        <!-- share -->
 
         <activity
             android:name="com.mob.tools.MobUIShell"

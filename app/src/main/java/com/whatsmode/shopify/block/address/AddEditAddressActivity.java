@@ -227,6 +227,8 @@ public class AddEditAddressActivity extends MvpActivity<AddEditAddressPresenter>
     public void addAddressSuccess(Address address) {
         hideLoading();
         SnackUtil.toastShow(this,R.string.add_address_success);
+        Intent intent = new Intent();
+        intent.putExtra(KeyConstant.KEY_EXTRA_ADDRESS,mAddress);
         setResult(RESULT_OK);
         finish();
     }
@@ -235,7 +237,9 @@ public class AddEditAddressActivity extends MvpActivity<AddEditAddressPresenter>
     public void updateAddressSuccess(Address address) {
         hideLoading();
         SnackUtil.toastShow(this,R.string.update_address_success);
-        setResult(RESULT_OK);
+        Intent intent = new Intent();
+        intent.putExtra(KeyConstant.KEY_EXTRA_ADDRESS,mAddress);
+        setResult(RESULT_OK,intent);
         finish();
     }
 

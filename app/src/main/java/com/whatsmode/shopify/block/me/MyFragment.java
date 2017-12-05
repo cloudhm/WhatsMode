@@ -18,7 +18,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -64,6 +67,8 @@ public class MyFragment extends MvpFragment<MyContract.Presenter> implements MyC
     private ViewGroup mOrdeEmpty;
     private RelativeLayout mNoLoginL;
     private Disposable mSubscribe;
+    private ImageView mImageViewBg;
+    private ImageView mImageViewBg2;
 
     public static MyFragment newInstance(){
         MyFragment fragment = new MyFragment();
@@ -81,6 +86,8 @@ public class MyFragment extends MvpFragment<MyContract.Presenter> implements MyC
         mNoLoginL = (RelativeLayout) view.findViewById(R.id.no_login_l);
         Button createAccount = (Button) view.findViewById(R.id.create_account);
         Button logIn = (Button) view.findViewById(R.id.log_in);
+        mImageViewBg = (ImageView) view.findViewById(R.id.image_view_bg);
+        mImageViewBg2 = (ImageView) view.findViewById(R.id.image_view_bg2);
         createAccount.setOnClickListener(this);
         logIn.setOnClickListener(this);
 
@@ -127,6 +134,7 @@ public class MyFragment extends MvpFragment<MyContract.Presenter> implements MyC
         mViewAddress.setOnClickListener(this);
         mName = (TextView) view.findViewById(R.id.name);
         mEmail = (TextView) view.findViewById(R.id.email);
+        view.findViewById(R.id.order_history).setOnClickListener(this);
     }
 
     @NonNull
@@ -175,17 +183,41 @@ public class MyFragment extends MvpFragment<MyContract.Presenter> implements MyC
         completeRefresh();
         if (code == APIException.CODE_SESSION_EXPIRE) {
             //AppNavigator.jumpToLogin(getActivity());
-            mNoLoginL.setVisibility(View.VISIBLE);
-            mSwipe.setVisibility(View.GONE);
+            setContentGone();
         }else{
-            mNoLoginL.setVisibility(View.GONE);
-            mSwipe.setVisibility(View.VISIBLE);
+            setContentVisible();
         }
+    }
+
+    private void startAnim(){
+        final Animation translate = AnimationUtils.loadAnimation(getContext(),
+                R.anim.anim_translate_account_bg);
+        final Animation translate2 = AnimationUtils.loadAnimation(getContext(),
+                R.anim.anim_translate_account_bg2);
+        if(mImageViewBg.getAnimation() == null || !mImageViewBg.getAnimation().hasStarted()
+                || mImageViewBg2.getAnimation() == null || !mImageViewBg2.getAnimation().hasStarted()
+                ){
+            mImageViewBg.startAnimation(translate);
+            mImageViewBg2.startAnimation(translate2);
+        }
+
+    }
+
+    private void stopAnim(){
+        mImageViewBg.clearAnimation();
+        mImageViewBg2.clearAnimation();
+    }
+
+    private void setContentGone(){
+        mNoLoginL.setVisibility(View.VISIBLE);
+        mSwipe.setVisibility(View.GONE);
+        startAnim();
     }
 
     private void setContentVisible(){
         mNoLoginL.setVisibility(View.GONE);
         mSwipe.setVisibility(View.VISIBLE);
+        stopAnim();
     }
 
     @Override

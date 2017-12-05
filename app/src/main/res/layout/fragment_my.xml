@@ -29,9 +29,19 @@
         android:layout_height="match_parent">
 
         <ImageView
+            android:id="@+id/image_view_bg"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:scaleType="fitStart"
+            android:scaleType="fitXY"
+            android:src="@drawable/account_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <ImageView
+            android:id="@+id/image_view_bg2"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:scaleType="fitXY"
             android:src="@drawable/account_bg"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>

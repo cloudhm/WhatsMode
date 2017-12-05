@@ -1,5 +1,6 @@
 package com.whatsmode.shopify.block.me;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.DividerItemDecoration;
@@ -8,10 +9,12 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import com.whatsmode.library.util.Util;
 import com.whatsmode.shopify.R;
+import com.whatsmode.shopify.block.WebActivity;
 import com.whatsmode.shopify.block.address.Address;
 import com.whatsmode.shopify.common.KeyConstant;
 import com.whatsmode.shopify.mvp.MvpActivity;
@@ -26,7 +29,7 @@ import java.util.List;
  * Created by tom on 17-11-22.
  */
 
-public class OrderDetailsActivity extends MvpActivity<OrderDetailsContract.Presenter> implements OrderDetailsContract.View {
+public class OrderDetailsActivity extends MvpActivity<OrderDetailsContract.Presenter> implements OrderDetailsContract.View, View.OnClickListener {
 
     private Toolbar mToolbar;
 
@@ -64,6 +67,7 @@ public class OrderDetailsActivity extends MvpActivity<OrderDetailsContract.Prese
         mTotal = (TextView) findViewById(R.id.total);
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mOrder = (Order) getIntent().getSerializableExtra(KeyConstant.KEY_ORDER);
+        findViewById(R.id.tracking_jump).setOnClickListener(this);
         init();
         initDetail();
     }
@@ -142,5 +146,15 @@ public class OrderDetailsActivity extends MvpActivity<OrderDetailsContract.Prese
     @Override
     public OrderDetailsContract.Presenter createPresenter() {
         return new OrderDetailsPresenter();
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.tracking_jump:
+                Intent intent = TrackingActivity.newIntent(this,mOrder.getCustomerUrl());
+                startActivity(intent);
+                break;
+        }
     }
 }

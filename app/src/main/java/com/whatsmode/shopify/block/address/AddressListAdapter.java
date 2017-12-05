@@ -36,9 +36,8 @@ public class AddressListAdapter extends CommonAdapter<Address> {
     }
 
     public void refresh(List<Address> list) {
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new AddressListDiff(getData(), list), true);
         getData().clear();
         getData().addAll(list);
-        diffResult.dispatchUpdatesTo(this);
+        notifyDataSetChanged();
     }
 }

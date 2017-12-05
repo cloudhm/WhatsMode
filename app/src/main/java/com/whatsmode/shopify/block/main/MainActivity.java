@@ -131,7 +131,6 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
     public void switch2Mode() {
         switchMenu(menuItemSearch);
         ivMenu.setVisibility(View.VISIBLE);
-        toolbar.setVisibility(View.VISIBLE);
         ivLogo.setVisibility(View.VISIBLE);
         toolbarTitle.setVisibility(View.GONE);
     }
@@ -150,7 +149,6 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
     public void switch2Influence() {
         switchMenu(menuItemSearch);
         ivMenu.setVisibility(View.VISIBLE);
-        toolbar.setVisibility(View.VISIBLE);
         ivLogo.setVisibility(View.VISIBLE);
         toolbarTitle.setVisibility(View.GONE);
     }
@@ -179,14 +177,12 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
         ivMenu.setVisibility(View.GONE);
         ivLogo.setVisibility(View.GONE);
         toolbarTitle.setVisibility(View.VISIBLE);
-        toolbar.setVisibility(View.VISIBLE);
         defineCartTitle();
     }
 
     @Override
     public void switch2Mine() {
         switchMenu(null);
-        toolbar.setVisibility(View.VISIBLE);
         toolbarTitle.setVisibility(View.GONE);
         ivMenu.setVisibility(View.GONE);
         ivLogo.setVisibility(View.GONE);
@@ -204,7 +200,6 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
             popupWindow.showAsDropDown(toolbar, 0,0);
             ivMenu.setEnabled(false);
         }
-        toolbar.setVisibility(View.VISIBLE);
     }
 
     private void initPopWindowView() {

@@ -106,6 +106,27 @@
             android:layout_height="wrap_content"/>
 
     </RelativeLayout>
+
+    <View
+        android:background="@color/separator"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_height="2px"/>
+
+    <TextView
+        android:id="@+id/tracking_jump"
+        android:textStyle="normal"
+        android:textColor="@color/black"
+        android:textSize="@dimen/sp_16"
+        android:padding="16dp"
+        android:text="order"
+        android:visibility="gone"
+        android:drawableRight="@drawable/button_right"
+        android:gravity="center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
     <View
         android:background="@color/separator"
         android:layout_width="match_parent"

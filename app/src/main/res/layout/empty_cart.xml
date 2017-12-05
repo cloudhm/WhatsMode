@@ -11,6 +11,7 @@
         android:layout_marginTop="150dp"
         android:layout_height="64dp" />
     <TextView
+        android:id="@+id/text"
         android:textSize="14sp"
         android:textColor="@color/gray_d5d5d5"
         android:layout_below="@+id/empty_iv"
@@ -19,4 +20,16 @@
         android:text="@string/cart_empty_now"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+    
+    <Button
+        android:id="@+id/shopping"
+        android:text="Shopping"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/text"
+        android:layout_marginTop="64dp"
+        android:background="@drawable/round_btn"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        android:layout_width="155dp"
+        android:layout_height="44dp" />
 </RelativeLayout>

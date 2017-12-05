@@ -38,8 +38,6 @@ public class CheckoutUpdatePresenter extends BaseRxPresenter<CheckoutUpdateConta
                 }
                 break;
             case R.id.shipping_method_layout:
-                if(isViewAttached())
-                checkShippingMethods(getView().getCheckoutId());
                 break;
             case R.id.edit:
                 if (isViewAttached()) {

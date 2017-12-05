@@ -27,7 +27,7 @@ import com.whatsmode.shopify.base.BaseActivity;
 import com.whatsmode.shopify.block.cart.AndroidJs;
 import com.whatsmode.shopify.block.cart.BadgeActionProvider;
 import com.whatsmode.shopify.block.cart.CartItem;
-import com.whatsmode.shopify.block.cart.JumpCartSelect;
+import com.whatsmode.shopify.block.cart.JumpMainTab;
 import com.whatsmode.shopify.block.me.ShareUtil;
 import com.whatsmode.shopify.ui.helper.ToolbarHelper;
 
@@ -69,7 +69,7 @@ public class WebActivity extends BaseActivity{
         mActionProvider = (BadgeActionProvider) MenuItemCompat.getActionProvider(menuItemCart);
         mActionProvider.setOnClickListener(0, what -> {
             AppNavigator.jumpToMain(this);
-            EventBus.getDefault().post(new JumpCartSelect());
+            EventBus.getDefault().post(new JumpMainTab(2));
         });// 设置点击监听。
         initToolBar();
         return super.onCreateOptionsMenu(menu);

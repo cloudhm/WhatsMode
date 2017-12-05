@@ -20,7 +20,6 @@ import com.shopify.buy3.Storefront;
 import com.shopify.graphql.support.ID;
 import com.whatsmode.library.rx.Util;
 import com.whatsmode.library.util.ListUtils;
-import com.whatsmode.library.util.PreferencesUtil;
 import com.whatsmode.library.util.ScreenUtils;
 import com.whatsmode.library.util.ToastUtil;
 import com.whatsmode.shopify.AppNavigator;
@@ -32,12 +31,10 @@ import com.whatsmode.shopify.block.address.Address;
 import com.whatsmode.shopify.block.address.AddressListActivity;
 import com.whatsmode.shopify.block.cart.CartItem;
 import com.whatsmode.shopify.block.cart.CartItemLists;
-import com.whatsmode.shopify.common.Constant;
 import com.whatsmode.shopify.common.KeyConstant;
 import com.whatsmode.shopify.mvp.MvpActivity;
 import com.whatsmode.shopify.ui.helper.ToolbarHelper;
 
-import java.io.IOException;
 import java.util.List;
 
 
@@ -54,7 +51,7 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
     private RelativeLayout signInLayout;
     private LinearLayout addAddressLayout;
     private RelativeLayout addressDetailLayout;
-    private Address mCurrentAddr;
+    private Address currentAddress;
     private boolean mCreateState;
     public static final int REQUEST_CODE_ADDRESS = 1001;
     private EditText etGiftCard;
@@ -92,7 +89,7 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
         addAddressLayout = (LinearLayout) findViewById(R.id.add_address);
         findViewById(R.id.iv_add).setOnClickListener(this);
 
-        //findViewById(R.id.shipping_method_layout).setOnClickListener(this);
+        findViewById(R.id.shipping_method_layout).setOnClickListener(this);
 
         mTvName = (TextView) findViewById(R.id.name);
         mTvPhone = (TextView) findViewById(R.id.phone);
@@ -102,7 +99,7 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
         mTvTax = (TextView) findViewById(R.id.taxes);
         mTvSubTotal = (TextView) findViewById(R.id.subtotal);
 
-        mTvShippingMethod = (TextView) findViewById(R.id.shiping_method);
+        mTvShippingMethod = (TextView) findViewById(R.id.shipping_method);
         findViewById(R.id.check_card).setOnClickListener(this);
         findViewById(R.id.pay).setOnClickListener(this);
         addressDetailLayout = (RelativeLayout) findViewById(R.id.address_detail);
@@ -148,7 +145,7 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
             signInLayout.setVisibility(View.VISIBLE);
             addAddressLayout.setVisibility(View.GONE);
         }
-        if (mCurrentAddr == null) {
+        if (currentAddress == null) {
             addAddressLayout.setVisibility(View.VISIBLE);
             addressDetailLayout.setVisibility(View.GONE);
         } else {
@@ -164,27 +161,32 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case REQUEST_CODE_ADDRESS:
-                    if(data != null && data.hasExtra(KeyConstant.KEY_EXTRA_SELECT_ADDRESS))
-                    mCurrentAddr = (Address) data.getSerializableExtra(KeyConstant.KEY_EXTRA_SELECT_ADDRESS);
+                    if (data != null) {
+                        if (data.hasExtra(KeyConstant.KEY_EXTRA_SELECT_ADDRESS)) {
+                            currentAddress = (Address) data.getSerializableExtra(KeyConstant.KEY_EXTRA_SELECT_ADDRESS);
+                        } else if (data.hasExtra(KeyConstant.KEY_EXTRA_ADDRESS)) {
+                            currentAddress = (Address) data.getSerializableExtra(KeyConstant.KEY_EXTRA_ADDRESS);
+                        }
+                    }
                     fillAddress();
                     showLoading();
-                    mPresenter.bindAddress(id, mCurrentAddr);
+                    mPresenter.bindAddress(id, currentAddress);
                     break;
             }
         }
     }
 
     private void fillAddress() {
-        if (mCurrentAddr == null) {
+        if (currentAddress == null) {
             return;
         }
-        mTvName.setText(mCurrentAddr.getName());
-        mTvPhone.setText(mCurrentAddr.getPhone());
+        mTvName.setText(currentAddress.getName());
+        mTvPhone.setText(currentAddress.getPhone());
         mTvAddressDetail.setText(new StringBuilder()
-                .append(mCurrentAddr.getAddress1())
-                .append(mCurrentAddr.getAddress2())
-                .append(mCurrentAddr.getCity())
-                .append(mCurrentAddr.getCountry()));
+                .append(currentAddress.getAddress1())
+                .append(currentAddress.getAddress2())
+                .append(currentAddress.getCity())
+                .append(currentAddress.getCountry()));
     }
 
     private void addItemToLayout() {
@@ -210,6 +212,8 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
             Glide.with(this).load(i.getIcon())
                     .asBitmap()
                     .centerCrop()
+                    .placeholder(R.drawable.defaut_product)
+                    .error(R.drawable.defaut_product)
                     .into(icon);
             TextView tvPrice = (TextView) view.findViewById(R.id.price);
             TextView tvFontSize = (TextView) view.findViewById(R.id.sizeAndColor);
@@ -249,7 +253,7 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
 
     @Override
     public void jumpToPay() {
-        if (mCurrentAddr == null) {
+        if (currentAddress == null) {
             ToastUtil.showToast(getString(R.string.plz_select_address));
         } else if (!TextUtils.isEmpty(webUrl)) {
             AppNavigator.jumpToWebActivity(CheckoutUpdateActivity.this, WebActivity.STATE_PAY, webUrl);
@@ -261,7 +265,7 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
     public void jumpToModifyAddress() {
         Intent intent = new Intent(this, AddEditAddressActivity.class);
         intent.putExtra(KeyConstant.KEY_ADD_EDIT_ADDRESS,AddEditAddressActivity.TYPE_EDIT_ADDRESS);
-        intent.putExtra(KeyConstant.KEY_ADDRESS, mCurrentAddr);
+        intent.putExtra(KeyConstant.KEY_ADDRESS, currentAddress);
         startActivityForResult(intent,REQUEST_CODE_ADDRESS);
     }
 

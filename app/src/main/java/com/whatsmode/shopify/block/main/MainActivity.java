@@ -27,7 +27,7 @@ import com.whatsmode.shopify.WhatsApplication;
 import com.whatsmode.shopify.block.WebActivity;
 import com.whatsmode.shopify.block.cart.CartFragment;
 import com.whatsmode.shopify.block.cart.CartItem;
-import com.whatsmode.shopify.block.cart.JumpCartSelect;
+import com.whatsmode.shopify.block.cart.JumpMainTab;
 import com.whatsmode.shopify.block.me.StatusBarUtil;
 import com.whatsmode.shopify.common.Constant;
 import com.whatsmode.shopify.mvp.MvpActivity;
@@ -80,8 +80,8 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
     }
 
     @Subscribe
-    public void receive(JumpCartSelect select){
-        vpContent.setCurrentItem(2);
+    public void receive(JumpMainTab select){
+        vpContent.setCurrentItem(select.tabPosition,false);
     }
 
     @NonNull
@@ -186,7 +186,11 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
     @Override
     public void switch2Mine() {
         switchMenu(null);
-        toolbar.setVisibility(View.GONE);
+        toolbar.setVisibility(View.VISIBLE);
+        toolbarTitle.setVisibility(View.GONE);
+        ivMenu.setVisibility(View.GONE);
+        ivLogo.setVisibility(View.GONE);
+
     }
 
     private PopupWindow popupWindow;

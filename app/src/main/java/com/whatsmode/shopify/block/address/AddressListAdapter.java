@@ -20,13 +20,10 @@ public class AddressListAdapter extends CommonAdapter<Address> {
 
     @Override
     protected void convert(CommonViewHolder helper, Address item) {
-        StringBuffer buffer = new StringBuffer();
-        buffer.append(item.getAddress1()).append(" ").append(item.getAddress2()).append(" ")
-                .append(item.getCity()).append(" ").append(item.getProvince()).append(" ")
-                .append(item.getCountry());
+        String joinAddress = AddressUtil.getJoinAddress(item);
         helper.setText(R.id.name,item.getName())
                 .setText(R.id.phone,item.getPhone())
-                .setText(R.id.address,buffer.toString())
+                .setText(R.id.address,joinAddress)
                 .addOnClickListener(R.id.delete)
                 .addOnClickListener(R.id.update)
                 .addOnClickListener(R.id.is_default)

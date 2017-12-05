@@ -20,7 +20,7 @@
             android:layout_gravity="center"
             android:textColor="@color/black"
             android:textSize="@dimen/sp_18"
-            android:text="@string/order_details"
+            android:text="@string/shipping_addresses"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
     </android.support.v7.widget.Toolbar>

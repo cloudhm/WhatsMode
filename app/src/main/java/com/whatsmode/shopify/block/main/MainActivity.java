@@ -28,6 +28,7 @@ import com.whatsmode.shopify.block.WebActivity;
 import com.whatsmode.shopify.block.cart.CartFragment;
 import com.whatsmode.shopify.block.cart.CartItem;
 import com.whatsmode.shopify.block.cart.JumpCartSelect;
+import com.whatsmode.shopify.block.me.StatusBarUtil;
 import com.whatsmode.shopify.common.Constant;
 import com.whatsmode.shopify.mvp.MvpActivity;
 import com.whatsmode.shopify.ui.helper.BaseFragmentAdapter;
@@ -60,6 +61,7 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        StatusBarUtil.StatusBarLightMode(this);
         vpContent = (NoScrollViewPager) findViewById(R.id.vp_content);
         vpContent.setOffscreenPageLimit(3);
         ivMenu = (ImageView) findViewById(R.id.menu);

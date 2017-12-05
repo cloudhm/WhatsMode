@@ -49,8 +49,8 @@ public class AddEditAddressActivity extends MvpActivity<AddEditAddressPresenter>
     private EditText mAddress1;
     private EditText mAddress2;
     private EditText mCity;
-    private EditText mProvince;
-    private EditText mCountry;
+    private TextView mProvince;
+    private TextView mCountry;
     private EditText mZip;
     private EditText mPhone;
     private Toolbar mToolbar;
@@ -77,8 +77,8 @@ public class AddEditAddressActivity extends MvpActivity<AddEditAddressPresenter>
         mAddress1 = (EditText) findViewById(R.id.address1);
         mAddress2 = (EditText) findViewById(R.id.address2);
         mCity = (EditText) findViewById(R.id.city);
-        mProvince = (EditText) findViewById(R.id.province);
-        mCountry = (EditText) findViewById(R.id.country);
+        mProvince = (TextView) findViewById(R.id.province);
+        mCountry = (TextView) findViewById(R.id.country);
         mZip = (EditText) findViewById(R.id.zip);
         mPhone = (EditText) findViewById(R.id.phone);
         mTitle = (TextView) findViewById(R.id.title);
@@ -120,6 +120,9 @@ public class AddEditAddressActivity extends MvpActivity<AddEditAddressPresenter>
             mTitle.setText(R.string.update_address);
             getSupportActionBar().setTitle("");
         }
+
+        //requesr focus
+        mFirstName.requestFocus();
     }
 
     @NonNull
@@ -193,12 +196,12 @@ public class AddEditAddressActivity extends MvpActivity<AddEditAddressPresenter>
             SnackUtil.toastShow(this,R.string.city_empty_prompt);
             return true;
         }
-        if("".equals(address.getProvince())){
-            SnackUtil.toastShow(this,R.string.state_empty_prompt);
-            return true;
-        }
         if("".equals(address.getCountry())){
             SnackUtil.toastShow(this,R.string.country_empty_prompt);
+            return true;
+        }
+        if("".equals(address.getProvince()) && isEnterProvince(address.getCountry())){
+            SnackUtil.toastShow(this,R.string.state_empty_prompt);
             return true;
         }
         if("".equals(address.getZip())){
@@ -212,10 +215,20 @@ public class AddEditAddressActivity extends MvpActivity<AddEditAddressPresenter>
         return false;
     }
 
+    private boolean isEnterProvince(String country) {
+        List<Site> province = getProvince(country);
+        if (!province.isEmpty()) {
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public void addAddressSuccess(Address address) {
         hideLoading();
         SnackUtil.toastShow(this,R.string.add_address_success);
+        Intent intent = new Intent();
+        intent.putExtra(KeyConstant.KEY_EXTRA_ADDRESS,mAddress);
         setResult(RESULT_OK);
         finish();
     }
@@ -224,7 +237,9 @@ public class AddEditAddressActivity extends MvpActivity<AddEditAddressPresenter>
     public void updateAddressSuccess(Address address) {
         hideLoading();
         SnackUtil.toastShow(this,R.string.update_address_success);
-        setResult(RESULT_OK);
+        Intent intent = new Intent();
+        intent.putExtra(KeyConstant.KEY_EXTRA_ADDRESS,mAddress);
+        setResult(RESULT_OK,intent);
         finish();
     }
 
@@ -242,7 +257,6 @@ public class AddEditAddressActivity extends MvpActivity<AddEditAddressPresenter>
         mOptionsPickerView = new OptionsPickerView.Builder(this, new OptionsPickerView.OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int option2, int options3, View v) {
-                //返回的分别是三个级别的选中位置
                 if (mAction == ACTION_SELECT_COUNTRY) {
                     if (mPickerDateCountry.size() > options1 && options1 >= 0) {
                         Site site = mPickerDateCountry.get(options1);
@@ -264,18 +278,8 @@ public class AddEditAddressActivity extends MvpActivity<AddEditAddressPresenter>
                         //自定义布局中的控件初始化及事件处理
                         final TextView tvSubmit = (TextView) v.findViewById(R.id.tv_finish);
                         ImageView ivCancel = (ImageView) v.findViewById(R.id.iv_cancel);
-                        tvSubmit.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                mOptionsPickerView.returnData();
-                            }
-                        });
-                        ivCancel.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                mOptionsPickerView.dismiss();
-                            }
-                        });
+                        tvSubmit.setOnClickListener(v1 -> mOptionsPickerView.returnData());
+                        ivCancel.setOnClickListener(v12 -> mOptionsPickerView.dismiss());
 
                     }
                 })

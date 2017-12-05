@@ -9,7 +9,9 @@ import com.whatsmode.shopify.WhatsApplication;
 import com.whatsmode.shopify.base.BaseRxPresenter;
 import com.whatsmode.shopify.block.account.AccountRepository;
 import com.whatsmode.shopify.block.account.data.AccountManager;
+import com.whatsmode.shopify.block.account.data.UserInfo;
 
+import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
@@ -23,29 +25,39 @@ public class ChangePasswordPresenter extends BaseRxPresenter<ChangePasswordContr
 
     @Override
     public void setPassword(String currentPwd, String newPwd) {
-        String username = AccountManager.getUsername();
+        final String username = AccountManager.getUsername();
         if (TextUtils.isEmpty(username)) {
             return;
         }
         Storefront.CustomerAccessTokenCreateInput input = new Storefront.CustomerAccessTokenCreateInput(username,currentPwd);
 
-        AccountRepository.create().login(input, _queryBuilder ->
-                _queryBuilder.customerAccessToken(
-                        _queryBuilder1 -> _queryBuilder1.accessToken().expiresAt())
-                        .userErrors(_queryBuilder2 -> _queryBuilder2.message().field()))
+        AccountRepository.create().login(input, new LoginFragment())  //1.验证旧密码
                 .flatMap(f -> {
+                    //2.设置新密码
                     Storefront.CustomerUpdateInput inputT = new Storefront.CustomerUpdateInput();
                     if (!TextUtils.isEmpty(newPwd)) inputT.setPassword(newPwd);
                     return MyRepository.create().updateCustomer(AccountManager.getCustomerAccessToken(),inputT,new UpdateCustomerFragment());
-                }).observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new SingleObserver<Storefront.Customer>() {
+                })
+                .flatMap(f -> {
+                    //3.重新登录
+                    Storefront.CustomerAccessTokenCreateInput inputN = new Storefront.CustomerAccessTokenCreateInput(username,newPwd);
+                    Single<Storefront.CustomerAccessToken> login = AccountRepository.create().login(inputN, new LoginFragment());
+
+                    return login;
+                }).map(t -> {
+                    AccountManager.getInstance().writeCustomerAccessToken(t != null ? t.getAccessToken() : null);
+                    AccountManager.getInstance().writeCustomerUserInfo(new UserInfo(username));
+                    return t;
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new SingleObserver<Storefront.CustomerAccessToken>() {
                     @Override
                     public void onSubscribe(@NonNull Disposable d) {
                         addSubscribe(d);
                     }
 
                     @Override
-                    public void onSuccess(@NonNull Storefront.Customer customer) {
+                    public void onSuccess(@NonNull Storefront.CustomerAccessToken token) {
                         if (isViewAttached()) {
                             getView().updateSuccess();
                         }
@@ -70,11 +82,23 @@ public class ChangePasswordPresenter extends BaseRxPresenter<ChangePasswordContr
 
     }
 
+    //update password
     public class UpdateCustomerFragment implements Storefront.CustomerUpdatePayloadQueryDefinition{
 
         @Override
         public void define(Storefront.CustomerUpdatePayloadQuery _queryBuilder) {
             _queryBuilder.userErrors(e -> e.message().field()).customer(c -> c.id().email().firstName().lastName());
+        }
+    }
+
+    //login
+    public class LoginFragment implements Storefront.CustomerAccessTokenCreatePayloadQueryDefinition{
+
+        @Override
+        public void define(Storefront.CustomerAccessTokenCreatePayloadQuery _queryBuilder) {
+            _queryBuilder.customerAccessToken(
+                    _queryBuilder1 -> _queryBuilder1.accessToken().expiresAt())
+                    .userErrors(_queryBuilder2 -> _queryBuilder2.message().field());
         }
     }
 }

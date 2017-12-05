@@ -1,6 +1,7 @@
 package com.whatsmode.shopify.block.me;
 
 import com.shopify.buy3.GraphClient;
+import com.shopify.buy3.HttpCachePolicy;
 import com.shopify.buy3.MutationGraphCall;
 import com.shopify.buy3.QueryGraphCall;
 import com.shopify.buy3.Storefront;
@@ -9,6 +10,8 @@ import com.whatsmode.library.rx.RxUtil;
 import com.whatsmode.library.rx.Util;
 import com.whatsmode.shopify.WhatsApplication;
 import com.whatsmode.shopify.block.account.AccountRepository;
+
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
@@ -60,7 +63,8 @@ public class MyRepository {
     }
 
     public Single<Storefront.Customer> getCustomer(String customerAccessToken, Storefront.CustomerQueryDefinition queryDef){
-        QueryGraphCall call = mGraphClient.queryGraph(Storefront.query(q -> q.customer(customerAccessToken, queryDef)));
+        QueryGraphCall call = mGraphClient.queryGraph(Storefront.query(q -> q.customer(customerAccessToken, queryDef)))
+                        .cachePolicy(HttpCachePolicy.NETWORK_FIRST.expireAfter(20, TimeUnit.MINUTES));
 
         return RxUtil.rxGraphQueryCall(call)
                 .flatMap(m -> {

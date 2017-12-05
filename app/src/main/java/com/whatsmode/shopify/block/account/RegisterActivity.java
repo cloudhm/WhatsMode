@@ -20,9 +20,11 @@ import android.widget.Toast;
 
 import com.whatsmode.library.util.SnackUtil;
 import com.whatsmode.library.util.Util;
+import com.whatsmode.shopify.AppNavigator;
 import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.block.me.StatusBarUtil;
 import com.whatsmode.shopify.common.Constant;
+import com.whatsmode.shopify.common.KeyConstant;
 import com.whatsmode.shopify.mvp.MvpActivity;
 
 /**
@@ -42,6 +44,8 @@ public class RegisterActivity extends MvpActivity<RegisterPresenter> implements 
     private TextInputLayout mFirstNameL;
     private TextInputLayout mLastNameL;
     private Button mRegister;
+
+    private boolean mInLoginJump;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +68,7 @@ public class RegisterActivity extends MvpActivity<RegisterPresenter> implements 
         signIn.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG );
         signIn.setOnClickListener(this);
         mEmail.setOnFocusChangeListener(this);
+        mInLoginJump = getIntent().getBooleanExtra(KeyConstant.KEY_IN_LOGIN_JUMP,false);
         init();
     }
 
@@ -151,7 +156,12 @@ public class RegisterActivity extends MvpActivity<RegisterPresenter> implements 
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.sign_in:
-                finish();
+                if (mInLoginJump) {
+                    finish();
+                }else{
+                    AppNavigator.jumpToLogin(this);
+                    finish();
+                }
                 break;
         }
     }

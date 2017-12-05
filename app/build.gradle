@@ -11,6 +11,20 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        ndk {
+            //选择要添加的对应cpu类型的.so库。
+            abiFilters 'armeabi', 'armeabi-v7a', 'arm64-v8a','x86', 'x86_64', 'mips', 'mips64'
+            // 还可以添加 'x86', 'x86_64', 'mips', 'mips64'
+        }
+
+        manifestPlaceholders = [
+                JPUSH_PKGNAME : "com.whatsmode.shopify",
+                JPUSH_APPKEY : "8a558451aeb6c81caaa912aa", //JPush上注册的包名对应的appkey.
+                JPUSH_CHANNEL : "developer-default", //暂时填写默认值即可.
+        ]
+
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -50,4 +64,8 @@ dependencies {
     compile files('libs/ShareSDK-Facebook-3.1.1.jar')
     compile files('libs/ShareSDK-Instagram-3.1.1.jar')
     compile files('libs/ShareSDK-WhatsApp-3.1.1.jar')
+
+    //JPush
+    compile 'cn.jiguang.sdk:jpush:3.0.9'  // 此处以JPush 3.0.9 版本为例。
+    compile 'cn.jiguang.sdk:jcore:1.1.7'  // 此处以JCore 1.1.7 版本为例。
 }

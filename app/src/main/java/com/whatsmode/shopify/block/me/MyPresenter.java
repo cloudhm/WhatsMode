@@ -1,5 +1,7 @@
 package com.whatsmode.shopify.block.me;
 
+import android.text.TextUtils;
+
 import com.shopify.buy3.Storefront;
 import com.whatsmode.library.exception.APIException;
 import com.whatsmode.shopify.base.BaseRxPresenter;
@@ -28,12 +30,18 @@ public class MyPresenter extends BaseRxPresenter<MyContract.View> implements MyC
                 .map(m -> {
                     Customer customer = new Customer(m.getEmail(),m.getFirstName(),m.getId().toString(),m.getLastName());
                     Storefront.MailingAddress defaultAddress = m.getDefaultAddress();
+                    String defaultId = getDefaultId(defaultAddress);
                     if (defaultAddress != null) {
                         Storefront.MailingAddress node = defaultAddress;
                         Address address = new Address(node.getId().toString(),node.getAddress1(),node.getAddress2(),
                                 node.getCity(),node.getProvince(),node.getProvinceCode(),node.getCountry(),node.getCountryCode(),
                                 node.getCompany(),node.getFirstName(),node.getLastName(), node.getName(),
                                 node.getPhone(),node.getZip(),null);
+                        if (TextUtils.equals(node.getId().toString(), defaultId) && !TextUtils.isEmpty(defaultId)) {
+                            address.setDefault(true);
+                        }else{
+                            address.setDefault(false);
+                        }
                         customer.setDefaultAddress(address);
                     }
                     return customer;
@@ -74,6 +82,13 @@ public class MyPresenter extends BaseRxPresenter<MyContract.View> implements MyC
         }
     }
 
+
+    private String getDefaultId(Storefront.MailingAddress defaultAddress){
+        if (defaultAddress == null || defaultAddress.getId() == null) {
+            return "";
+        }
+        return defaultAddress.getId().toString();
+    }
 
 
     //*******************************************

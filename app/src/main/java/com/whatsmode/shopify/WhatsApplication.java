@@ -2,6 +2,7 @@ package com.whatsmode.shopify;
 
 import android.app.Application;
 import android.content.Context;
+import android.support.multidex.MultiDex;
 
 import com.mob.MobApplication;
 import com.shopify.buy3.GraphClient;
@@ -9,6 +10,7 @@ import com.shopify.buy3.HttpCachePolicy;
 
 import java.util.concurrent.TimeUnit;
 
+import cn.jpush.android.api.JPushInterface;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import com.whatsmode.library.util.ToastUtil;
@@ -27,8 +29,13 @@ public class WhatsApplication extends MobApplication {
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
-        sContext = this;
 
+        MultiDex.install(this);
+    }
+
+    private void initJPush() {
+        JPushInterface.setDebugMode(true); 	// 设置开启日志,发布时请关闭日志
+        JPushInterface.init(this);     		// 初始化 JPush
         initGraphClient();
         Thread.setDefaultUncaughtExceptionHandler(AppException.getAppExceptionHandler());
     }
@@ -51,6 +58,8 @@ public class WhatsApplication extends MobApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+        sContext = this;
+        initJPush();
     }
 
     public static WhatsApplication getContext() {

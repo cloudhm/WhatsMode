@@ -6,11 +6,19 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     >
+
+    <ProgressBar
+        android:id="@+id/indeterminate_bar"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:max="100"/>
+
     <android.support.v4.widget.SwipeRefreshLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/swipe"
-        android:visibility="visible"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <android.support.v7.widget.RecyclerView
@@ -32,19 +40,19 @@
             android:id="@+id/image_view_bg"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:scaleType="fitXY"
+            android:scaleType="fitCenter"
             android:src="@drawable/account_bg"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="wrap_content"/>
 
         <ImageView
             android:id="@+id/image_view_bg2"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:scaleType="fitXY"
+            android:scaleType="fitCenter"
             android:src="@drawable/account_bg"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="wrap_content"/>
 
             <View
                 android:background="@drawable/account_login_prompt_shape"

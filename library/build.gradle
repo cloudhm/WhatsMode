@@ -71,5 +71,5 @@ dependencies {
     compile 'com.contrarywind:Android-PickerView:3.2.7'
 
     compile 'com.android.support:multidex:1.0.1'
-    //compile 'com.google.android.gms:play-services-analytics:9.2.0'
+
 }

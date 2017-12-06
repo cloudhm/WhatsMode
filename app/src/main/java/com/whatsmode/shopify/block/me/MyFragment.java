@@ -33,12 +33,14 @@ import com.whatsmode.library.util.ScreenUtils;
 import com.whatsmode.library.util.SnackUtil;
 import com.whatsmode.shopify.AppNavigator;
 import com.whatsmode.shopify.R;
+import com.whatsmode.shopify.actionlog.ActionLog;
 import com.whatsmode.shopify.block.account.LoginActivity;
 import com.whatsmode.shopify.block.address.Address;
 import com.whatsmode.shopify.block.address.AddressListActivity;
 import com.whatsmode.shopify.block.address.AddressUtil;
 import com.whatsmode.shopify.block.address.LoadType;
 import com.whatsmode.shopify.block.me.event.LoginEvent;
+import com.whatsmode.shopify.common.Constant;
 import com.whatsmode.shopify.common.KeyConstant;
 import com.whatsmode.shopify.mvp.MvpFragment;
 
@@ -183,6 +185,7 @@ public class MyFragment extends MvpFragment<MyContract.Presenter> implements MyC
         switch (view.getId()) {
             case R.id.avatar:
                 startActivity(new Intent(getActivity(), SettingInfoActivity.class));
+                //ActionLog.onEvent(Constant.Event.LOGIN);
                 break;
             case R.id.view_address:
                 Intent intent = new Intent(getActivity(), AddressListActivity.class);

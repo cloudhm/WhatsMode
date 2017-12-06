@@ -1,11 +1,13 @@
 package com.whatsmode.shopify.actionlog;
 
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.WhatsApplication;
 import com.whatsmode.shopify.block.account.data.AccountManager;
@@ -44,6 +46,7 @@ public class ActionLog {
     public void logEventByFlurry(LogParam param){
 
         logFromGoogle(param);
+        logFromFirebase(param);
     }
 
     private void logFromGoogle(LogParam param) {
@@ -58,6 +61,18 @@ public class ActionLog {
             }
         }
         getDefaultTracker().send(eventBuilder.build());
+    }
+
+    private void logFromFirebase(LogParam param){
+        Bundle bundle = new Bundle();
+        HashMap<String, String> params = param.getParams();
+        if(params != null) {
+            Set<Map.Entry<String, String>> entries = params.entrySet();
+            for (Map.Entry<String, String> entry : entries) {
+                bundle.putString(entry.getKey(),entry.getValue());
+            }
+        }
+        getFirebaseAnalytics().logEvent(param.getEventId(), bundle);
     }
 
     /**
@@ -132,10 +147,8 @@ public class ActionLog {
         if(logParam==null){
             logParam = new LogParam(realEventId);
         }
-//        logParam.setParam(Constant.KEY_USERID,AccountManager.getCurUserIdStr())
-//                .setParam(Constant.KEY_ISUSER,AccountManager.isUserLogined()+"")
-//                .setEventId(realEventId);
-//
+        logParam.setParam(Constant.Param.EMAIL, AccountManager.getUsername());
+
     }
     private void onEndTimeEventInner(String eventId){
         String realEventId = getRealEventId(eventId);
@@ -147,9 +160,8 @@ public class ActionLog {
         if(logParam==null){
             logParam = new LogParam(eventId);
         }
-//        logParam.setParam(Constant.KEY_USERID, AccountManager.getCurUserIdStr())
-//                .setParam(Constant.KEY_ISUSER,AccountManager.isUserLogined()+"")
-//                .setParam(Constant.KEY_EMAIL,AccountManager.getCurUserEmail());
+        logParam.setParam(Constant.Param.EMAIL, AccountManager.getUsername());
+
         if(mIsReady){
             logEventByFlurry(logParam);
         }else {
@@ -175,5 +187,14 @@ public class ActionLog {
             mTracker = analytics.newTracker(R.xml.global_tracker);
         }
         return mTracker;
+    }
+
+    private FirebaseAnalytics mFirebaseAnalytics;
+
+    synchronized public FirebaseAnalytics getFirebaseAnalytics(){
+        if (mFirebaseAnalytics == null) {
+            mFirebaseAnalytics = FirebaseAnalytics.getInstance(WhatsApplication.getContext());
+        }
+        return mFirebaseAnalytics;
     }
 }

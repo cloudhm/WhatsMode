@@ -29,4 +29,18 @@ public class Constant {
         ROOTPATH_CUSTOMER_USERINFO = WhatsApplication.getContext().getFilesDir().getAbsolutePath()
                 + File.separator + "cache";
     }
+
+
+    public static class Param {
+        public static final String EMAIL = "email";
+
+        protected Param(){}
+    }
+
+    public static class Event{
+        public static final String LOGIN = "login";
+
+        protected Event(){}
+    }
+
 }

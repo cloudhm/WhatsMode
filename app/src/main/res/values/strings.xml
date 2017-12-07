@@ -118,6 +118,9 @@
     <string name="card_num_not_exist">card num is invalid</string>
     <string name="dedicated_platform_for_influencer_brands">Dedicated Platform\n for Influencer Brands</string>
     <string name="my_address">My Address</string>
+    <string name="whether_pay_continue">Do you want to pay continue?</string>
+    <string name="no">no</string>
+    <string name="yes">yes</string>
 
     <array name="category">
         <item>APPAREL</item>

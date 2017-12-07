@@ -315,33 +315,46 @@ public class CartRepository {
 
     public void checkOrderExist(ID checkoutId) {
         Storefront.QueryRootQuery query = Storefront.query(_queryBuilder
-                -> _queryBuilder.node(checkoutId, _queryBuilder12 -> _queryBuilder12.onOrder(qd -> qd.orderNumber()
+                -> _queryBuilder.node(checkoutId, _queryBuilder12
+                -> _queryBuilder12.onOrder(qd
+                -> qd.orderNumber()
+                .lineItems(_queryBuilder1 -> _queryBuilder1.edges(new Storefront.OrderLineItemEdgeQueryDefinition() {
+                    @Override
+                    public void define(Storefront.OrderLineItemEdgeQuery _queryBuilder1) {
+                            _queryBuilder1.node(_queryBuilder11 -> _queryBuilder11.variant(qd1
+                                    -> qd1.availableForSale().compareAtPrice().title().sku().price().selectedOptions(s
+                                    -> s.name().value()).image(args
+                                    -> args.maxHeight(150).maxWidth(100).crop(Storefront.CropRegion.CENTER), quey
+                                    -> quey.src())).quantity().title().customAttributes(a
+                                    -> a.value().key()));
+                    }
+                }))
                 .currencyCode().customerLocale().email()
-                .shippingAddress(_queryBuilder13 -> _queryBuilder13.address1().address2().city().province().provinceCode().country().countryCode().company().
+                .shippingAddress(_queryBuilder13
+                        -> _queryBuilder13.address1().address2().city().province().provinceCode().country().countryCode().company().
                         firstName().lastName().name().phone().zip())
                 .customerUrl().phone().processedAt()
                 .subtotalPrice().totalPrice().totalRefunded()
                 .totalShippingPrice().totalTax())
-                .onCheckoutLineItem(_queryBuilder1 -> _queryBuilder1.variant(qd
-                        -> qd.availableForSale().compareAtPrice().title().sku().price().selectedOptions(s
-                        -> s.name().value()).image(args
-                        -> args.maxHeight(150).maxWidth(100).crop(Storefront.CropRegion.CENTER), quey
-                        -> quey.src())).quantity().title().customAttributes(a
-                        -> a.value().key()))))
-                ;
+        ));
         client.queryGraph(query)
                 .enqueue(new GraphCall.Callback<Storefront.QueryRoot>() {
                     @Override
                     public void onResponse(@android.support.annotation.NonNull GraphResponse<Storefront.QueryRoot> response) {
-                        Storefront.Order node = (Storefront.Order) response.data().getNode();
-//                        Address orderAddress = getOrderAddress(node.getShippingAddress());
-//                        Order order = new Order(node.getCustomerUrl(),node.getEmail(),node.getId().toString(),
-//                                node.getOrderNumber(),node.getPhone(),node.getProcessedAt(),orderAddress,node.getSubtotalPrice(),
-//                                node.getTotalPrice(),node.getTotalRefunded(),node.getTotalShippingPrice(),
-//                                node.getTotalTax(),bu,lineItem);
                         if (orderListener == null) {
                             return;
                         }
+                        if (response.data() == null) {
+                            orderListener.onFailure();
+                        }
+                        Storefront.Checkout checkout = (Storefront.Checkout) response.data().getNode();
+                        Storefront.Order node = checkout.getOrder();
+                        if (node == null) {
+                            orderListener.onFailure();
+                            return;
+                        }
+                        Order order = Order.parseOrder(node);
+                        Logger.e(order);
                     }
 
                     @Override
@@ -379,7 +392,7 @@ public class CartRepository {
     }
 
     public interface OrderDetailListener{
-        void onSuccess();
+        void onSuccess(Order order);
         void onFailure();
     }
 }

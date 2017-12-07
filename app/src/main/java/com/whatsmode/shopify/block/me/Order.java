@@ -283,4 +283,13 @@ public class Order implements Serializable{
         return order;
     }
 
+    public static Order parseOrder(Storefront.Order node){
+        List<LineItem> lineItem = LineItem.parseLineItems(node.getLineItems());
+        Address orderAddress = Address.parseOrderAddress(node.getShippingAddress());
+        Order order = new Order(node.getCustomerUrl(),node.getEmail(),node.getId().toString(),
+                node.getOrderNumber(),node.getPhone(),node.getProcessedAt(),orderAddress,node.getSubtotalPrice(),
+                node.getTotalPrice(),node.getTotalRefunded(),node.getTotalShippingPrice(),
+                node.getTotalTax(),null,lineItem);
+        return order;
+    }
 }

@@ -4,6 +4,7 @@ package com.whatsmode.shopify.block.checkout;
 import com.shopify.buy3.Storefront;
 import com.shopify.graphql.support.ID;
 import com.whatsmode.shopify.block.address.Address;
+import com.whatsmode.shopify.block.me.Order;
 import com.whatsmode.shopify.mvp.MvpPresenter;
 import com.whatsmode.shopify.mvp.MvpView;
 
@@ -36,6 +37,10 @@ public class CheckoutUpdateContact {
         void jumpToPay();
 
         void jumpToModifyAddress();
+
+        void showFailure();
+
+        void jumpToOrderDetail(Order order);
     }
 
     interface Presenter extends MvpPresenter<View> {

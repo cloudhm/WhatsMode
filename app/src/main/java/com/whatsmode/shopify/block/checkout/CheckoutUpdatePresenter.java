@@ -8,6 +8,7 @@ import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.base.BaseRxPresenter;
 import com.whatsmode.shopify.block.address.Address;
 import com.whatsmode.shopify.block.cart.CartRepository;
+import com.whatsmode.shopify.block.me.Order;
 
 import java.util.List;
 
@@ -112,14 +113,18 @@ public class CheckoutUpdatePresenter extends BaseRxPresenter<CheckoutUpdateConta
     public void checkOrderExist(ID checkoutId) {
         CartRepository.create().orderListener(new CartRepository.OrderDetailListener() {
             @Override
-            public void onSuccess() {
+            public void onSuccess(Order order) {
                 // FIXME: 2017/12/7
+                if (isViewAttached()) {
+                    getView().jumpToOrderDetail(order);
+                }
             }
 
             @Override
             public void onFailure() {
                 if (isViewAttached()) {
-                    // TODO: 2017/12/7  
+                    // TODO: 2017/12/7
+                    getView().showFailure();
                 }
             }
         }).checkOrderExist(checkoutId);

@@ -134,7 +134,6 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
         switchMenu(menuItemSearch);
         ivMenu.setVisibility(View.VISIBLE);
         ivLogo.setVisibility(View.VISIBLE);
-        toolbar.setVisibility(View.VISIBLE);
         toolbarTitle.setVisibility(View.GONE);
         ActionLog.onEvent(Constant.Event.MODE);
     }
@@ -153,7 +152,6 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
     public void switch2Influence() {
         switchMenu(menuItemSearch);
         ivMenu.setVisibility(View.VISIBLE);
-        toolbar.setVisibility(View.VISIBLE);
         ivLogo.setVisibility(View.VISIBLE);
         toolbarTitle.setVisibility(View.GONE);
         ActionLog.onEvent(Constant.Event.INFLUENCER);
@@ -179,7 +177,6 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
     public void switch2Cart() {
         switchMenu(menuEdit);
         ivMenu.setVisibility(View.GONE);
-        toolbar.setVisibility(View.VISIBLE);
         ivLogo.setVisibility(View.GONE);
         toolbarTitle.setVisibility(View.VISIBLE);
         defineCartTitle();
@@ -189,7 +186,6 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
     @Override
     public void switch2Mine() {
         switchMenu(null);
-        toolbar.setVisibility(View.GONE);
         toolbarTitle.setVisibility(View.GONE);
         ivMenu.setVisibility(View.GONE);
         ivLogo.setVisibility(View.GONE);

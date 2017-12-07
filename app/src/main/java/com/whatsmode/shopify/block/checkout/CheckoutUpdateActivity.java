@@ -1,11 +1,13 @@
 package com.whatsmode.shopify.block.checkout;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -34,6 +36,8 @@ import com.whatsmode.shopify.block.address.AddressListActivity;
 import com.whatsmode.shopify.block.cart.CartItem;
 import com.whatsmode.shopify.block.cart.CartItemLists;
 import com.whatsmode.shopify.block.cart.RxRefreshCartList;
+import com.whatsmode.shopify.block.me.Order;
+import com.whatsmode.shopify.block.me.OrderDetailsActivity;
 import com.whatsmode.shopify.common.Constant;
 import com.whatsmode.shopify.common.KeyConstant;
 import com.whatsmode.shopify.mvp.MvpActivity;
@@ -294,6 +298,25 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
         intent.putExtra(KeyConstant.KEY_ADD_EDIT_ADDRESS,AddEditAddressActivity.TYPE_EDIT_ADDRESS);
         intent.putExtra(KeyConstant.KEY_ADDRESS, currentAddress);
         startActivityForResult(intent,REQUEST_CODE_ADDRESS);
+    }
+
+    @Override
+    public void showFailure() {
+        runOnUiThread(() -> {
+            AlertDialog alertDialog = new AlertDialog.Builder(CheckoutUpdateActivity.this)
+                    .setNegativeButton(R.string.no, (dialog, which) -> finish())
+                    .setPositiveButton(R.string.yes,null)
+                    .setMessage(R.string.whether_pay_continue)
+                    .create();
+            alertDialog.show();
+        });
+    }
+
+    @Override
+    public void jumpToOrderDetail(Order order) {
+        Intent intent = new Intent(this, OrderDetailsActivity.class);
+        intent.putExtra(KeyConstant.KEY_ORDER, order);
+        startActivity(intent);
     }
 
     @Override

@@ -19,12 +19,14 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.whatsmode.library.exception.APIException;
+import com.whatsmode.library.rx.RxBus;
 import com.whatsmode.library.util.GlideCacheUtil;
 import com.whatsmode.library.util.PreferencesUtil;
 import com.whatsmode.library.util.SnackUtil;
 import com.whatsmode.shopify.AppNavigator;
 import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.block.account.LoginActivity;
+import com.whatsmode.shopify.block.me.event.LoginEvent;
 import com.whatsmode.shopify.common.KeyConstant;
 import com.whatsmode.shopify.mvp.MvpActivity;
 
@@ -141,6 +143,7 @@ public class SettingInfoActivity extends MvpActivity<SettingInfoContract.Present
     @Override
     public void signoutSuccess() {
         setJPushAlias(null);
+        RxBus.getInstance().post(new LoginEvent(true));
         finish();
     }
 

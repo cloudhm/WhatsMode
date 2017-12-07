@@ -8,6 +8,8 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.whatsmode.library.util.SnackUtil;
+import com.whatsmode.shopify.block.me.TrackingActivity;
+import com.whatsmode.shopify.common.Constant;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -47,7 +49,8 @@ public class JPushReceiver extends BroadcastReceiver {
             } else if (JPushInterface.ACTION_NOTIFICATION_OPENED.equals(intent.getAction())) {
                 Log.d(TAG, "[MyReceiver] 用户点击打开了通知");
                 String message = bundle.getString(JPushInterface.EXTRA_ALERT);
-                SnackUtil.toastShow(context,message);
+                String extras = bundle.getString(JPushInterface.EXTRA_EXTRA);
+                parse(context,extras);
 
             } else if (JPushInterface.ACTION_RICHPUSH_CALLBACK.equals(intent.getAction())) {
                 Log.d(TAG, "[MyReceiver] 用户收到到RICH PUSH CALLBACK: " + bundle.getString(JPushInterface.EXTRA_EXTRA));
@@ -63,6 +66,23 @@ public class JPushReceiver extends BroadcastReceiver {
             e.printStackTrace();
         }
 
+    }
+
+    private void parse(Context context,String extras) {
+        try {
+            JSONObject object = new JSONObject(extras);
+            String external = object.optString(Constant.EXTERNAL);
+            jump(context,external);
+        } catch (Exception e) {
+        }
+    }
+
+    private void jump(Context context,String data) {
+        if (!TextUtils.isEmpty(data)) {
+            Intent intent = TrackingActivity.newIntent(context, data);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            context.startActivity(intent);
+        }
     }
 
     private void receivingNotification(Context context, Bundle bundle) {

@@ -117,7 +117,7 @@ public class LoginActivity extends MvpActivity<LoginPresenter> implements LoginC
     @Override
     public void loginSuccess() {
         setJPushAlias(AccountManager.getUsername());
-        RxBus.getInstance().post(new LoginEvent());
+        RxBus.getInstance().post(new LoginEvent(true));
         hideLoading();
         AppNavigator.jumpToMain(this);
         finish();

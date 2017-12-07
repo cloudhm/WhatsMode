@@ -3,8 +3,11 @@ package com.whatsmode.shopify.block.me;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.shopify.buy3.Storefront;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -95,6 +98,10 @@ public class LineItem implements Serializable{
 
         public void setValue(String value) {
             this.value = value;
+        }
+
+        public static CustomAttributes parseCustomAttributes(LineItem.CustomAttributes customAttributes){
+            return new LineItem.CustomAttributes(customAttributes.getKey(),customAttributes.getValue());
         }
 
     }
@@ -194,6 +201,10 @@ public class LineItem implements Serializable{
             public void setSrc(String src) {
                 this.src = src;
             }
+
+            public static Image parseImage(Storefront.ProductVariant variant){
+                return new LineItem.Variant.Image(variant.getImage() == null ? null : variant.getImage().getSrc());
+            }
         }
 
         public static class SelectedOptions implements Serializable{
@@ -220,6 +231,56 @@ public class LineItem implements Serializable{
             public void setValue(String value) {
                 this.value = value;
             }
+
+            public static List<LineItem.Variant.SelectedOptions> parseSelectedOptions(List<Storefront.SelectedOption> selectedOptions){
+                List<LineItem.Variant.SelectedOptions> optionses = new ArrayList<>();
+                if (selectedOptions != null && !selectedOptions.isEmpty()) {
+                    for (Storefront.SelectedOption selectedOption : selectedOptions) {
+                        LineItem.Variant.SelectedOptions options = new LineItem.Variant.SelectedOptions(selectedOption.getName(),selectedOption.getValue());
+                        optionses.add(options);
+                    }
+                }
+                return optionses;
+            }
+
+        }
+
+        public static Variant parseVariant(Storefront.ProductVariant variant){
+            List<Storefront.SelectedOption> selectedOptions = variant.getSelectedOptions();
+            return new LineItem.Variant(variant.getAvailableForSale(),variant.getTitle(),
+                    variant.getSku(),variant.getPrice(),variant.getCompareAtPrice()
+                    , Variant.Image.parseImage(variant),LineItem.Variant.SelectedOptions.parseSelectedOptions(selectedOptions));
         }
     }
+
+    public static List<LineItem> parseLineItems(Storefront.OrderLineItemConnection orderLineItem) {
+        List<Storefront.OrderLineItemEdge> edges = orderLineItem.getEdges();
+        List<LineItem> items = new ArrayList<>();
+        if (edges != null && !edges.isEmpty()) {
+            for (Storefront.OrderLineItemEdge edge : edges) {
+                LineItem lineItem = parseLineItem(edge);
+                items.add(lineItem);
+            }
+        }
+        return items;
+    }
+
+    public static LineItem parseLineItem(Storefront.OrderLineItemEdge edge){
+        LineItem lineItem = new LineItem();
+        Storefront.OrderLineItem node = edge.getNode();
+        Storefront.ProductVariant variant = node.getVariant();
+        if (variant != null) {
+
+            lineItem.setVariant(Variant.parseVariant(variant));
+        }
+        lineItem.setQuantity(node.getQuantity());
+        lineItem.setTitle(node.getTitle());
+        LineItem.CustomAttributes customAttributes = lineItem.getCustomAttributes();
+        if (customAttributes != null) {
+            lineItem.setCustomAttributes(CustomAttributes.parseCustomAttributes(customAttributes));
+        }
+
+        return lineItem;
+    }
+
 }

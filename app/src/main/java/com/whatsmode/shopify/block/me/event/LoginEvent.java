@@ -5,4 +5,9 @@ package com.whatsmode.shopify.block.me.event;
  */
 
 public class LoginEvent {
+    public boolean isLogin;
+
+    public LoginEvent(boolean isLogin) {
+        this.isLogin = isLogin;
+    }
 }

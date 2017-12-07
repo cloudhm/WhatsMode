@@ -24,6 +24,7 @@ import com.whatsmode.library.util.ToastUtil;
 import com.whatsmode.shopify.AppNavigator;
 import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.WhatsApplication;
+import com.whatsmode.shopify.actionlog.ActionLog;
 import com.whatsmode.shopify.block.WebActivity;
 import com.whatsmode.shopify.block.cart.CartFragment;
 import com.whatsmode.shopify.block.cart.CartItem;
@@ -135,6 +136,7 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
         ivLogo.setVisibility(View.VISIBLE);
         toolbar.setVisibility(View.VISIBLE);
         toolbarTitle.setVisibility(View.GONE);
+        ActionLog.onEvent(Constant.Event.MODE);
     }
 
     private void switchMenu(MenuItem menuItem) {
@@ -154,6 +156,7 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
         toolbar.setVisibility(View.VISIBLE);
         ivLogo.setVisibility(View.VISIBLE);
         toolbarTitle.setVisibility(View.GONE);
+        ActionLog.onEvent(Constant.Event.INFLUENCER);
     }
 
     public void defineCartTitle(){
@@ -180,6 +183,7 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
         ivLogo.setVisibility(View.GONE);
         toolbarTitle.setVisibility(View.VISIBLE);
         defineCartTitle();
+        ActionLog.onEvent(Constant.Event.MY_CART);
     }
 
     @Override
@@ -189,7 +193,7 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
         toolbarTitle.setVisibility(View.GONE);
         ivMenu.setVisibility(View.GONE);
         ivLogo.setVisibility(View.GONE);
-
+        ActionLog.onEvent(Constant.Event.ACCOUNT);
     }
 
     private PopupWindow popupWindow;
@@ -202,6 +206,7 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
             popupWindow.setFocusable(true);
             popupWindow.showAsDropDown(toolbar, 0,0);
             ivMenu.setEnabled(false);
+            ActionLog.onEvent(Constant.Event.CATEGORY);
         }
     }
 
@@ -225,6 +230,7 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
     @Override
     public void showSearch() {
         AppNavigator.jumpToWebActivity(this, WebActivity.STATE_SEARCH, Constant.URL_SEARCH);
+        ActionLog.onEvent(Constant.Event.SREARCH);
     }
 
     @Override
@@ -233,12 +239,24 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
         String title = menuEdit.getTitle().toString();
         menuEdit.setTitle(title.equals(getString(R.string.edit)) ? R.string.done : R.string.edit);
         item.deleteCartItems(menuEdit.getTitle().toString());
+        ActionLog.onEvent(Constant.Event.DELETE);
     }
 
     @Override
     public void jumpToAds(int i) {
         AppNavigator.jumpToWebActivity(this,getResources().getStringArray(R.array.pop_icon_name)[i]
                 ,getResources().getStringArray(R.array.pop_icon_link)[i]);
+        switch (i){
+            case 0:
+                ActionLog.onEvent(Constant.Event.NEW_ARRIVALS);
+                break;
+            case 1:
+                ActionLog.onEvent(Constant.Event.DISCOVER);
+                break;
+            case 2:
+                ActionLog.onEvent(Constant.Event.SALE);
+                break;
+        }
     }
 
     @Override

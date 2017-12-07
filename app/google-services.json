@@ -1,0 +1,61 @@
+{
+  "project_info": {
+    "project_number": "60856914612",
+    "firebase_url": "https://whatsmode-95a2e.firebaseio.com",
+    "project_id": "whatsmode-95a2e",
+    "storage_bucket": "whatsmode-95a2e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:60856914612:android:fba8d4c58c1e9b5c",
+        "android_client_info": {
+          "package_name": "com.whatsmode.shopify"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "60856914612-6fnfgp7lkabg4015l4cso0k8neouppsp.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "60856914612-oh1o49epq9jemd852p0ievgv5sa6uhev.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "60856914612-e9s5nir5se9enciruma5euc6t2k25e7m.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "60856914612-cjcpsn146oetee6t1rsvesvssi114rfq.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "60856914612-1ab0g23u23rgdj5i4up2i7bau7869s0s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBeGJkpCJO0IHPDyLr1-sPlrhcYzU1dbjg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 2,
+          "analytics_property": {
+            "tracking_id": "UA-92870277-5"
+          }
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

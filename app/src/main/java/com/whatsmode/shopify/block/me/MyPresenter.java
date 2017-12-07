@@ -28,22 +28,7 @@ public class MyPresenter extends BaseRxPresenter<MyContract.View> implements MyC
     public void getCustomer() {
         MyRepository.create().getCustomer(AccountManager.getCustomerAccessToken(),new CustomerFragment())
                 .map(m -> {
-                    Customer customer = new Customer(m.getEmail(),m.getFirstName(),m.getId().toString(),m.getLastName());
-                    Storefront.MailingAddress defaultAddress = m.getDefaultAddress();
-                    String defaultId = getDefaultId(defaultAddress);
-                    if (defaultAddress != null) {
-                        Storefront.MailingAddress node = defaultAddress;
-                        Address address = new Address(node.getId().toString(),node.getAddress1(),node.getAddress2(),
-                                node.getCity(),node.getProvince(),node.getProvinceCode(),node.getCountry(),node.getCountryCode(),
-                                node.getCompany(),node.getFirstName(),node.getLastName(), node.getName(),
-                                node.getPhone(),node.getZip(),null);
-                        if (TextUtils.equals(node.getId().toString(), defaultId) && !TextUtils.isEmpty(defaultId)) {
-                            address.setDefault(true);
-                        }else{
-                            address.setDefault(false);
-                        }
-                        customer.setDefaultAddress(address);
-                    }
+                    Customer customer = Customer.parseCustomer(m);
                     return customer;
                 }).observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new SingleObserver<Customer>() {
@@ -83,13 +68,6 @@ public class MyPresenter extends BaseRxPresenter<MyContract.View> implements MyC
     }
 
 
-    private String getDefaultId(Storefront.MailingAddress defaultAddress){
-        if (defaultAddress == null || defaultAddress.getId() == null) {
-            return "";
-        }
-        return defaultAddress.getId().toString();
-    }
-
 
     //*******************************************
 
@@ -102,20 +80,7 @@ public class MyPresenter extends BaseRxPresenter<MyContract.View> implements MyC
         MyRepository.create().getOrders(AccountManager.getCustomerAccessToken(),new OrderFragment(true,pageSize,null))
                 .map(m -> {
                     Order.sHasNextPage = m.getPageInfo().getHasNextPage();
-                    List<Storefront.OrderEdge> edges = m.getEdges();
-                    List<Order> orders = new ArrayList<Order>();
-                    if (edges != null && !edges.isEmpty()) {
-                        for (Storefront.OrderEdge edge : edges) {
-                            Storefront.Order node = edge.getNode();
-                            List<LineItem> lineItem = getLineItem(node.getLineItems());
-                            Address orderAddress = getOrderAddress(node.getShippingAddress());
-                            Order order = new Order(node.getCustomerUrl(),node.getEmail(),node.getId().toString(),
-                                    node.getOrderNumber(),node.getPhone(),node.getProcessedAt(),orderAddress,node.getSubtotalPrice(),
-                                    node.getTotalPrice(),node.getTotalRefunded(),node.getTotalShippingPrice(),
-                                    node.getTotalTax(),edge.getCursor(),lineItem);
-                            orders.add(order);
-                        }
-                    }
+                    List<Order> orders = Order.parseOrders(m);
                     return orders;
                 }).observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new SingleObserver<List<Order>>() {
@@ -154,20 +119,7 @@ public class MyPresenter extends BaseRxPresenter<MyContract.View> implements MyC
         MyRepository.create().getOrders(AccountManager.getCustomerAccessToken(),new OrderFragment(false,pageSize,cursor))
                 .map(m -> {
                     Order.sHasNextPage = m.getPageInfo().getHasNextPage();
-                    List<Storefront.OrderEdge> edges = m.getEdges();
-                    List<Order> orders = new ArrayList<Order>();
-                    if (edges != null && !edges.isEmpty()) {
-                        for (Storefront.OrderEdge edge : edges) {
-                            Storefront.Order node = edge.getNode();
-                            List<LineItem> lineItem = getLineItem(node.getLineItems());
-                            Address orderAddress = getOrderAddress(node.getShippingAddress());
-                            Order order = new Order(node.getCustomerUrl(),node.getEmail(),node.getId().toString(),
-                                    node.getOrderNumber(),node.getPhone(),node.getProcessedAt(),orderAddress,node.getSubtotalPrice(),
-                                    node.getTotalPrice(),node.getTotalRefunded(),node.getTotalShippingPrice(),
-                                    node.getTotalTax(),edge.getCursor(),lineItem);
-                            orders.add(order);
-                        }
-                    }
+                    List<Order> orders = Order.parseOrders(m);
                     return orders;
                 }).observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new SingleObserver<List<Order>>() {
@@ -198,51 +150,6 @@ public class MyPresenter extends BaseRxPresenter<MyContract.View> implements MyC
                         }
                     }
                 });
-    }
-
-    private List<LineItem> getLineItem(Storefront.OrderLineItemConnection orderLineItem) {
-        List<Storefront.OrderLineItemEdge> edges = orderLineItem.getEdges();
-        List<LineItem> items = new ArrayList<>();
-        if (edges != null && !edges.isEmpty()) {
-            for (Storefront.OrderLineItemEdge edge : edges) {
-                LineItem lineItem = new LineItem();
-                Storefront.OrderLineItem node = edge.getNode();
-                Storefront.ProductVariant variant = node.getVariant();
-                if (variant != null) {
-                    List<Storefront.SelectedOption> selectedOptions = variant.getSelectedOptions();
-                    lineItem.setVariant(new LineItem.Variant(variant.getAvailableForSale(),variant.getTitle(),
-                            variant.getSku(),variant.getPrice(),variant.getCompareAtPrice()
-                            ,new LineItem.Variant.Image(variant.getImage() == null ? null : variant.getImage().getSrc()),getSelectedOptions(selectedOptions)));
-                }
-                lineItem.setQuantity(node.getQuantity());
-                lineItem.setTitle(node.getTitle());
-                LineItem.CustomAttributes customAttributes = lineItem.getCustomAttributes();
-                if (customAttributes != null) {
-                    lineItem.setCustomAttributes(new LineItem.CustomAttributes(customAttributes.getKey(),customAttributes.getValue()));
-                }
-                items.add(lineItem);
-            }
-        }
-        return items;
-    }
-
-    private List<LineItem.Variant.SelectedOptions> getSelectedOptions(List<Storefront.SelectedOption> selectedOptions){
-        List<LineItem.Variant.SelectedOptions> optionses = new ArrayList<>();
-        if (selectedOptions != null && !selectedOptions.isEmpty()) {
-            for (Storefront.SelectedOption selectedOption : selectedOptions) {
-                LineItem.Variant.SelectedOptions options = new LineItem.Variant.SelectedOptions(selectedOption.getName(),selectedOption.getValue());
-                optionses.add(options);
-            }
-        }
-        return optionses;
-    }
-
-    private Address getOrderAddress(Storefront.MailingAddress node){
-        Address address = new Address(node.getId().toString(),node.getAddress1(),node.getAddress2(),
-                node.getCity(),node.getProvince(),node.getProvinceCode(),node.getCountry(),node.getCountryCode(),
-                node.getCompany(),node.getFirstName(),node.getLastName(), node.getName(),
-                node.getPhone(),node.getZip(),null);
-        return address;
     }
 
 

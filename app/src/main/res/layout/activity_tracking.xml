@@ -33,9 +33,19 @@
         android:layout_height="20dp"
         android:max="100"/>
 
-    <WebView
-        android:id="@+id/webview"
+    <FrameLayout
+        android:id="@+id/webview_l"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></WebView>
+        android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/reload"
+            android:text="Reload"
+            android:visibility="gone"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </FrameLayout>
 
 </LinearLayout>

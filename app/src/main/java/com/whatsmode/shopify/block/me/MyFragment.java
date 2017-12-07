@@ -22,21 +22,25 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.whatsmode.library.exception.APIException;
 import com.whatsmode.library.rx.RxBus;
+import com.whatsmode.library.util.ScreenUtils;
 import com.whatsmode.library.util.SnackUtil;
 import com.whatsmode.shopify.AppNavigator;
 import com.whatsmode.shopify.R;
+import com.whatsmode.shopify.actionlog.ActionLog;
 import com.whatsmode.shopify.block.account.LoginActivity;
 import com.whatsmode.shopify.block.address.Address;
 import com.whatsmode.shopify.block.address.AddressListActivity;
 import com.whatsmode.shopify.block.address.AddressUtil;
 import com.whatsmode.shopify.block.address.LoadType;
 import com.whatsmode.shopify.block.me.event.LoginEvent;
+import com.whatsmode.shopify.common.Constant;
 import com.whatsmode.shopify.common.KeyConstant;
 import com.whatsmode.shopify.mvp.MvpFragment;
 
@@ -69,6 +73,7 @@ public class MyFragment extends MvpFragment<MyContract.Presenter> implements MyC
     private Disposable mSubscribe;
     private ImageView mImageViewBg;
     private ImageView mImageViewBg2;
+    private ProgressBar mIndeterminateBar;
 
     public static MyFragment newInstance(){
         MyFragment fragment = new MyFragment();
@@ -86,11 +91,12 @@ public class MyFragment extends MvpFragment<MyContract.Presenter> implements MyC
         mNoLoginL = (RelativeLayout) view.findViewById(R.id.no_login_l);
         Button createAccount = (Button) view.findViewById(R.id.create_account);
         Button logIn = (Button) view.findViewById(R.id.log_in);
+        mIndeterminateBar = (ProgressBar) view.findViewById(R.id.indeterminate_bar);
         mImageViewBg = (ImageView) view.findViewById(R.id.image_view_bg);
         mImageViewBg2 = (ImageView) view.findViewById(R.id.image_view_bg2);
         createAccount.setOnClickListener(this);
         logIn.setOnClickListener(this);
-
+        setImageBGSize();
         /**/
         initRecyclerView();
         mPresenter.getCustomer();
@@ -98,13 +104,39 @@ public class MyFragment extends MvpFragment<MyContract.Presenter> implements MyC
         initLoginListener();
     }
 
+    private void setImageBGSize(){
+        int screenWidth = ScreenUtils.getScreenWidth(getContext());
+        int mar = ScreenUtils.dip2px(getContext(), 20 * 2);
+        int width = screenWidth - mar;
+        int height = (int)(width * (984.0 / 690.0)) + ScreenUtils.dip2px(getContext(),6);
+        ViewGroup.LayoutParams lp = mImageViewBg.getLayoutParams();
+        if (lp == null) {
+            lp = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        }
+        lp.width = width;
+        lp.height = height;
+        mImageViewBg.setLayoutParams(lp);
+
+        ViewGroup.LayoutParams lp2 = mImageViewBg2.getLayoutParams();
+        if (lp2 == null) {
+            lp2 = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        }
+        lp2.width = width;
+        lp2.height = height;
+        mImageViewBg2.setLayoutParams(lp2);
+    }
+
     private void initLoginListener() {
         mSubscribe = RxBus.getInstance().register(LoginEvent.class)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(loginEvent -> {
-                    mPresenter.getCustomer();
-                    mPresenter.refreshOrderList();
+                    if (loginEvent.isLogin) {
+                        mPresenter.getCustomer();
+                        mPresenter.refreshOrderList();
+                    }else{
+                        setContentGone();
+                    }
                 });
     }
 
@@ -153,6 +185,7 @@ public class MyFragment extends MvpFragment<MyContract.Presenter> implements MyC
         switch (view.getId()) {
             case R.id.avatar:
                 startActivity(new Intent(getActivity(), SettingInfoActivity.class));
+                //ActionLog.onEvent(Constant.Event.CREATE_ACCOUNT);
                 break;
             case R.id.view_address:
                 Intent intent = new Intent(getActivity(), AddressListActivity.class);
@@ -179,7 +212,7 @@ public class MyFragment extends MvpFragment<MyContract.Presenter> implements MyC
 
     @Override
     public void onError(int code, String msg) {
-        SnackUtil.toastShow(getContext(),msg);
+        //SnackUtil.toastShow(getContext(),msg);
         completeRefresh();
         if (code == APIException.CODE_SESSION_EXPIRE) {
             //AppNavigator.jumpToLogin(getActivity());
@@ -209,12 +242,14 @@ public class MyFragment extends MvpFragment<MyContract.Presenter> implements MyC
     }
 
     private void setContentGone(){
+        mIndeterminateBar.setVisibility(View.GONE);
         mNoLoginL.setVisibility(View.VISIBLE);
         mSwipe.setVisibility(View.GONE);
         startAnim();
     }
 
     private void setContentVisible(){
+        mIndeterminateBar.setVisibility(View.GONE);
         mNoLoginL.setVisibility(View.GONE);
         mSwipe.setVisibility(View.VISIBLE);
         stopAnim();
@@ -231,12 +266,12 @@ public class MyFragment extends MvpFragment<MyContract.Presenter> implements MyC
         if (defaultAddress != null && defaultAddress.isDefault()) {
             String joinAddress = AddressUtil.getJoinAddress(defaultAddress);
             if (TextUtils.isEmpty(joinAddress)) {
-                mViewAddress.setText("add address");
+                mViewAddress.setText(R.string.my_address);
             }else {
                 mViewAddress.setText(joinAddress);
             }
         }else{
-            mViewAddress.setText("add address");
+            mViewAddress.setText(R.string.my_address);
         }
     }
 

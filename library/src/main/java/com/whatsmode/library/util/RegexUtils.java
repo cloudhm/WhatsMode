@@ -270,4 +270,8 @@ public class RegexUtils {
     public static boolean isPwd(String input){
         return isMatch(REGEX_PWD, input);
     }
+
+    public static boolean isBlock(String url) {
+        return TextUtils.isEmpty(url) ||url.contains("cart");
+    }
 }

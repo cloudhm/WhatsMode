@@ -169,7 +169,9 @@ public class WebActivity extends BaseActivity{
                     startActivity(WebActivity.newIntent(WebActivity.this,WebActivity.STATE_PRODUCT,url));
                 } else if (RegexUtils.isCollection(url)) {
                     startActivity(WebActivity.newIntent(WebActivity.this,WebActivity.STATE_COLLECTIONS,url));
-                }else{
+                } else if (RegexUtils.isBlock(url)) {
+
+                } else {
                     view.loadUrl(url);
                 }
                 return true;

@@ -107,4 +107,21 @@ public class CheckoutUpdatePresenter extends BaseRxPresenter<CheckoutUpdateConta
                 })
                 .bindAddress(a);
     }
+
+    @Override
+    public void checkOrderExist(ID checkoutId) {
+        CartRepository.create().orderListener(new CartRepository.OrderDetailListener() {
+            @Override
+            public void onSuccess() {
+                // FIXME: 2017/12/7
+            }
+
+            @Override
+            public void onFailure() {
+                if (isViewAttached()) {
+                    // TODO: 2017/12/7  
+                }
+            }
+        }).checkOrderExist(checkoutId);
+    }
 }

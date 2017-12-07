@@ -47,5 +47,7 @@ public class CheckoutUpdateContact {
         void checkShippingMethods(ID id);
 
         void bindAddress(ID id, Address a);
+
+        void checkOrderExist(ID checkoutId);
     }
 }

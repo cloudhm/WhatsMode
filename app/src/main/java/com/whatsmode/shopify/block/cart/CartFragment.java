@@ -73,8 +73,12 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
             mPresenter.doLoadData(true);
             checkSpanner();
             if (mPresenter.isSelectAll()) {
-                onCheckSelect(true,list);
+                if (!TextUtils.isEmpty(list.getId())) {
+                    onCheckSelect(true,list);
+                }
                 checkTotal();
+            }else{
+                showOrHideEdit();
             }
         });
     }
@@ -103,6 +107,8 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
             if (mAdapter != null && !ListUtils.isEmpty(mAdapter.getData())) {
                 mPresenter.saveCart(mAdapter.getData());
             }
+        }else{
+            showOrHideEdit();
         }
     }
 
@@ -143,8 +149,8 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
     }
 
     @Override
-    public void showSuccess(Double price,ID id) {
-        AppNavigator.jumpToCheckoutUpdateActivity(getActivity(),price,id,new CartItemLists(checkItem));
+    public void showSuccess(Double price,ID id,List<CartItem> response) {
+        AppNavigator.jumpToCheckoutUpdateActivity(getActivity(),price,id,new CartItemLists(response));
     }
 
     @Override
@@ -172,6 +178,16 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
         tvTotal.setText(new StringBuilder(getString(R.string.unit)).append(Util.getFormatDouble(Math.max(total, 0.0))));
         MainActivity activity = (MainActivity) getActivity();
         activity.refreshBottomBar(badge);
+        showOrHideEdit();
+    }
+
+    private void showOrHideEdit() {
+        MainActivity activity = (MainActivity) getActivity();
+        if (mAdapter == null || ListUtils.isEmpty(mAdapter.getData())) {
+            activity.hideEdit(false);
+        }else{
+            activity.hideEdit(true);
+        }
     }
 
     @Override
@@ -210,6 +226,8 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
                         .setTitle(R.string.delete)
                         .create();
             alertDialog.show();
+        }else{
+            ToastUtil.showToast(getString(R.string.plz_select_products));
         }
     }
 
@@ -250,6 +268,7 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
             }
             MainActivity activity = (MainActivity) getActivity();
             activity.defineCartTitle();
+            showOrHideEdit();
         });
     }
 
@@ -280,6 +299,7 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
             totalTv.setVisibility(View.GONE);
             btnCheckout.setVisibility(View.GONE);
         }
+        showOrHideEdit();
     }
 
     @Override

@@ -96,6 +96,7 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
         menuItemSearch = menu.findItem(R.id.action_search);
         menuItemSearch.setVisible(true);
         menuEdit = menu.findItem(R.id.action_edit);
+        menuEdit.setVisible(false);
         getPresenter().setPageSelected(0);
         return super.onCreateOptionsMenu(menu);
     }
@@ -132,6 +133,7 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
         switchMenu(menuItemSearch);
         ivMenu.setVisibility(View.VISIBLE);
         ivLogo.setVisibility(View.VISIBLE);
+        toolbar.setVisibility(View.VISIBLE);
         toolbarTitle.setVisibility(View.GONE);
     }
 
@@ -140,7 +142,7 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
             mTempMenu.setVisible(false);
         }
         if (menuItem != null) {
-            menuItem.setVisible(true);
+            //menuItem.setVisible(true);
             mTempMenu = menuItem;
         }
     }
@@ -149,6 +151,7 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
     public void switch2Influence() {
         switchMenu(menuItemSearch);
         ivMenu.setVisibility(View.VISIBLE);
+        toolbar.setVisibility(View.VISIBLE);
         ivLogo.setVisibility(View.VISIBLE);
         toolbarTitle.setVisibility(View.GONE);
     }
@@ -164,9 +167,7 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
             }
             toolbarTitle.setText(ListUtils.isEmpty(cartItemList) ? "My Cart" : "My Cart(" + badge + ")");
             bottomBarItem.setBadge(badge);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -175,6 +176,7 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
     public void switch2Cart() {
         switchMenu(menuEdit);
         ivMenu.setVisibility(View.GONE);
+        toolbar.setVisibility(View.VISIBLE);
         ivLogo.setVisibility(View.GONE);
         toolbarTitle.setVisibility(View.VISIBLE);
         defineCartTitle();
@@ -183,6 +185,7 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
     @Override
     public void switch2Mine() {
         switchMenu(null);
+        toolbar.setVisibility(View.GONE);
         toolbarTitle.setVisibility(View.GONE);
         ivMenu.setVisibility(View.GONE);
         ivLogo.setVisibility(View.GONE);
@@ -280,5 +283,9 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
     public void refreshBottomBar(int i) {
         toolbarTitle.setText(i == 0 ? "My Cart" : "My Cart(" + i + ")");
         bottomBarItem.setBadge(i);
+    }
+
+    public void hideEdit(boolean visiable) {
+        menuEdit.setVisible(visiable);
     }
 }

@@ -15,8 +15,11 @@ import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.WhatsApplication;
 import com.whatsmode.shopify.block.account.data.AccountManager;
 import com.whatsmode.shopify.block.address.Address;
+import com.whatsmode.shopify.block.me.MyPresenter;
+import com.whatsmode.shopify.block.me.Order;
 import com.zchu.log.Logger;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,6 +36,7 @@ public class CartRepository {
     private UpdateCheckoutListener updateCheckoutListener;
     private ID checkoutId;
     private ShippingListener shippingListener;
+    private OrderDetailListener orderListener;
 
     private CartRepository() {
         client = WhatsApplication.getGraphClient();
@@ -67,6 +71,11 @@ public class CartRepository {
 
     public CartRepository bindUser(ID checkoutId) {
         this.checkoutId = checkoutId;
+        return cartRepository;
+    }
+
+    public CartRepository orderListener(OrderDetailListener listener) {
+        this.orderListener = listener;
         return cartRepository;
     }
 
@@ -124,6 +133,35 @@ public class CartRepository {
                 .checkoutCreate(generateInput(dataSource), createPayloadQuery -> createPayloadQuery
                         .checkout(checkoutQuery -> checkoutQuery
                                 .webUrl().totalPrice()
+                                .lineItems(new Storefront.CheckoutQuery.LineItemsArgumentsDefinition() {
+                                    @Override
+                                    public void define(Storefront.CheckoutQuery.LineItemsArguments args) {
+                                        args.first(250);
+                                    }
+                                }, new Storefront.CheckoutLineItemConnectionQueryDefinition() {
+                                    @Override
+                                    public void define(Storefront.CheckoutLineItemConnectionQuery _queryBuilder) {
+                                            _queryBuilder.edges(_queryBuilder1 -> _queryBuilder1.node(new Storefront.CheckoutLineItemQueryDefinition() {
+                                                @Override
+                                                public void define(Storefront.CheckoutLineItemQuery _queryBuilder1) {
+                                                    _queryBuilder1.quantity().title().variant(_queryBuilder11 -> _queryBuilder11.price()
+                                                            .compareAtPrice().title().product(new Storefront.ProductQueryDefinition() {
+                                                                @Override
+                                                                public void define(Storefront.ProductQuery _queryBuilder) {
+                                                                    _queryBuilder.title().images(args -> args.first(1), _queryBuilder22
+                                                                            -> _queryBuilder22.edges(_queryBuilder2 
+                                                                            -> _queryBuilder2.node(new Storefront.ImageQueryDefinition() {
+                                                                        @Override
+                                                                        public void define(Storefront.ImageQuery _queryBuilder2) {
+                                                                            _queryBuilder2.src();
+                                                                        }
+                                                                    })));
+                                                                }
+                                                            }));
+                                                }
+                                            }));
+                                    }
+                                })
                         ).userErrors(userErrorQuery -> userErrorQuery
                                 .field()
                                 .message()
@@ -147,7 +185,22 @@ public class CartRepository {
                     if (response.data().getCheckoutCreate().getCheckout() != null) {
                         if (mListener != null) {
                             ID checkoutID = response.data().getCheckoutCreate().getCheckout().getId();
-                            mListener.onSuccess(response.data().getCheckoutCreate().getCheckout().getTotalPrice().doubleValue(),checkoutID);
+                            List<Storefront.CheckoutLineItemEdge> edges = response.data().getCheckoutCreate().getCheckout().getLineItems().getEdges();
+                            List<CartItem> responseData = new ArrayList<>();
+                            for (Storefront.CheckoutLineItemEdge edge : edges) {
+                                CartItem cartItem = new CartItem();
+                                cartItem.setId(edge.getNode().getVariant().getId().toString());
+                                cartItem.setColorAndSize(edge.getNode().getVariant().getTitle());
+                                BigDecimal compareAtPrice = edge.getNode().getVariant().getCompareAtPrice();
+                                cartItem.setComparePrice(compareAtPrice == null ? 0.0:compareAtPrice.doubleValue());
+                                cartItem.setName(edge.getNode().getTitle());
+                                cartItem.setPrice(edge.getNode().getVariant().getPrice().doubleValue());
+                                cartItem.setQuality(edge.getNode().getQuantity());
+                                String src = edge.getNode().getVariant().getProduct().getImages().getEdges().get(0).getNode().getSrc();
+                                cartItem.setIcon(src);
+                                responseData.add(cartItem);
+                            }
+                            mListener.onSuccess(response.data().getCheckoutCreate().getCheckout().getTotalPrice().doubleValue(),checkoutID,responseData);
                         }
                     }
                 }
@@ -181,7 +234,10 @@ public class CartRepository {
                         .userErrors(Storefront.UserErrorQuery::message)).checkoutDiscountCodeApply(s, new ID(checkoutId), new Storefront.CheckoutDiscountCodeApplyPayloadQueryDefinition() {
                     @Override
                     public void define(Storefront.CheckoutDiscountCodeApplyPayloadQuery _queryBuilder) {
-                        _queryBuilder.checkout(_queryBuilder1 -> _queryBuilder1.paymentDue().totalPrice().subtotalPrice())
+                        _queryBuilder.checkout(_queryBuilder1
+                                -> _queryBuilder1.paymentDue()
+                                .totalPrice().subtotalPrice()
+                                )
                                 .userErrors(_queryBuilder12 -> _queryBuilder12.message());
                     }
                 })
@@ -256,6 +312,48 @@ public class CartRepository {
                 });
     }
 
+
+    public void checkOrderExist(ID checkoutId) {
+        Storefront.QueryRootQuery query = Storefront.query(_queryBuilder
+                -> _queryBuilder.node(checkoutId, _queryBuilder12 -> _queryBuilder12.onOrder(qd -> qd.orderNumber()
+                .currencyCode().customerLocale().email()
+                .shippingAddress(_queryBuilder13 -> _queryBuilder13.address1().address2().city().province().provinceCode().country().countryCode().company().
+                        firstName().lastName().name().phone().zip())
+                .customerUrl().phone().processedAt()
+                .subtotalPrice().totalPrice().totalRefunded()
+                .totalShippingPrice().totalTax())
+                .onCheckoutLineItem(_queryBuilder1 -> _queryBuilder1.variant(qd
+                        -> qd.availableForSale().compareAtPrice().title().sku().price().selectedOptions(s
+                        -> s.name().value()).image(args
+                        -> args.maxHeight(150).maxWidth(100).crop(Storefront.CropRegion.CENTER), quey
+                        -> quey.src())).quantity().title().customAttributes(a
+                        -> a.value().key()))))
+                ;
+        client.queryGraph(query)
+                .enqueue(new GraphCall.Callback<Storefront.QueryRoot>() {
+                    @Override
+                    public void onResponse(@android.support.annotation.NonNull GraphResponse<Storefront.QueryRoot> response) {
+                        Storefront.Order node = (Storefront.Order) response.data().getNode();
+//                        Address orderAddress = getOrderAddress(node.getShippingAddress());
+//                        Order order = new Order(node.getCustomerUrl(),node.getEmail(),node.getId().toString(),
+//                                node.getOrderNumber(),node.getPhone(),node.getProcessedAt(),orderAddress,node.getSubtotalPrice(),
+//                                node.getTotalPrice(),node.getTotalRefunded(),node.getTotalShippingPrice(),
+//                                node.getTotalTax(),bu,lineItem);
+                        if (orderListener == null) {
+                            return;
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@android.support.annotation.NonNull GraphError error) {
+                        if (orderListener == null) {
+                            return;
+                        }
+                        orderListener.onFailure();
+                    }
+                });
+    }
+
     public interface ShippingListener {
         void onSuccess(Double tax,List<Storefront.ShippingRate> shippingRates,String url);
 
@@ -263,7 +361,7 @@ public class CartRepository {
     }
 
     public interface QueryListener {
-        void onSuccess(Double totalPrice,ID id);
+        void onSuccess(Double totalPrice,ID id,List<CartItem> responseData);
 
         void onError(String message);
     }
@@ -278,5 +376,10 @@ public class CartRepository {
         void onSuccess(String url);
 
         void onError(String message);
+    }
+
+    public interface OrderDetailListener{
+        void onSuccess();
+        void onFailure();
     }
 }

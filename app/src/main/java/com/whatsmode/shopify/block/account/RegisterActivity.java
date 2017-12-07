@@ -22,6 +22,7 @@ import com.whatsmode.library.util.SnackUtil;
 import com.whatsmode.library.util.Util;
 import com.whatsmode.shopify.AppNavigator;
 import com.whatsmode.shopify.R;
+import com.whatsmode.shopify.actionlog.ActionLog;
 import com.whatsmode.shopify.block.me.StatusBarUtil;
 import com.whatsmode.shopify.common.Constant;
 import com.whatsmode.shopify.common.KeyConstant;
@@ -104,6 +105,7 @@ public class RegisterActivity extends MvpActivity<RegisterPresenter> implements 
 
             mPresenter.register(email,pwd,firstName,lastName);
             showLoading();
+            ActionLog.onEvent(Constant.Event.CREATE_ACCOUNT);
         }
     }
 

@@ -24,7 +24,7 @@ import java.util.Set;
  * Created by Administrator on 2017/9/2.
  */
 public class ActionLog {
-    private boolean mIsReady;
+    private boolean mIsReady = true;
     private int MAX_PENDING_EVENT = 10;
     private ArrayList<LogParam> mPendingEvents = new ArrayList<>(MAX_PENDING_EVENT);
 
@@ -147,7 +147,7 @@ public class ActionLog {
         if(logParam==null){
             logParam = new LogParam(realEventId);
         }
-        logParam.setParam(Constant.Param.EMAIL, AccountManager.getUsername());
+        //logParam.setParam(Constant.Param.EMAIL, AccountManager.getUsername());
 
     }
     private void onEndTimeEventInner(String eventId){
@@ -160,7 +160,7 @@ public class ActionLog {
         if(logParam==null){
             logParam = new LogParam(eventId);
         }
-        logParam.setParam(Constant.Param.EMAIL, AccountManager.getUsername());
+        //logParam.setParam(Constant.Param.EMAIL, AccountManager.getUsername());
 
         if(mIsReady){
             logEventByFlurry(logParam);

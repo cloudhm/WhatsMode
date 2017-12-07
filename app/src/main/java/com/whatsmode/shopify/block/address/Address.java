@@ -3,6 +3,8 @@ package com.whatsmode.shopify.block.address;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.shopify.buy3.Storefront;
+
 import java.io.Serializable;
 
 /**
@@ -286,5 +288,14 @@ public class Address implements Serializable{
                 ", zip='" + zip + '\'' +
                 ", cursor='" + cursor + '\'' +
                 '}';
+    }
+
+
+    public static Address parseOrderAddress(Storefront.MailingAddress node){
+        Address address = new Address(node.getId().toString(),node.getAddress1(),node.getAddress2(),
+                node.getCity(),node.getProvince(),node.getProvinceCode(),node.getCountry(),node.getCountryCode(),
+                node.getCompany(),node.getFirstName(),node.getLastName(), node.getName(),
+                node.getPhone(),node.getZip(),null);
+        return address;
     }
 }

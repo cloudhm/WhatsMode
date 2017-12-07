@@ -1,5 +1,8 @@
 package com.whatsmode.shopify.block.me;
 
+import android.text.TextUtils;
+
+import com.shopify.buy3.Storefront;
 import com.whatsmode.shopify.block.address.Address;
 
 import java.io.Serializable;
@@ -194,5 +197,29 @@ public class Customer implements Serializable{
         result = 31 * result + (phone != null ? phone.hashCode() : 0);
         result = 31 * result + (updatedAt != null ? updatedAt.hashCode() : 0);
         return result;
+    }
+
+    public static Customer parseCustomer(Storefront.Customer m){
+        Customer customer = new Customer(m.getEmail(),m.getFirstName(),m.getId().toString(),m.getLastName());
+        Storefront.MailingAddress defaultAddress = m.getDefaultAddress();
+        String defaultId = getDefaultId(defaultAddress);
+        if (defaultAddress != null) {
+            Storefront.MailingAddress node = defaultAddress;
+            Address address = Address.parseOrderAddress(node);
+            if (TextUtils.equals(node.getId().toString(), defaultId) && !TextUtils.isEmpty(defaultId)) {
+                address.setDefault(true);
+            }else{
+                address.setDefault(false);
+            }
+            customer.setDefaultAddress(address);
+        }
+        return customer;
+    }
+
+    private static String getDefaultId(Storefront.MailingAddress defaultAddress){
+        if (defaultAddress == null || defaultAddress.getId() == null) {
+            return "";
+        }
+        return defaultAddress.getId().toString();
     }
 }

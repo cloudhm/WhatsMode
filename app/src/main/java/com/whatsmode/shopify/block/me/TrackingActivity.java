@@ -24,6 +24,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.whatsmode.shopify.R;
+import com.whatsmode.shopify.common.Constant;
 
 
 /**
@@ -92,6 +93,7 @@ public class TrackingActivity extends AppCompatActivity implements View.OnClickL
     private void setWebView(){
 
         WebSettings webSettings = mWebView.getSettings();
+        webSettings.setUserAgentString(Constant.USER_AGENT);
 
         //如果访问的页面中要与Javascript交互，则webview必须设置支持Javascript
         webSettings.setJavaScriptEnabled(true);

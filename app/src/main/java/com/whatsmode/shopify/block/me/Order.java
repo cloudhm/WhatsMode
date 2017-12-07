@@ -1,14 +1,15 @@
 package com.whatsmode.shopify.block.me;
 
 import android.os.Parcel;
-import android.os.Parcelable;
 
+import com.shopify.buy3.Storefront;
 import com.whatsmode.shopify.block.address.Address;
 
 import org.joda.time.DateTime;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -257,4 +258,29 @@ public class Order implements Serializable{
                 ", lineItems=" + lineItems +
                 '}';
     }
+
+
+    public static List<Order> parseOrders(Storefront.OrderConnection connection){
+        List<Order> orders = new ArrayList<Order>();
+        List<Storefront.OrderEdge> edges = connection.getEdges();
+        if (edges != null && !edges.isEmpty()) {
+            for (Storefront.OrderEdge edge : edges) {
+                Order order = parseOrder(edge);
+                orders.add(order);
+            }
+        }
+        return orders;
+    }
+
+    public static Order parseOrder(Storefront.OrderEdge edge){
+        Storefront.Order node = edge.getNode();
+        List<LineItem> lineItem = LineItem.parseLineItems(node.getLineItems());
+        Address orderAddress = Address.parseOrderAddress(node.getShippingAddress());
+        Order order = new Order(node.getCustomerUrl(),node.getEmail(),node.getId().toString(),
+                node.getOrderNumber(),node.getPhone(),node.getProcessedAt(),orderAddress,node.getSubtotalPrice(),
+                node.getTotalPrice(),node.getTotalRefunded(),node.getTotalShippingPrice(),
+                node.getTotalTax(),edge.getCursor(),lineItem);
+        return order;
+    }
+
 }

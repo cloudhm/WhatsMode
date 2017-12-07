@@ -108,7 +108,7 @@ public class MyFragment extends MvpFragment<MyContract.Presenter> implements MyC
         int screenWidth = ScreenUtils.getScreenWidth(getContext());
         int mar = ScreenUtils.dip2px(getContext(), 20 * 2);
         int width = screenWidth - mar;
-        int height = (int)(width * (984.0 / 690.0));
+        int height = (int)(width * (984.0 / 690.0)) + ScreenUtils.dip2px(getContext(),6);
         ViewGroup.LayoutParams lp = mImageViewBg.getLayoutParams();
         if (lp == null) {
             lp = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -185,7 +185,7 @@ public class MyFragment extends MvpFragment<MyContract.Presenter> implements MyC
         switch (view.getId()) {
             case R.id.avatar:
                 startActivity(new Intent(getActivity(), SettingInfoActivity.class));
-                //ActionLog.onEvent(Constant.Event.LOGIN);
+                //ActionLog.onEvent(Constant.Event.CREATE_ACCOUNT);
                 break;
             case R.id.view_address:
                 Intent intent = new Intent(getActivity(), AddressListActivity.class);

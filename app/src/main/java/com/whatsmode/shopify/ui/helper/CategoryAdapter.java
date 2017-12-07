@@ -73,10 +73,12 @@ public class CategoryAdapter extends ExpandableRecyclerAdapter<CategoryAdapter.C
 
         void bind(int position) {
             name.setText(visibleItems.get(position).Text);
-            view.setOnClickListener(v ->
+            view.setOnClickListener(v ->{
                             AppNavigator.jumpToWebActivity(mContext, WebActivity.STATE_COLLECTIONS,
                             new StringBuilder(Constant.WEB_PREFIX)
-                                    .append(visibleItems.get(position).tag).toString()));
+                                    .append(visibleItems.get(position).tag).toString());
+
+            });
         }
     }
 

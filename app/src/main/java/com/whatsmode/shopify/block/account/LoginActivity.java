@@ -26,6 +26,7 @@ import com.whatsmode.library.util.Util;
 import com.whatsmode.shopify.AppNavigator;
 import com.whatsmode.shopify.BuildConfig;
 import com.whatsmode.shopify.R;
+import com.whatsmode.shopify.actionlog.ActionLog;
 import com.whatsmode.shopify.block.account.data.AccountManager;
 import com.whatsmode.shopify.block.me.MyFragment;
 import com.whatsmode.shopify.block.me.StatusBarUtil;
@@ -106,6 +107,7 @@ public class LoginActivity extends MvpActivity<LoginPresenter> implements LoginC
         }
         mPresenter.login(email,pwd);
         showLoading();
+        ActionLog.onEvent(Constant.Event.SIGN_IN);
     }
 
     @NonNull

@@ -23,12 +23,14 @@ import android.widget.ProgressBar;
 import com.whatsmode.library.util.RegexUtils;
 import com.whatsmode.shopify.AppNavigator;
 import com.whatsmode.shopify.R;
+import com.whatsmode.shopify.actionlog.ActionLog;
 import com.whatsmode.shopify.base.BaseActivity;
 import com.whatsmode.shopify.block.cart.AndroidJs;
 import com.whatsmode.shopify.block.cart.BadgeActionProvider;
 import com.whatsmode.shopify.block.cart.CartItem;
 import com.whatsmode.shopify.block.cart.JumpMainTab;
 import com.whatsmode.shopify.block.me.ShareUtil;
+import com.whatsmode.shopify.common.Constant;
 import com.whatsmode.shopify.ui.helper.ToolbarHelper;
 
 import org.greenrobot.eventbus.EventBus;
@@ -80,9 +82,18 @@ public class WebActivity extends BaseActivity{
         switch (item.getItemId()) {
             case R.id.action_share:
                 ShareUtil.showShare(this,EXTRA_TITLE,"",EXTRA_URL,EXTRA_URL);
+                shareActionLog();
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void shareActionLog() {
+        if (STATE_PRODUCT.equals(title)) {
+            ActionLog.onEvent(Constant.Event.PRODUCT_SHARE);
+        } else if (STATE_COLLECTIONS.equals(title)) {
+            ActionLog.onEvent(Constant.Event.SHOP_SHARE);
+        }
     }
 
     @Override
@@ -99,7 +110,7 @@ public class WebActivity extends BaseActivity{
         ToolbarHelper.ToolbarHolder toolbarHolder = ToolbarHelper.initToolbar(this, R.id.toolbar, true, title);
         toolbarHolder.titleView.setVisibility(View.VISIBLE);
         mWebView = (WebView) findViewById(R.id.webview);
-        mWebView.getSettings().setUserAgentString("mobile-Android");
+        mWebView.getSettings().setUserAgentString(Constant.USER_AGENT);
         mProgressBar = (ProgressBar) findViewById(R.id.indeterminateBar);
         url = getIntent().getStringExtra(EXTRA_URL);
         mWebView.getSettings().setJavaScriptEnabled(true);

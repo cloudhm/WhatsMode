@@ -1,0 +1,43 @@
+{
+  "project_info": {
+    "project_number": "60856914612",
+    "project_id": "whatsmode-95a2e"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:60856914612:android:fba8d4c58c1e9b5c",
+        "android_client_info": {
+          "package_name": "com.whatsmode.shopify"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "60856914612-1ab0g23u23rgdj5i4up2i7bau7869s0s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBeGJkpCJO0IHPDyLr1-sPlrhcYzU1dbjg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 2,
+          "analytics_property": {
+            "tracking_id": "UA-92870277-5"
+          }
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

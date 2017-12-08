@@ -6,8 +6,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.webkit.WebChromeClient;
 
 import com.whatsmode.library.util.SnackUtil;
+import com.whatsmode.shopify.block.WebActivity;
 import com.whatsmode.shopify.block.me.TrackingActivity;
 import com.whatsmode.shopify.common.Constant;
 
@@ -79,7 +81,7 @@ public class JPushReceiver extends BroadcastReceiver {
 
     private void jump(Context context,String data) {
         if (!TextUtils.isEmpty(data)) {
-            Intent intent = TrackingActivity.newIntent(context, data);
+            Intent intent = WebActivity.newIntent(context,"", data);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             context.startActivity(intent);
         }

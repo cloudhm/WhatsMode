@@ -152,7 +152,7 @@ public class OrderDetailsActivity extends MvpActivity<OrderDetailsContract.Prese
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tracking_jump:
-                Intent intent = TrackingActivity.newIntent(this,mOrder.getCustomerUrl());
+                Intent intent = WebActivity.newIntent(this,"",mOrder.getCustomerUrl());
                 startActivity(intent);
                 break;
         }

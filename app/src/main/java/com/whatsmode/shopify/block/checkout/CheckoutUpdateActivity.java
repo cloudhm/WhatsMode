@@ -36,12 +36,7 @@ import com.whatsmode.shopify.block.address.Address;
 import com.whatsmode.shopify.block.address.AddressListActivity;
 import com.whatsmode.shopify.block.cart.CartItem;
 import com.whatsmode.shopify.block.cart.CartItemLists;
-<<<<<<< HEAD
-=======
-import com.whatsmode.shopify.block.cart.RxRefreshCartList;
 import com.whatsmode.shopify.block.me.Order;
-import com.whatsmode.shopify.block.me.OrderDetailsActivity;
->>>>>>> 6fc5b0b548516737149f00a9c7d12fb4f5e92e1f
 import com.whatsmode.shopify.common.Constant;
 import com.whatsmode.shopify.common.KeyConstant;
 import com.whatsmode.shopify.mvp.MvpActivity;
@@ -49,7 +44,6 @@ import com.whatsmode.shopify.ui.helper.ToolbarHelper;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.io.IOException;
 import java.util.List;
 
 

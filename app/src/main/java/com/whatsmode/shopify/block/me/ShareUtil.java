@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.View;
 
+import com.whatsmode.library.util.Util;
 import com.whatsmode.shopify.R;
 
 import cn.sharesdk.onekeyshare.OnekeyShare;
@@ -40,8 +41,8 @@ public class ShareUtil {
         //oks.setSiteUrl("http://sharesdk.cn");
 
         // 构造一个图标
-        Bitmap enableLogo = BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher);
-        String label = "link";
+        Bitmap enableLogo = BitmapFactory.decodeResource(context.getResources(), R.drawable.ssdk_url);
+        String label = "url";
         View.OnClickListener listener = new View.OnClickListener() {
             public void onClick(View v) {
                 //获取剪贴板管理器：
@@ -52,7 +53,7 @@ public class ShareUtil {
                 cm.setPrimaryClip(mClipData);
             }
         };
-        oks.setCustomerLogo(enableLogo, label, listener);
+        oks.setCustomerLogo(Util.scaleBitmap(enableLogo,0.56f), label, listener);
 
 // 启动分享GUI
         oks.show(context);

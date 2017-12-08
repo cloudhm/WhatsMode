@@ -142,7 +142,7 @@ public class CategoryAdapter extends ExpandableRecyclerAdapter<CategoryAdapter.C
             }
             if (templateArray != null) {
                 for (int k = 0; k < templateArray.length; k++) {
-                    items.add(new CategoryItem(k,templateArray[k],templateArrayLinks[k]));
+                    items.add(new CategoryItem(i,templateArray[k],templateArrayLinks[k]));
                 }
             }
         }

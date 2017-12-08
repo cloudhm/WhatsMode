@@ -22,7 +22,6 @@ import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.actionlog.ActionLog;
 import com.whatsmode.shopify.block.WebActivity;
 import com.whatsmode.shopify.common.Constant;
-import com.zchu.log.Logger;
 
 public class BaseWebFragment extends BaseFragment implements View.OnClickListener {
 

@@ -4,9 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
 
-import com.whatsmode.shopify.AppNavigator;
 import com.whatsmode.shopify.R;
-import com.whatsmode.shopify.WhatsApplication;
 import com.whatsmode.shopify.base.BaseWebFragment;
 import com.whatsmode.shopify.block.cart.CartFragment;
 import com.whatsmode.shopify.block.me.MyFragment;
@@ -96,6 +94,9 @@ class MainPresenter extends MvpBasePresenter<MainContact.View> implements MainCo
                 if (isViewAttached()) {
                     getView().jumpToAds(1);
                 }
+                break;
+            case R.id.about_us:
+                getView().jumpToAboutUs();
                 break;
         }
     }

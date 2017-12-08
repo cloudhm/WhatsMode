@@ -25,6 +25,7 @@ public class Constant {
     public static final String CART_FRAGMENT_NAME = "com.whatsmode.shopify.block.cart.CartFragment";
     public static final String EXTERNAL = "external";
     public static final String USER_AGENT = "mobile-Android";
+    public static final String ABOUT_US = "https://whatsmode.com/pages/introduce-us";
 
 
     static {

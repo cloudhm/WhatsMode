@@ -213,6 +213,7 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
         customView.findViewById(R.id.new_arrive).setOnClickListener(this);
         customView.findViewById(R.id.discover).setOnClickListener(this);
         customView.findViewById(R.id.sale).setOnClickListener(this);
+        customView.findViewById(R.id.about_us).setOnClickListener(this);
         RecyclerView recycler = (RecyclerView) customView.findViewById(R.id.recycleView);
         CategoryAdapter adapter = new CategoryAdapter(this);
         adapter.setMode(ExpandableRecyclerAdapter.MODE_ACCORDION);
@@ -255,6 +256,11 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
                 ActionLog.onEvent(Constant.Event.SALE);
                 break;
         }
+    }
+
+    @Override
+    public void jumpToAboutUs() {
+        AppNavigator.jumpToWebActivity(this,WebActivity.STATE_ABOUT_US,Constant.ABOUT_US);
     }
 
     @Override

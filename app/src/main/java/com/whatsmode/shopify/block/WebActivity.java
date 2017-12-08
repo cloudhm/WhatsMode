@@ -19,6 +19,7 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
@@ -48,6 +49,7 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
     public static final String STATE_PAY = "PAY";  // 支付頁
     public static final String STATE_PRODUCT = "PRODUCT";  // 商品詳情頁
     public static final String STATE_COLLECTIONS = "COLLECTIONS"; // 網紅
+    public static final String STATE_ABOUT_US = "ABOUT_US";
 
     private ProgressBar mProgressBar;
     private WebView mWebView;
@@ -57,6 +59,8 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
     private MenuItem menuItemCart;
     private BadgeActionProvider mActionProvider;
     private RelativeLayout errorView;
+    private ImageView ivLogo;
+    private ToolbarHelper.ToolbarHolder toolbarHolder;
 
 
     public static Intent newIntent(Context context,String title, String url) {
@@ -114,8 +118,9 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
         Button btnRefresh = (Button)findViewById(R.id.refresh);
         btnRefresh.setOnClickListener(this);
 
-        ToolbarHelper.ToolbarHolder toolbarHolder = ToolbarHelper.initToolbar(this, R.id.toolbar, true, title);
+        toolbarHolder = ToolbarHelper.initToolbar(this, R.id.toolbar, true, title);
         toolbarHolder.titleView.setVisibility(View.VISIBLE);
+        ivLogo = (ImageView) findViewById(R.id.logo);
         mWebView = (WebView) findViewById(R.id.webview);
         mWebView.getSettings().setUserAgentString(Constant.USER_AGENT);
         mProgressBar = (ProgressBar) findViewById(R.id.indeterminateBar);
@@ -141,14 +146,26 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
             case WebActivity.STATE_COLLECTIONS:
                 menuItemCart.setVisible(false);
                 menuItemShare.setVisible(true);
+                ivLogo.setVisibility(View.GONE);
+                toolbarHolder.titleView.setVisibility(View.VISIBLE);
                 break;
             case WebActivity.STATE_PRODUCT:
                 menuItemShare.setVisible(true);
                 menuItemCart.setVisible(true);
+                ivLogo.setVisibility(View.GONE);
+                toolbarHolder.titleView.setVisibility(View.VISIBLE);
+                break;
+            case WebActivity.STATE_ABOUT_US:
+                menuItemCart.setVisible(false);
+                menuItemShare.setVisible(false);
+                ivLogo.setVisibility(View.VISIBLE);
+                toolbarHolder.titleView.setVisibility(View.GONE);
                 break;
             default:
                 menuItemShare.setVisible(false);
                 menuItemCart.setVisible(false);
+                ivLogo.setVisibility(View.GONE);
+                toolbarHolder.titleView.setVisibility(View.VISIBLE);
                 break;
         }
     }

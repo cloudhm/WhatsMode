@@ -39,6 +39,8 @@ import com.whatsmode.shopify.ui.helper.ToolbarHelper;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import java.net.URL;
+
 
 public class WebActivity extends BaseActivity implements View.OnClickListener {
 
@@ -79,6 +81,7 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
         mActionProvider.setOnClickListener(0, what -> {
             AppNavigator.jumpToMain(this);
             EventBus.getDefault().post(new JumpMainTab(2));
+            ActionLog.onEvent(Constant.Event.MY_CART);
         });// 设置点击监听。
         initToolBar();
         return super.onCreateOptionsMenu(menu);
@@ -211,6 +214,7 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
                     startActivity(WebActivity.newIntent(WebActivity.this,WebActivity.STATE_COLLECTIONS,url));
                 } else if (RegexUtils.isPages(url)){
                     startActivity(WebActivity.newIntent(WebActivity.this,WebActivity.STATE_ABOUT_US,url));
+                    aboutUsAnalytics(url);
                 }else if (RegexUtils.isBlock(url)) {
 
                 } else {
@@ -232,6 +236,22 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
             }
         });
         mWebView.loadUrl(mUrl);
+    }
+
+    private void aboutUsAnalytics(String url){
+        if (RegexUtils.isJoinUs(url)) {
+            ActionLog.onEvent(Constant.Event.JOIN_US);
+        } else if (RegexUtils.isPriacyPolicy(url)) {
+            ActionLog.onEvent(Constant.Event.PRIVACY_POLICY);
+        } else if (RegexUtils.isContactUs(url)) {
+            ActionLog.onEvent(Constant.Event.CONTACT_US);
+        } else if (RegexUtils.isPromoteUs(url)) {
+            ActionLog.onEvent(Constant.Event.PROMOTE_WITH_US);
+        } else if (RegexUtils.isShippingDelivery(url)) {
+            ActionLog.onEvent(Constant.Event.SHIPPING_DELIVERY);
+        } else if (RegexUtils.isTermsConditions(url)) {
+            ActionLog.onEvent(Constant.Event.TERMS_CONDITIONS);
+        }
     }
 
     @Override

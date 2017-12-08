@@ -107,7 +107,6 @@ public class LoginActivity extends MvpActivity<LoginPresenter> implements LoginC
         }
         mPresenter.login(email,pwd);
         showLoading();
-        ActionLog.onEvent(Constant.Event.SIGN_IN);
     }
 
     @NonNull
@@ -118,6 +117,7 @@ public class LoginActivity extends MvpActivity<LoginPresenter> implements LoginC
 
     @Override
     public void loginSuccess() {
+        ActionLog.onEvent(Constant.Event.SIGN_IN);
         setJPushAlias(AccountManager.getUsername());
         RxBus.getInstance().post(new LoginEvent(true));
         hideLoading();

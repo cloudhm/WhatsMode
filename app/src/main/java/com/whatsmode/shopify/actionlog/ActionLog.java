@@ -7,6 +7,8 @@ import android.util.Log;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.WhatsApplication;
@@ -45,7 +47,7 @@ public class ActionLog {
     }
     public void logEventByFlurry(LogParam param){
 
-        logFromGoogle(param);
+        //logFromGoogle(param);
         logFromFirebase(param);
     }
 

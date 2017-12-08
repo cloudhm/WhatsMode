@@ -278,4 +278,28 @@ public class RegexUtils {
     public static boolean isPages(String url) {
         return !TextUtils.isEmpty(url) && url.contains("pages");
     }
+
+    public static boolean isJoinUs(String url){
+        return url != null && url.equals("join-whatsmode");
+    }
+
+    public static boolean isPriacyPolicy(String url){
+        return url != null && url.equals("privacy-policy");
+    }
+
+    public static boolean isContactUs(String url){
+        return url != null && url.equals("contact");
+    }
+
+    public static boolean isPromoteUs(String url){
+        return url != null && url.equals("affiliate-program");
+    }
+
+    public static boolean isShippingDelivery(String url){
+        return url != null && url.equals("shipping-returns");
+    }
+
+    public static boolean isTermsConditions(String url){
+        return url != null && url.equals("terms-conditions");
+    }
 }

@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.View;
 
+import com.whatsmode.library.util.Util;
 import com.whatsmode.shopify.R;
 
 import cn.sharesdk.onekeyshare.OnekeyShare;
@@ -27,7 +28,7 @@ public class ShareUtil {
         // text是分享文本，所有平台都需要这个字段
         oks.setText(text);
         //分享网络图片，新浪微博分享网络图片需要通过审核后申请高级写入接口，否则请注释掉测试新浪微博
-        oks.setImageUrl("http://f1.sharesdk.cn/imgs/2014/02/26/owWpLZo_638x960.jpg");
+        oks.setImageUrl("");//"http://f1.sharesdk.cn/imgs/2014/02/26/owWpLZo_638x960.jpg"
         // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
         oks.setImagePath(imagePath);//确保SDcard下面存在此张图片
         // url仅在微信（包括好友和朋友圈）中使用
@@ -40,8 +41,8 @@ public class ShareUtil {
         //oks.setSiteUrl("http://sharesdk.cn");
 
         // 构造一个图标
-        Bitmap enableLogo = BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher);
-        String label = "link";
+        Bitmap enableLogo = BitmapFactory.decodeResource(context.getResources(), R.drawable.ssdk_url);
+        String label = "Url";
         View.OnClickListener listener = new View.OnClickListener() {
             public void onClick(View v) {
                 //获取剪贴板管理器：
@@ -52,7 +53,7 @@ public class ShareUtil {
                 cm.setPrimaryClip(mClipData);
             }
         };
-        oks.setCustomerLogo(enableLogo, label, listener);
+        oks.setCustomerLogo(Util.scaleBitmap(enableLogo,0.54f), label, listener);
 
 // 启动分享GUI
         oks.show(context);

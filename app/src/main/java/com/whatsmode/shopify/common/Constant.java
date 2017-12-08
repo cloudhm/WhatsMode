@@ -75,6 +75,9 @@ public class Constant {
         public static final String JOIN_US = "join_us";//加入我们
         public static final String CONTACT_US = "contact_us";//联系我们
         public static final String PROMOTE_WITH_US = "promote_with_us";//与我们合作
+        public static final String PRIVACY_POLICY = "privacy_policy";//
+        public static final String SHIPPING_DELIVERY = "shipping_delivery";//
+        public static final String TERMS_CONDITIONS = "Terms_conditions";//
 
         protected Event(){}
     }

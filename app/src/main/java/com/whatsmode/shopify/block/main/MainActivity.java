@@ -267,6 +267,7 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
     @Override
     public void jumpToAboutUs() {
         AppNavigator.jumpToWebActivity(this,WebActivity.STATE_ABOUT_US,Constant.ABOUT_US);
+        ActionLog.onEvent(Constant.Event.ABOUT_US);
     }
 
     @Override

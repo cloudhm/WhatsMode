@@ -28,6 +28,7 @@ import com.whatsmode.library.util.ScreenUtils;
 import com.whatsmode.library.util.ToastUtil;
 import com.whatsmode.shopify.AppNavigator;
 import com.whatsmode.shopify.R;
+import com.whatsmode.shopify.actionlog.ActionLog;
 import com.whatsmode.shopify.block.WebActivity;
 import com.whatsmode.shopify.block.account.data.AccountManager;
 import com.whatsmode.shopify.block.address.AddEditAddressActivity;
@@ -35,9 +36,7 @@ import com.whatsmode.shopify.block.address.Address;
 import com.whatsmode.shopify.block.address.AddressListActivity;
 import com.whatsmode.shopify.block.cart.CartItem;
 import com.whatsmode.shopify.block.cart.CartItemLists;
-import com.whatsmode.shopify.block.cart.RxRefreshCartList;
 import com.whatsmode.shopify.block.me.Order;
-import com.whatsmode.shopify.block.me.OrderDetailsActivity;
 import com.whatsmode.shopify.common.Constant;
 import com.whatsmode.shopify.common.KeyConstant;
 import com.whatsmode.shopify.mvp.MvpActivity;
@@ -45,7 +44,6 @@ import com.whatsmode.shopify.ui.helper.ToolbarHelper;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.io.IOException;
 import java.util.List;
 
 
@@ -130,6 +128,8 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
         etGiftCard = (EditText) findViewById(R.id.gift_card_edit);
         checkSignState();
         mCreateState = true;
+
+        ActionLog.onEvent(Constant.Event.CHECK_OUT);
     }
 
     private void getParseData() {

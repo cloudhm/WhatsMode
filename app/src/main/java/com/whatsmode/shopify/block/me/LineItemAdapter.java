@@ -34,9 +34,9 @@ public class LineItemAdapter extends CommonAdapter<LineItem> {
         ((TextView)helper.getView(R.id.original_price)).getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
         String src = null;
         if ((src = getSrc(variant)) != null) {
-            Glide.with(mContext).load(src).placeholder(R.mipmap.ic_launcher).into((ImageView) helper.getView(R.id.image_view));
+            Glide.with(mContext).load(src).placeholder(R.drawable.default_mode).into((ImageView) helper.getView(R.id.image_view));
         }else{
-            Glide.with(mContext).load(R.mipmap.ic_launcher).placeholder(R.mipmap.ic_launcher).into((ImageView) helper.getView(R.id.image_view));
+            Glide.with(mContext).load(R.drawable.default_mode).placeholder(R.drawable.default_mode).into((ImageView) helper.getView(R.id.image_view));
         }
     }
 

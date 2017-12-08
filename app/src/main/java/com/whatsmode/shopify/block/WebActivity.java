@@ -209,7 +209,9 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
                     startActivity(WebActivity.newIntent(WebActivity.this,WebActivity.STATE_PRODUCT,url));
                 } else if (RegexUtils.isCollection(url)) {
                     startActivity(WebActivity.newIntent(WebActivity.this,WebActivity.STATE_COLLECTIONS,url));
-                } else if (RegexUtils.isBlock(url)) {
+                } else if (RegexUtils.isPages(url)){
+                    startActivity(WebActivity.newIntent(WebActivity.this,WebActivity.STATE_ABOUT_US,url));
+                }else if (RegexUtils.isBlock(url)) {
 
                 } else {
                     view.loadUrl(url);

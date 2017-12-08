@@ -274,4 +274,8 @@ public class RegexUtils {
     public static boolean isBlock(String url) {
         return TextUtils.isEmpty(url) ||url.contains("cart");
     }
+
+    public static boolean isPages(String url) {
+        return TextUtils.isEmpty(url) || url.contains("pages");
+    }
 }

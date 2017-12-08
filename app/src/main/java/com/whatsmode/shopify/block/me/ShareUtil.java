@@ -42,7 +42,7 @@ public class ShareUtil {
 
         // 构造一个图标
         Bitmap enableLogo = BitmapFactory.decodeResource(context.getResources(), R.drawable.ssdk_url);
-        String label = "url";
+        String label = "Url";
         View.OnClickListener listener = new View.OnClickListener() {
             public void onClick(View v) {
                 //获取剪贴板管理器：
@@ -53,7 +53,7 @@ public class ShareUtil {
                 cm.setPrimaryClip(mClipData);
             }
         };
-        oks.setCustomerLogo(Util.scaleBitmap(enableLogo,0.56f), label, listener);
+        oks.setCustomerLogo(Util.scaleBitmap(enableLogo,0.54f), label, listener);
 
 // 启动分享GUI
         oks.show(context);

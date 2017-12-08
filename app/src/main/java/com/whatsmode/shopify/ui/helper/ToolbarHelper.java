@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.whatsmode.library.util.DisplayUtil;
 import com.whatsmode.shopify.R;
+import com.whatsmode.shopify.WhatsApplication;
 
 public class ToolbarHelper {
 
@@ -39,7 +40,7 @@ public class ToolbarHelper {
             actionBar.setDisplayShowTitleEnabled(false);
             if (canBack) {
                 actionBar.setDisplayHomeAsUpEnabled(true);
-                toolbar.setNavigationIcon(VectorDrawableCompat.create(activity.getResources(), R.drawable.icon_back,activity.getTheme()));
+                toolbar.setNavigationIcon(WhatsApplication.getContext().getResources().getDrawable(R.drawable.icon_reback, activity.getTheme()));
                 toolbar.setNavigationOnClickListener(v -> activity.onBackPressed());
             }
 
@@ -69,7 +70,7 @@ public class ToolbarHelper {
             actionBar.setDisplayShowTitleEnabled(false);
             if (canBack) {
                 actionBar.setDisplayHomeAsUpEnabled(true);
-                toolbar.setNavigationIcon(VectorDrawableCompat.create(activity.getResources(), R.drawable.icon_back,activity.getTheme()));
+                toolbar.setNavigationIcon(VectorDrawableCompat.create(activity.getResources(), R.drawable.icon_reback,activity.getTheme()));
                 toolbar.setNavigationOnClickListener(v -> activity.onBackPressed());
             }
 

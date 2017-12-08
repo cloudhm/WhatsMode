@@ -15,7 +15,6 @@ import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.WhatsApplication;
 import com.whatsmode.shopify.block.account.data.AccountManager;
 import com.whatsmode.shopify.block.address.Address;
-import com.whatsmode.shopify.block.me.MyPresenter;
 import com.whatsmode.shopify.block.me.Order;
 import com.zchu.log.Logger;
 
@@ -216,12 +215,24 @@ public class CartRepository {
         });
     }
 
-    @TargetApi(Build.VERSION_CODES.N)
     private Storefront.CheckoutCreateInput generateInput(List<CartItem> data) {
-        ArrayList<Storefront.CheckoutLineItemInput> arrayList =
-                data.stream().map(cartItem ->
-                        new Storefront.CheckoutLineItemInput(cartItem.quality, new ID(cartItem.getId().replace("\n",""))))
-                        .collect(Collectors.toCollection(ArrayList::new));
+
+//        Storefront.CheckoutCreateInput input = new Storefront.CheckoutCreateInput()
+//                .setLineItemsInput(Input.value(Arrays.asList(
+//                        new Storefront.CheckoutLineItemInput(new ID("mFyaWFu"), 5),
+//                        new Storefront.CheckoutLineItemInput(new ID("8vc2hGl"), 3)
+//                )));
+
+        ArrayList<Storefront.CheckoutLineItemInput> arrayList = new ArrayList<>();
+        for (CartItem cartItem : data) {
+            Storefront.CheckoutLineItemInput itemInput = new Storefront.
+                    CheckoutLineItemInput(cartItem.getQuality(), new ID(cartItem.getId().replace("\n", "")));
+            arrayList.add(itemInput);
+        }
+//        ArrayList<Storefront.CheckoutLineItemInput> arrayList =
+//                data.stream().map(cartItem ->
+//                        new Storefront.CheckoutLineItemInput(cartItem.quality, new ID(cartItem.getId().replace("\n",""))))
+//                        .collect(Collectors.toCollection(ArrayList::new));
         return new Storefront.CheckoutCreateInput()
                 .setLineItemsInput(Input.value(arrayList));
     }
@@ -336,8 +347,7 @@ public class CartRepository {
                         .currencyCode().customerLocale().email()
                         .shippingAddress(_queryBuilder13
                         -> _queryBuilder13.address1().address2().city().province().provinceCode().country().countryCode().company().
-                        firstName().lastName().name().phone().zip()).customerUrl().phone()
-                        .processedAt().subtotalPrice().totalPrice().totalRefunded()
+                        firstName().lastName().name().phone().zip()).customerUrl().phone().processedAt().subtotalPrice().totalPrice().totalRefunded()
                         .totalShippingPrice().totalTax());
             }
         })));

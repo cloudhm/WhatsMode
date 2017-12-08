@@ -282,7 +282,12 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
             try {
                 List<CartItem> cartList  = (List<CartItem>) PreferencesUtil.getObject(this, Constant.CART_LOCAL);
                 if (!ListUtils.isEmpty(cartList)) {
-                    dataSource.cartItems.stream().filter(cartList::contains).forEach(cartList::remove);
+                    //dataSource.cartItems.stream().filter(cartList::contains).forEach(cartList::remove);
+                    for (CartItem cartItem : dataSource.cartItems) {
+                        if (cartList.contains(cartItem)) {
+                            cartList.remove(cartItem);
+                        }
+                    }
                     PreferencesUtil.putObject(this,Constant.CART_LOCAL,cartList);
                     EventBus.getDefault().post(new CartItem());
                 }

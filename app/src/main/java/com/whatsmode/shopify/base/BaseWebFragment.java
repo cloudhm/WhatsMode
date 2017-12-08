@@ -12,7 +12,9 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
 import com.whatsmode.library.util.RegexUtils;
 import com.whatsmode.shopify.AppNavigator;
@@ -20,12 +22,16 @@ import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.actionlog.ActionLog;
 import com.whatsmode.shopify.block.WebActivity;
 import com.whatsmode.shopify.common.Constant;
+import com.zchu.log.Logger;
 
-public class BaseWebFragment extends BaseFragment {
+public class BaseWebFragment extends BaseFragment implements View.OnClickListener {
 
     private ProgressBar mProgressBar;
     private static final String KEY_URL = "key_url";
     private String mUrl;
+    private RelativeLayout net_error_view;
+    private WebView mWebView;
+
     public static BaseWebFragment newInstance(String url) {
         Bundle args = new Bundle();
         args.putString(KEY_URL,url);
@@ -37,7 +43,11 @@ public class BaseWebFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        WebView mWebView = (WebView) view.findViewById(R.id.webView);
+        mWebView = (WebView) view.findViewById(R.id.webView);
+        net_error_view = (RelativeLayout) view.findViewById(R.id.net_error_view);
+        Button btnRefresh = (Button) view.findViewById(R.id.refresh);
+        btnRefresh.setOnClickListener(this);
+
         WebSettings settings = mWebView.getSettings();
         settings.setUserAgentString(Constant.USER_AGENT);
         mProgressBar = (ProgressBar) view.findViewById(R.id.indeterminateBar);
@@ -65,14 +75,19 @@ public class BaseWebFragment extends BaseFragment {
 
             @Override
             public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-                super.onReceivedError(view, errorCode, description, failingUrl);
+                //super.onReceivedError(view, errorCode, description, failingUrl);
                 mProgressBar.setVisibility(View.GONE);
+                if (mUrl.equals(failingUrl)) {
+                    mWebView.setVisibility(View.GONE);
+                    view.loadUrl("about:blank");
+                    net_error_view.setVisibility(View.VISIBLE);
+                }
             }
             @TargetApi(Build.VERSION_CODES.M)
             @Override
             public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
-                super.onReceivedError(view, request, error);
-                mProgressBar.setVisibility(View.GONE);
+                //super.onReceivedError(view, request, error);
+                onReceivedError(view,error.getErrorCode(),error.getDescription().toString(),request.getUrl().toString());
             }
 
             public boolean shouldOverrideUrlLoading(WebView view, String url){
@@ -101,5 +116,15 @@ public class BaseWebFragment extends BaseFragment {
     @Override
     public int getLayoutId() {
         return R.layout.web_fragment_layout;
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (!TextUtils.isEmpty(mUrl)) {
+            net_error_view.setVisibility(View.GONE);
+            mWebView.loadUrl(mUrl);
+            mWebView.postDelayed(() -> mWebView.setVisibility(View.VISIBLE), 2000);
+            mProgressBar.setVisibility(View.VISIBLE);
+        }
     }
 }

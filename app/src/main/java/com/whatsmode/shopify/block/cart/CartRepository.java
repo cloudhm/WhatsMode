@@ -320,12 +320,13 @@ public class CartRepository {
             @Override
             public void define(Storefront.CheckoutQuery _queryBuilder) {
                 _queryBuilder.order(_queryBuilder14
-                        -> _queryBuilder14.orderNumber()
-                        .lineItems(args -> args.first(250), _queryBuilder1
-                                -> _queryBuilder1.edges(new Storefront.OrderLineItemEdgeQueryDefinition() {
+                        -> _queryBuilder14.orderNumber().lineItems(args
+                        -> args.first(250), _queryBuilder1
+                        -> _queryBuilder1.edges(new Storefront.OrderLineItemEdgeQueryDefinition() {
                             @Override
                             public void define(Storefront.OrderLineItemEdgeQuery _queryBuilder1) {
-                                _queryBuilder1.node(_queryBuilder11 -> _queryBuilder11.variant(qd1
+                                _queryBuilder1.node(_queryBuilder11
+                                        -> _queryBuilder11.variant(qd1
                                         -> qd1.availableForSale().compareAtPrice().title().sku().price().selectedOptions(s
                                         -> s.name().value()).image(args
                                         -> args.maxHeight(150).maxWidth(100).crop(Storefront.CropRegion.CENTER), Storefront.ImageQuery::src)).quantity().title().customAttributes(a
@@ -334,10 +335,9 @@ public class CartRepository {
                         }))
                         .currencyCode().customerLocale().email()
                         .shippingAddress(_queryBuilder13
-                                -> _queryBuilder13.address1().address2().city().province().provinceCode().country().countryCode().company().
-                                firstName().lastName().name().phone().zip())
-                        .customerUrl().phone().processedAt()
-                        .subtotalPrice().totalPrice().totalRefunded()
+                        -> _queryBuilder13.address1().address2().city().province().provinceCode().country().countryCode().company().
+                        firstName().lastName().name().phone().zip()).customerUrl().phone()
+                        .processedAt().subtotalPrice().totalPrice().totalRefunded()
                         .totalShippingPrice().totalTax());
             }
         })));

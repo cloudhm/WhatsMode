@@ -121,6 +121,14 @@
     <string name="whether_pay_continue">Do you want to pay continue?</string>
     <string name="no">no</string>
     <string name="yes">yes</string>
+    <string name="under_review">Under review</string>
+    <string name="desc_order_check">We are reviewing the transaction</string>
+    <string name="Repayment">Repayment</string>
+    <string name="complete">Complete</string>
+    <string name="success">Success</string>
+    <string name="success_desc">Your bill has been paid</string>
+    <string name="home">Home</string>
+    <string name="view_order">View Order</string>
 
     <array name="category">
         <item>APPAREL</item>

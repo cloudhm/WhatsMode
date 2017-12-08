@@ -48,20 +48,43 @@
         android:textSize="14sp" />
 
     <TextView
-        android:id="@+id/price"
+        android:id="@+id/comparePrice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_above="@+id/price"
+        android:layout_toRightOf="@+id/icon"
+        android:layout_marginBottom="3dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text=""
+        android:textColor="@color/gray_d5d5d5"
+        android:textSize="10sp" />
+    <TextView
+        android:id="@+id/price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="10dp"
         android:layout_toRightOf="@+id/icon"
         android:ellipsize="end"
         android:maxLines="1"
         android:text=""
         android:textColor="@color/gray_333333"
         android:textSize="14sp" />
-
+    <TextView
+        android:id="@+id/price_unit"
+        android:layout_above="@+id/comparePrice"
+        android:textSize="10sp"
+        android:layout_alignParentBottom="true"
+        android:textColor="@color/gray_d5d5d5"
+        android:layout_marginLeft="3dp"
+        android:layout_marginBottom="11dp"
+        android:text="USD"
+        android:layout_toRightOf="@+id/price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
     <LinearLayout
         android:id="@+id/operation_layout"
         android:layout_width="120dp"

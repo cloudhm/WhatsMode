@@ -38,9 +38,9 @@ public class CheckoutUpdateContact {
 
         void jumpToModifyAddress();
 
-        void showFailure();
+        void ViewResponseFailed();
 
-        void jumpToOrderDetail(Order order);
+        void ViewResponseSuccess(Order order);
     }
 
     interface Presenter extends MvpPresenter<View> {

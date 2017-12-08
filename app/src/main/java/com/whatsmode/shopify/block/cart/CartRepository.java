@@ -316,27 +316,33 @@ public class CartRepository {
     public void checkOrderExist(ID checkoutId) {
         Storefront.QueryRootQuery query = Storefront.query(_queryBuilder
                 -> _queryBuilder.node(checkoutId, _queryBuilder12
-                -> _queryBuilder12.onOrder(qd
-                -> qd.orderNumber()
-                .lineItems(_queryBuilder1 -> _queryBuilder1.edges(new Storefront.OrderLineItemEdgeQueryDefinition() {
-                    @Override
-                    public void define(Storefront.OrderLineItemEdgeQuery _queryBuilder1) {
-                            _queryBuilder1.node(_queryBuilder11 -> _queryBuilder11.variant(qd1
-                                    -> qd1.availableForSale().compareAtPrice().title().sku().price().selectedOptions(s
-                                    -> s.name().value()).image(args
-                                    -> args.maxHeight(150).maxWidth(100).crop(Storefront.CropRegion.CENTER), quey
-                                    -> quey.src())).quantity().title().customAttributes(a
-                                    -> a.value().key()));
-                    }
-                }))
-                .currencyCode().customerLocale().email()
-                .shippingAddress(_queryBuilder13
-                        -> _queryBuilder13.address1().address2().city().province().provinceCode().country().countryCode().company().
-                        firstName().lastName().name().phone().zip())
-                .customerUrl().phone().processedAt()
-                .subtotalPrice().totalPrice().totalRefunded()
-                .totalShippingPrice().totalTax())
-        ));
+                -> _queryBuilder12.onCheckout(new Storefront.CheckoutQueryDefinition() {
+            @Override
+            public void define(Storefront.CheckoutQuery _queryBuilder) {
+                _queryBuilder.order(_queryBuilder14
+                        -> _queryBuilder14.orderNumber()
+                        .lineItems(args -> args.first(250), _queryBuilder1
+                                -> _queryBuilder1.edges(new Storefront.OrderLineItemEdgeQueryDefinition() {
+                            @Override
+                            public void define(Storefront.OrderLineItemEdgeQuery _queryBuilder1) {
+                                _queryBuilder1.node(_queryBuilder11 -> _queryBuilder11.variant(qd1
+                                        -> qd1.availableForSale().compareAtPrice().title().sku().price().selectedOptions(s
+                                        -> s.name().value()).image(args
+                                        -> args.maxHeight(150).maxWidth(100).crop(Storefront.CropRegion.CENTER), Storefront.ImageQuery::src)).quantity().title().customAttributes(a
+                                        -> a.value().key()));
+                            }
+                        }))
+                        .currencyCode().customerLocale().email()
+                        .shippingAddress(_queryBuilder13
+                                -> _queryBuilder13.address1().address2().city().province().provinceCode().country().countryCode().company().
+                                firstName().lastName().name().phone().zip())
+                        .customerUrl().phone().processedAt()
+                        .subtotalPrice().totalPrice().totalRefunded()
+                        .totalShippingPrice().totalTax());
+            }
+        })));
+
+
         client.queryGraph(query)
                 .enqueue(new GraphCall.Callback<Storefront.QueryRoot>() {
                     @Override
@@ -355,6 +361,9 @@ public class CartRepository {
                         }
                         Order order = Order.parseOrder(node);
                         Logger.e(order);
+                        if (order != null) {
+                            orderListener.onSuccess(order);
+                        }
                     }
 
                     @Override

@@ -230,9 +230,12 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
             TextView tvPrice = (TextView) view.findViewById(R.id.price);
             TextView tvFontSize = (TextView) view.findViewById(R.id.sizeAndColor);
             TextView comparePrice = (TextView) view.findViewById(R.id.comparePrice);
-            comparePrice.setText(new StringBuilder("$").append(Util.getFormatDouble(i.getComparePrice())));
+            comparePrice.setText(new StringBuilder("$").append(Util.getFormatDouble(i.getComparePrice())).append("USD"));
             comparePrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
             tvFontSize.setText(i.getColorAndSize());
+            if (Double.doubleToLongBits(i.getComparePrice()) == Double.doubleToLongBits(i.getPrice())) {
+                comparePrice.setVisibility(View.GONE);
+            }
             tvPrice.setText(new StringBuilder("$").append(i.getPrice()));
             TextView tvCount = (TextView) view.findViewById(R.id.checkout_count);
             tvCount.setText(new StringBuilder("x").append(String.valueOf(i.getQuality())));
@@ -283,9 +286,7 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
                     PreferencesUtil.putObject(this,Constant.CART_LOCAL,cartList);
                     EventBus.getDefault().post(new CartItem());
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             AppNavigator.jumpToWebActivity(CheckoutUpdateActivity.this, WebActivity.STATE_PAY, webUrl);
@@ -301,22 +302,27 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
     }
 
     @Override
-    public void showFailure() {
+    public void ViewResponseFailed() {
         runOnUiThread(() -> {
-            AlertDialog alertDialog = new AlertDialog.Builder(CheckoutUpdateActivity.this)
-                    .setNegativeButton(R.string.no, (dialog, which) -> finish())
-                    .setPositiveButton(R.string.yes,null)
-                    .setMessage(R.string.whether_pay_continue)
-                    .create();
-            alertDialog.show();
+            waitingReply = false;
+//            AlertDialog alertDialog = new AlertDialog.Builder(CheckoutUpdateActivity.this)
+//                    .setNegativeButton(R.string.no, (dialog, which) -> finish())
+//                    .setPositiveButton(R.string.yes,null)
+//                    .setMessage(R.string.whether_pay_continue)
+//                    .create();
+//            alertDialog.show();
+            startActivity(new Intent(CheckoutUpdateActivity.this,CheckoutResponseActivity.class));
         });
     }
 
     @Override
-    public void jumpToOrderDetail(Order order) {
-        Intent intent = new Intent(this, OrderDetailsActivity.class);
-        intent.putExtra(KeyConstant.KEY_ORDER, order);
+    public void ViewResponseSuccess(Order order) {
+        waitingReply = false;
+        Intent intent = new Intent(this, CheckoutResponseActivity.class);
+        intent.putExtra(CheckoutResponseActivity.EXTRA_STATUS, true);
+        intent.putExtra(CheckoutResponseActivity.EXTRA_ORDER, order);
         startActivity(intent);
+        finish();
     }
 
     @Override

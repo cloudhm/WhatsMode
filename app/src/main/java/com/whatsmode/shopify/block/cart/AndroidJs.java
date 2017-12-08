@@ -33,6 +33,7 @@ public class AndroidJs extends Object {
             String productVariantTitle = jsonObject.getString("productVariantTitle");
             String productVariantID = jsonObject.getString("productVariantID");
             String productVariantImage = jsonObject.getString("productVariantImage");
+            String comparePrice = jsonObject.getString("productVariantCompareAtPrice");
             String productVariantCompareAtPrice = jsonObject.getString("productVariantCompareAtPrice");
             String productVariantPrice = jsonObject.getString("productVariantPrice");
             String link = jsonObject.getString("link");
@@ -46,6 +47,7 @@ public class AndroidJs extends Object {
             cartItem.comparePrice = Double.parseDouble(productVariantCompareAtPrice);
             cartItem.colorAndSize = productVariantTitle;
             cartItem.url = link;
+            cartItem.setComparePrice(Double.parseDouble(comparePrice)/100);
             cartItem.icon = productVariantImage;
             cartItem.name = title;
             //gid://shopify/ProductVariant/{productVariant_id}

@@ -114,9 +114,8 @@ public class CheckoutUpdatePresenter extends BaseRxPresenter<CheckoutUpdateConta
         CartRepository.create().orderListener(new CartRepository.OrderDetailListener() {
             @Override
             public void onSuccess(Order order) {
-                // FIXME: 2017/12/7
                 if (isViewAttached()) {
-                    getView().jumpToOrderDetail(order);
+                    getView().ViewResponseSuccess(order);
                 }
             }
 
@@ -124,7 +123,7 @@ public class CheckoutUpdatePresenter extends BaseRxPresenter<CheckoutUpdateConta
             public void onFailure() {
                 if (isViewAttached()) {
                     // TODO: 2017/12/7
-                    getView().showFailure();
+                    getView().ViewResponseFailed();
                 }
             }
         }).checkOrderExist(checkoutId);

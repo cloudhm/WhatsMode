@@ -143,8 +143,10 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
             mTempMenu.setVisible(false);
         }
         if (menuItem != null) {
-            //menuItem.setVisible(true);
             mTempMenu = menuItem;
+        }
+        if (menuItem == menuItemSearch) {
+            menuItem.setVisible(true);
         }
     }
 

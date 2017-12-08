@@ -56,7 +56,11 @@ public class BaseWebFragment extends BaseFragment {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
-                mProgressBar.setVisibility(View.VISIBLE);
+                if (RegexUtils.isCollection(url) || RegexUtils.isProduct(url)) {
+                    mProgressBar.setVisibility(View.GONE);
+                }else{
+                    mProgressBar.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override

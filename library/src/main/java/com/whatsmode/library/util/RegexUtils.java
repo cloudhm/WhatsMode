@@ -276,6 +276,6 @@ public class RegexUtils {
     }
 
     public static boolean isPages(String url) {
-        return TextUtils.isEmpty(url) || url.contains("pages");
+        return !TextUtils.isEmpty(url) && url.contains("pages");
     }
 }

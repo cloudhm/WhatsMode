@@ -2,9 +2,11 @@ package com.whatsmode.shopify.block.main;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -58,6 +60,9 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
     private MenuItem mTempMenu;
     private BaseFragmentAdapter fragmentAdapter;
     private ImageView ivLogo;
+    static {
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -202,6 +207,7 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
         }else {
             initPopWindowView();
             popupWindow.setFocusable(true);
+            popupWindow.setBackgroundDrawable(new BitmapDrawable());
             popupWindow.showAsDropDown(toolbar, 0,0);
             ivMenu.setEnabled(false);
             ActionLog.onEvent(Constant.Event.CATEGORY);

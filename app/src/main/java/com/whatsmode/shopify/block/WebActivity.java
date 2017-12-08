@@ -51,7 +51,7 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
     public static final String STATE_PAY = "PAY";  // 支付頁
     public static final String STATE_PRODUCT = "PRODUCT";  // 商品詳情頁
     public static final String STATE_COLLECTIONS = "COLLECTIONS"; // 網紅
-    public static final String STATE_ABOUT_US = "ABOUT_US";
+    public static final String STATE_ABOUT_US = "ABOUT_US"; // 關於我們
 
     private ProgressBar mProgressBar;
     private WebView mWebView;

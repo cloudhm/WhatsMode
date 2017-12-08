@@ -77,7 +77,6 @@ public class CategoryAdapter extends ExpandableRecyclerAdapter<CategoryAdapter.C
                             AppNavigator.jumpToWebActivity(mContext, WebActivity.STATE_COLLECTIONS,
                             new StringBuilder(Constant.WEB_PREFIX)
                                     .append(visibleItems.get(position).tag).toString());
-
             });
         }
     }

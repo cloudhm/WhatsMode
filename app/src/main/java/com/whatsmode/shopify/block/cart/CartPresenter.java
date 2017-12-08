@@ -11,6 +11,7 @@ import com.whatsmode.library.util.ListUtils;
 import com.whatsmode.library.util.PreferencesUtil;
 import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.WhatsApplication;
+import com.whatsmode.shopify.actionlog.ActionLog;
 import com.whatsmode.shopify.base.BaseRxPresenter;
 import com.whatsmode.shopify.common.Constant;
 import com.whatsmode.shopify.ui.helper.CommonAdapter;

@@ -92,9 +92,9 @@ public class OrderListAdapter extends CommonAdapter<Order> {
             LineItem.Variant variant = item.getVariant();
             if (variant != null && variant.getImage() != null) {
                 String url = variant.getImage().getSrc();
-                Glide.with(mContext).load(url).placeholder(R.mipmap.ic_launcher).into((ImageView) helper.getView(R.id.image_view));
+                Glide.with(mContext).load(url).placeholder(R.drawable.default_mode).into((ImageView) helper.getView(R.id.image_view));
             }else{
-                Glide.with(mContext).load(R.mipmap.ic_launcher).placeholder(R.mipmap.ic_launcher).into((ImageView) helper.getView(R.id.image_view));
+                Glide.with(mContext).load(R.drawable.default_mode).placeholder(R.drawable.default_mode).into((ImageView) helper.getView(R.id.image_view));
             }
         }
     }

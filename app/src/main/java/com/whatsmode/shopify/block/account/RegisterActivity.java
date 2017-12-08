@@ -105,7 +105,6 @@ public class RegisterActivity extends MvpActivity<RegisterPresenter> implements 
 
             mPresenter.register(email,pwd,firstName,lastName);
             showLoading();
-            ActionLog.onEvent(Constant.Event.CREATE_ACCOUNT);
         }
     }
 
@@ -128,6 +127,7 @@ public class RegisterActivity extends MvpActivity<RegisterPresenter> implements 
 
     @Override
     public void registerSuccess() {
+        ActionLog.onEvent(Constant.Event.CREATE_ACCOUNT);
         finish();
     }
 

@@ -72,6 +72,7 @@ public class WebActivity extends BaseActivity{
         mActionProvider.setOnClickListener(0, what -> {
             AppNavigator.jumpToMain(this);
             EventBus.getDefault().post(new JumpMainTab(2));
+            ActionLog.onEvent(Constant.Event.MY_CART);
         });// 设置点击监听。
         initToolBar();
         return super.onCreateOptionsMenu(menu);

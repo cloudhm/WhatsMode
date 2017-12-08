@@ -7,6 +7,7 @@ import android.webkit.JavascriptInterface;
 import com.whatsmode.library.util.ListUtils;
 import com.whatsmode.library.util.PreferencesUtil;
 import com.whatsmode.shopify.WhatsApplication;
+import com.whatsmode.shopify.actionlog.ActionLog;
 import com.whatsmode.shopify.common.Constant;
 import com.zchu.log.Logger;
 
@@ -72,6 +73,7 @@ public class AndroidJs extends Object {
             }
             PreferencesUtil.putObject(WhatsApplication.getContext(), Constant.CART_LOCAL, cartItemList);
             EventBus.getDefault().post(cartItem); // 發送rx消息通知購物車更新
+            ActionLog.onEvent(Constant.Event.ADD_TO_CART);
         } catch (Exception e) {
             e.printStackTrace();
         }

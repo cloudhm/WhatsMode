@@ -25,8 +25,10 @@ import com.whatsmode.library.util.PreferencesUtil;
 import com.whatsmode.library.util.SnackUtil;
 import com.whatsmode.shopify.AppNavigator;
 import com.whatsmode.shopify.R;
+import com.whatsmode.shopify.actionlog.ActionLog;
 import com.whatsmode.shopify.block.account.LoginActivity;
 import com.whatsmode.shopify.block.me.event.LoginEvent;
+import com.whatsmode.shopify.common.Constant;
 import com.whatsmode.shopify.common.KeyConstant;
 import com.whatsmode.shopify.mvp.MvpActivity;
 
@@ -81,6 +83,7 @@ public class SettingInfoActivity extends MvpActivity<SettingInfoContract.Present
         setCacheSize();
         boolean isOpen = PreferencesUtil.getBoolean(this, KeyConstant.KEY_IS_OPEN_JPUSH, true);
         pushSwitch.setChecked(isOpen);
+        ActionLog.onEvent(Constant.Event.SETTING);
     }
 
     private void init(){
@@ -158,6 +161,7 @@ public class SettingInfoActivity extends MvpActivity<SettingInfoContract.Present
             case R.id.sign_out:
                 performFocusChange();
                 mPresenter.signout();
+                ActionLog.onEvent(Constant.Event.SIGN_OUT);
                 break;
             case R.id.clear_cache_l:
                 GlideCacheUtil.getInstance().deleteFolderFile(getCacheDir().getAbsolutePath(),false);
@@ -297,5 +301,6 @@ public class SettingInfoActivity extends MvpActivity<SettingInfoContract.Present
         }
         //save status
         PreferencesUtil.putBoolean(this,KeyConstant.KEY_IS_OPEN_JPUSH,b);
+        ActionLog.onEvent(Constant.Event.PUSH_NOTIFICATION);
     }
 }

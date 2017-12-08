@@ -1,5 +1,7 @@
 package com.whatsmode.shopify.block.cart;
 
+import com.zchu.log.Logger;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -107,6 +109,6 @@ public class CartItem implements Serializable{
     @Override
     public boolean equals(Object obj) {
         CartItem cartItem = (CartItem) obj;
-        return getId().equals(cartItem.getId());
+        return getId().replace("\n","").equals(cartItem.getId().replace("\n",""));
     }
 }

@@ -18,7 +18,10 @@ import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
 import com.whatsmode.library.util.RegexUtils;
 import com.whatsmode.shopify.AppNavigator;
@@ -37,23 +40,27 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 
-public class WebActivity extends BaseActivity{
+public class WebActivity extends BaseActivity implements View.OnClickListener {
 
-    private static final String EXTRA_URL = "url";
+    private static final String EXTRA_URL = "mUrl";
     private static final String EXTRA_TITLE = "title";
 
     public static final String STATE_SEARCH = "SEARCH"; // 搜索
     public static final String STATE_PAY = "PAY";  // 支付頁
     public static final String STATE_PRODUCT = "PRODUCT";  // 商品詳情頁
     public static final String STATE_COLLECTIONS = "COLLECTIONS"; // 網紅
+    public static final String STATE_ABOUT_US = "ABOUT_US";
 
     private ProgressBar mProgressBar;
     private WebView mWebView;
-    private String url;
+    private String mUrl;
     private String title;
     private MenuItem menuItemShare;
     private MenuItem menuItemCart;
     private BadgeActionProvider mActionProvider;
+    private RelativeLayout errorView;
+    private ImageView ivLogo;
+    private ToolbarHelper.ToolbarHolder toolbarHolder;
 
 
     public static Intent newIntent(Context context,String title, String url) {
@@ -108,15 +115,20 @@ public class WebActivity extends BaseActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.page_web);
         title = getIntent().getStringExtra(EXTRA_TITLE);
-        ToolbarHelper.ToolbarHolder toolbarHolder = ToolbarHelper.initToolbar(this, R.id.toolbar, true, title);
+        errorView = (RelativeLayout) findViewById(R.id.net_error_view);
+        Button btnRefresh = (Button)findViewById(R.id.refresh);
+        btnRefresh.setOnClickListener(this);
+
+        toolbarHolder = ToolbarHelper.initToolbar(this, R.id.toolbar, true, title);
         toolbarHolder.titleView.setVisibility(View.VISIBLE);
+        ivLogo = (ImageView) findViewById(R.id.logo);
         mWebView = (WebView) findViewById(R.id.webview);
         mWebView.getSettings().setUserAgentString(Constant.USER_AGENT);
         mProgressBar = (ProgressBar) findViewById(R.id.indeterminateBar);
-        url = getIntent().getStringExtra(EXTRA_URL);
+        mUrl = getIntent().getStringExtra(EXTRA_URL);
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.addJavascriptInterface(new AndroidJs(), "android");//AndroidtoJS类对象映射到js的test对象
-        if (!TextUtils.isEmpty(url)){
+        if (!TextUtils.isEmpty(mUrl)){
             initWebTitle();
         }
         if (STATE_PRODUCT.equals(title)) {
@@ -135,14 +147,26 @@ public class WebActivity extends BaseActivity{
             case WebActivity.STATE_COLLECTIONS:
                 menuItemCart.setVisible(false);
                 menuItemShare.setVisible(true);
+                ivLogo.setVisibility(View.GONE);
+                toolbarHolder.titleView.setVisibility(View.VISIBLE);
                 break;
             case WebActivity.STATE_PRODUCT:
                 menuItemShare.setVisible(true);
                 menuItemCart.setVisible(true);
+                ivLogo.setVisibility(View.GONE);
+                toolbarHolder.titleView.setVisibility(View.VISIBLE);
+                break;
+            case WebActivity.STATE_ABOUT_US:
+                menuItemCart.setVisible(false);
+                menuItemShare.setVisible(false);
+                ivLogo.setVisibility(View.VISIBLE);
+                toolbarHolder.titleView.setVisibility(View.GONE);
                 break;
             default:
                 menuItemShare.setVisible(false);
                 menuItemCart.setVisible(false);
+                ivLogo.setVisibility(View.GONE);
+                toolbarHolder.titleView.setVisibility(View.VISIBLE);
                 break;
         }
     }
@@ -167,12 +191,17 @@ public class WebActivity extends BaseActivity{
             public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
                 super.onReceivedError(view, errorCode, description, failingUrl);
                 mProgressBar.setVisibility(View.GONE);
+                if (mUrl.equals(failingUrl)) {
+                    mWebView.setVisibility(View.GONE);
+                    view.loadUrl("about:blank");
+                    errorView.setVisibility(View.VISIBLE);
+                }
             }
             @TargetApi(Build.VERSION_CODES.M)
             @Override
             public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
                 super.onReceivedError(view, request, error);
-                mProgressBar.setVisibility(View.GONE);
+                onReceivedError(view,error.getErrorCode(),error.getDescription().toString(),request.getUrl().toString());
             }
 
             @Override
@@ -181,7 +210,9 @@ public class WebActivity extends BaseActivity{
                     startActivity(WebActivity.newIntent(WebActivity.this,WebActivity.STATE_PRODUCT,url));
                 } else if (RegexUtils.isCollection(url)) {
                     startActivity(WebActivity.newIntent(WebActivity.this,WebActivity.STATE_COLLECTIONS,url));
-                }else{
+                } else if (RegexUtils.isBlock(url)) {
+
+                } else {
                     view.loadUrl(url);
                 }
                 return true;
@@ -199,12 +230,22 @@ public class WebActivity extends BaseActivity{
                 super.onReceivedTitle(view, title);
             }
         });
-        mWebView.loadUrl(url);
+        mWebView.loadUrl(mUrl);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (!TextUtils.isEmpty(mUrl)) {
+            errorView.setVisibility(View.GONE);
+            mWebView.loadUrl(mUrl);
+            mWebView.postDelayed(() -> mWebView.setVisibility(View.VISIBLE), 2000);
+            mProgressBar.setVisibility(View.VISIBLE);
+        }
     }
 }

@@ -8,6 +8,7 @@ import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.base.BaseRxPresenter;
 import com.whatsmode.shopify.block.address.Address;
 import com.whatsmode.shopify.block.cart.CartRepository;
+import com.whatsmode.shopify.block.me.Order;
 
 import java.util.List;
 
@@ -106,5 +107,25 @@ public class CheckoutUpdatePresenter extends BaseRxPresenter<CheckoutUpdateConta
                     }
                 })
                 .bindAddress(a);
+    }
+
+    @Override
+    public void checkOrderExist(ID checkoutId) {
+        CartRepository.create().orderListener(new CartRepository.OrderDetailListener() {
+            @Override
+            public void onSuccess(Order order) {
+                if (isViewAttached()) {
+                    getView().ViewResponseSuccess(order);
+                }
+            }
+
+            @Override
+            public void onFailure() {
+                if (isViewAttached()) {
+                    // TODO: 2017/12/7
+                    getView().ViewResponseFailed();
+                }
+            }
+        }).checkOrderExist(checkoutId);
     }
 }

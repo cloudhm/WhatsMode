@@ -1,5 +1,6 @@
 package com.whatsmode.shopify.block.cart;
 
+import android.graphics.Paint;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -77,10 +78,17 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
                         .setText(R.id.sizeAndColor,item.getColorAndSize())
                         .setText(R.id.price, new StringBuilder("$").append(String.valueOf(item.getPrice())))
                         .setText(R.id.quality, String.valueOf(item.quality));
+                TextView comparePrice = helper.getView(R.id.comparePrice);
+                if (Double.doubleToLongBits(item.getPrice()) == Double.doubleToLongBits(item.getComparePrice())) {
+                    comparePrice.setVisibility(View.GONE);
+                } else {
+                    comparePrice.setVisibility(View.VISIBLE);
+                    comparePrice.setText(new StringBuilder("$").append(String.valueOf(item.getComparePrice())).append("USD"));
+                    comparePrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+                }
                 TextView tvQuality = helper.getView(R.id.quality);
                 helper.getView(R.id.reduce).setOnClickListener(v -> {
-                    int quality = Math.max(1, Integer.parseInt(tvQuality.getText().toString())- 1);
-                    item.quality = quality;
+                    item.quality = Math.max(1, Integer.parseInt(tvQuality.getText().toString())- 1);
                     tvQuality.setText(String.valueOf(item.quality));
                     if (isViewAttached()) {
                         getView().checkTotal();
@@ -185,10 +193,10 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
             }
             CartRepository.create().parameter(data).checkoutListener(new CartRepository.QueryListener() {
                 @Override
-                public void onSuccess(Double price,ID id) {
+                public void onSuccess(Double price,ID id,List<CartItem> response) {
                     if (isViewAttached()) {
                         getView().hideLoading();
-                        getView().showSuccess(price,id);
+                        getView().showSuccess(price,id,response);
                     }
                 }
 

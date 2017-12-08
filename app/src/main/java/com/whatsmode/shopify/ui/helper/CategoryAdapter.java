@@ -29,6 +29,7 @@ public class CategoryAdapter extends ExpandableRecyclerAdapter<CategoryAdapter.C
     static class CategoryItem extends ExpandableRecyclerAdapter.ListItem {
         String Text;
         String tag;
+        int index;
 
         CategoryItem(String group) {
             super(TYPE_HEADER);
@@ -36,9 +37,9 @@ public class CategoryAdapter extends ExpandableRecyclerAdapter<CategoryAdapter.C
             Text = group;
         }
 
-        CategoryItem(String first, String tag) {
+        CategoryItem(int index,String first, String tag) {
             super(TYPE_PERSON);
-
+            this.index = index;
             Text = first;
             this.tag = tag;
         }
@@ -141,7 +142,7 @@ public class CategoryAdapter extends ExpandableRecyclerAdapter<CategoryAdapter.C
             }
             if (templateArray != null) {
                 for (int k = 0; k < templateArray.length; k++) {
-                    items.add(new CategoryItem(templateArray[k],templateArrayLinks[k]));
+                    items.add(new CategoryItem(k,templateArray[k],templateArrayLinks[k]));
                 }
             }
         }

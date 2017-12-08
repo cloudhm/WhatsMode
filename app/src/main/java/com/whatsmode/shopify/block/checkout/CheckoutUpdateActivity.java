@@ -1,10 +1,13 @@
 package com.whatsmode.shopify.block.checkout;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -20,6 +23,7 @@ import com.shopify.buy3.Storefront;
 import com.shopify.graphql.support.ID;
 import com.whatsmode.library.rx.Util;
 import com.whatsmode.library.util.ListUtils;
+import com.whatsmode.library.util.PreferencesUtil;
 import com.whatsmode.library.util.ScreenUtils;
 import com.whatsmode.library.util.ToastUtil;
 import com.whatsmode.shopify.AppNavigator;
@@ -32,11 +36,20 @@ import com.whatsmode.shopify.block.address.Address;
 import com.whatsmode.shopify.block.address.AddressListActivity;
 import com.whatsmode.shopify.block.cart.CartItem;
 import com.whatsmode.shopify.block.cart.CartItemLists;
+<<<<<<< HEAD
+=======
+import com.whatsmode.shopify.block.cart.RxRefreshCartList;
+import com.whatsmode.shopify.block.me.Order;
+import com.whatsmode.shopify.block.me.OrderDetailsActivity;
+>>>>>>> 6fc5b0b548516737149f00a9c7d12fb4f5e92e1f
 import com.whatsmode.shopify.common.Constant;
 import com.whatsmode.shopify.common.KeyConstant;
 import com.whatsmode.shopify.mvp.MvpActivity;
 import com.whatsmode.shopify.ui.helper.ToolbarHelper;
 
+import org.greenrobot.eventbus.EventBus;
+
+import java.io.IOException;
 import java.util.List;
 
 
@@ -73,6 +86,7 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
     private Double taxCost;
     private LinearLayout mLayoutCard;
     private TextView mTvSubTotal;
+    private boolean waitingReply;
 
     @NonNull
     @Override
@@ -221,7 +235,13 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
                     .into(icon);
             TextView tvPrice = (TextView) view.findViewById(R.id.price);
             TextView tvFontSize = (TextView) view.findViewById(R.id.sizeAndColor);
+            TextView comparePrice = (TextView) view.findViewById(R.id.comparePrice);
+            comparePrice.setText(new StringBuilder("$").append(Util.getFormatDouble(i.getComparePrice())).append("USD"));
+            comparePrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
             tvFontSize.setText(i.getColorAndSize());
+            if (Double.doubleToLongBits(i.getComparePrice()) == Double.doubleToLongBits(i.getPrice())) {
+                comparePrice.setVisibility(View.GONE);
+            }
             tvPrice.setText(new StringBuilder("$").append(i.getPrice()));
             TextView tvCount = (TextView) view.findViewById(R.id.checkout_count);
             tvCount.setText(new StringBuilder("x").append(String.valueOf(i.getQuality())));
@@ -233,6 +253,10 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
     protected void onResume() {
         super.onResume();
         checkSignState();
+        if (waitingReply) {
+            showLoading();
+            mPresenter.checkOrderExist(getCheckoutId());
+        }
     }
 
     public static Intent newIntent(Context context, Double price,ID id, CartItemLists cartItemList) {
@@ -260,8 +284,18 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
         if (currentAddress == null) {
             ToastUtil.showToast(getString(R.string.plz_select_address));
         } else if (!TextUtils.isEmpty(webUrl)) {
+            waitingReply = true;
+            try {
+                List<CartItem> cartList  = (List<CartItem>) PreferencesUtil.getObject(this, Constant.CART_LOCAL);
+                if (!ListUtils.isEmpty(cartList)) {
+                    dataSource.cartItems.stream().filter(cartList::contains).forEach(cartList::remove);
+                    PreferencesUtil.putObject(this,Constant.CART_LOCAL,cartList);
+                    EventBus.getDefault().post(new CartItem());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             AppNavigator.jumpToWebActivity(CheckoutUpdateActivity.this, WebActivity.STATE_PAY, webUrl);
-            finish();
         }
     }
 
@@ -271,6 +305,30 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
         intent.putExtra(KeyConstant.KEY_ADD_EDIT_ADDRESS,AddEditAddressActivity.TYPE_EDIT_ADDRESS);
         intent.putExtra(KeyConstant.KEY_ADDRESS, currentAddress);
         startActivityForResult(intent,REQUEST_CODE_ADDRESS);
+    }
+
+    @Override
+    public void ViewResponseFailed() {
+        runOnUiThread(() -> {
+            waitingReply = false;
+//            AlertDialog alertDialog = new AlertDialog.Builder(CheckoutUpdateActivity.this)
+//                    .setNegativeButton(R.string.no, (dialog, which) -> finish())
+//                    .setPositiveButton(R.string.yes,null)
+//                    .setMessage(R.string.whether_pay_continue)
+//                    .create();
+//            alertDialog.show();
+            startActivity(new Intent(CheckoutUpdateActivity.this,CheckoutResponseActivity.class));
+        });
+    }
+
+    @Override
+    public void ViewResponseSuccess(Order order) {
+        waitingReply = false;
+        Intent intent = new Intent(this, CheckoutResponseActivity.class);
+        intent.putExtra(CheckoutResponseActivity.EXTRA_STATUS, true);
+        intent.putExtra(CheckoutResponseActivity.EXTRA_ORDER, order);
+        startActivity(intent);
+        finish();
     }
 
     @Override

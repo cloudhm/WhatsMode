@@ -97,6 +97,7 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
         menuItemSearch = menu.findItem(R.id.action_search);
         menuItemSearch.setVisible(true);
         menuEdit = menu.findItem(R.id.action_edit);
+        menuEdit.setVisible(false);
         getPresenter().setPageSelected(0);
         return super.onCreateOptionsMenu(menu);
     }
@@ -142,8 +143,10 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
             mTempMenu.setVisible(false);
         }
         if (menuItem != null) {
-            menuItem.setVisible(true);
             mTempMenu = menuItem;
+        }
+        if (menuItem == menuItemSearch) {
+            menuItem.setVisible(true);
         }
     }
 
@@ -167,9 +170,7 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
             }
             toolbarTitle.setText(ListUtils.isEmpty(cartItemList) ? "My Cart" : "My Cart(" + badge + ")");
             bottomBarItem.setBadge(badge);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -212,6 +213,7 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
         customView.findViewById(R.id.new_arrive).setOnClickListener(this);
         customView.findViewById(R.id.discover).setOnClickListener(this);
         customView.findViewById(R.id.sale).setOnClickListener(this);
+        customView.findViewById(R.id.about_us).setOnClickListener(this);
         RecyclerView recycler = (RecyclerView) customView.findViewById(R.id.recycleView);
         CategoryAdapter adapter = new CategoryAdapter(this);
         adapter.setMode(ExpandableRecyclerAdapter.MODE_ACCORDION);
@@ -257,6 +259,11 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
     }
 
     @Override
+    public void jumpToAboutUs() {
+        AppNavigator.jumpToWebActivity(this,WebActivity.STATE_ABOUT_US,Constant.ABOUT_US);
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         if (popupWindow != null && popupWindow.isShowing()) {
@@ -298,5 +305,9 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
     public void refreshBottomBar(int i) {
         toolbarTitle.setText(i == 0 ? "My Cart" : "My Cart(" + i + ")");
         bottomBarItem.setBadge(i);
+    }
+
+    public void hideEdit(boolean visiable) {
+        menuEdit.setVisible(visiable);
     }
 }

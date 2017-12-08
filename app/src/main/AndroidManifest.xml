@@ -90,7 +90,9 @@
         <activity android:name=".block.WebActivity"
             android:screenOrientation="portrait"
             />
-
+        <activity android:name=".block.checkout.CheckoutResponseActivity"
+            android:screenOrientation="portrait"
+            />
         <activity android:name=".block.checkout.CheckGiftCardActivity"
             android:screenOrientation="portrait"
             />

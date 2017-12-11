@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -63,7 +64,7 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
     public static final int REQUEST_CODE_ADDRESS = 1001;
     private EditText etGiftCard;
     private TextView mTvGiftAmount;
-    private TextView mTvGiftUnit;
+    //private TextView mTvGiftUnit;
     private TextView mTvName;
     private TextView mTvPhone;
     private TextView mTvAddressDetail;
@@ -78,6 +79,7 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
     private LinearLayout mLayoutCard;
     private TextView mTvSubTotal;
     private boolean waitingReply;
+    private TextView btnPay;
 
     @NonNull
     @Override
@@ -108,7 +110,8 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
 
         mTvShippingMethod = (TextView) findViewById(R.id.shipping_method);
         findViewById(R.id.check_card).setOnClickListener(this);
-        findViewById(R.id.pay).setOnClickListener(this);
+        btnPay = (TextView) findViewById(R.id.pay);
+        btnPay.setOnClickListener(this);
         addressDetailLayout = (RelativeLayout) findViewById(R.id.address_detail);
         mLayoutCard = (LinearLayout) findViewById(R.id.cardLayout);
         addressDetailLayout.setOnClickListener(this);
@@ -120,14 +123,17 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
         addItemToLayout();
 
         mTvGiftAmount = (TextView) findViewById(R.id.gift_amount);
-        mTvGiftUnit = (TextView) findViewById(R.id.gift_unit);
+        //mTvGiftUnit = (TextView) findViewById(R.id.gift_unit);
 
         etGiftCard = (EditText) findViewById(R.id.gift_card_edit);
-        checkSignState();
         mCreateState = true;
-        if (AccountManager.isLoginStatus()) {
-            // FIXME: 2017/12/11 init address
+        if (AccountManager.getCustomerDefaultAddress() != null) {
+            currentAddress = AccountManager.getCustomerDefaultAddress();
+            fillAddress();
+            showLoading();
+            mPresenter.bindAddress(id, currentAddress);
         }
+        checkSignState();
         ActionLog.onEvent(Constant.Event.CHECK_OUT);
     }
 
@@ -198,6 +204,7 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
                 .append(currentAddress.getAddress2())
                 .append(currentAddress.getCity())
                 .append(currentAddress.getCountry()));
+        btnPay.setEnabled(true);
     }
 
     private void addItemToLayout() {
@@ -249,6 +256,7 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
         if (waitingReply) {
             showLoading();
             mPresenter.checkOrderExist(getCheckoutId());
+            mPresenter.getAddress(id);
         }
     }
 
@@ -330,6 +338,24 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
     }
 
     @Override
+    public void updateAddress(Storefront.MailingAddress address, Storefront.ShippingRate shippingRate) {
+        runOnUiThread(() -> {
+            if (currentAddress != null && address != null) {
+                currentAddress.setName(address.getName());
+                currentAddress.setPhone(address.getPhone());
+                currentAddress.setCity(address.getCity());
+                currentAddress.setCountry(address.getCountry());
+                currentAddress.setAddress1(address.getAddress1());
+                currentAddress.setAddress2(address.getAddress2());
+                fillAddress();
+            }
+            if (shippingRate != null) {
+                mTvShippingMethod.setText(shippingRate.getTitle());
+            }
+        });
+    }
+
+    @Override
     public void showError(String message) {
         runOnUiThread(() -> {
             hideLoading();
@@ -376,7 +402,7 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
             if (!TextUtils.isEmpty(balance)) {
                 this.discount = totalPrice - Double.parseDouble(balance);
                 mTvGiftAmount.setText(new StringBuilder("-$").append(Util.getFormatDouble(discount)));
-                mTvGiftUnit.setVisibility(View.VISIBLE);
+                //mTvGiftUnit.setVisibility(View.VISIBLE);
                 mPresenter.checkShippingMethods(getCheckoutId());
             }else{
                 hideLoading();

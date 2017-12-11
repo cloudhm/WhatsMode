@@ -88,6 +88,7 @@
                   android:screenOrientation="portrait"
             />
         <activity android:name=".block.WebActivity"
+            android:windowSoftInputMode="adjustResize"
             android:screenOrientation="portrait"
             />
         <activity android:name=".block.checkout.CheckoutResponseActivity"

@@ -8,6 +8,8 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -144,15 +146,15 @@ public class AddEditAddressActivity extends MvpActivity<AddEditAddressPresenter>
     }
 
     private void createUpdateAddress() {
-        String firstName = mFirstName.getText().toString();
-        String lastName = mLastName.getText().toString();
-        String address1 = mAddress1.getText().toString();
-        String address2 = mAddress2.getText().toString();
-        String city = mCity.getText().toString();
-        String province = mProvince.getText().toString();
-        String country = mCountry.getText().toString();
-        String zip = mZip.getText().toString();
-        String phone = mPhone.getText().toString();
+        String firstName = mFirstName.getText().toString().trim();
+        String lastName = mLastName.getText().toString().trim();
+        String address1 = mAddress1.getText().toString().trim();
+        String address2 = mAddress2.getText().toString().trim();
+        String city = mCity.getText().toString().trim();
+        String province = mProvince.getText().toString().trim();
+        String country = mCountry.getText().toString().trim();
+        String zip = mZip.getText().toString().trim();
+        String phone = mPhone.getText().toString().trim();
         if (mAddress == null) {
             mAddress = new Address(null,address1,address2,city,province,null,country,null,null,firstName,lastName,null,phone,zip,null);
         }else {
@@ -291,6 +293,7 @@ public class AddEditAddressActivity extends MvpActivity<AddEditAddressPresenter>
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.province_l:
+                Util.hideInputMethod(this);
                 mAction = ACTION_SELECT_PROVINCES;
                 String country = mCountry.getText().toString();
                 if (TextUtils.isEmpty(country)) {
@@ -302,6 +305,7 @@ public class AddEditAddressActivity extends MvpActivity<AddEditAddressPresenter>
                 mOptionsPickerView.show();
                 break;
             case R.id.country_l:
+                Util.hideInputMethod(this);
                 mAction = ACTION_SELECT_COUNTRY;
                 if (mPickerDateCountry.isEmpty()) {
                     List<Site> countryList = getCountry();

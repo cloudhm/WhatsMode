@@ -40,10 +40,15 @@ import com.whatsmode.shopify.block.address.Address;
 import com.whatsmode.shopify.block.address.AddressListActivity;
 import com.whatsmode.shopify.block.address.AddressUtil;
 import com.whatsmode.shopify.block.address.LoadType;
+import com.whatsmode.shopify.block.cart.JumpMainTab;
 import com.whatsmode.shopify.block.me.event.LoginEvent;
 import com.whatsmode.shopify.common.Constant;
 import com.whatsmode.shopify.common.KeyConstant;
 import com.whatsmode.shopify.mvp.MvpFragment;
+import com.zchu.log.Logger;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -103,6 +108,19 @@ public class MyFragment extends MvpFragment<MyContract.Presenter> implements MyC
         mPresenter.getCustomer();
         mPresenter.refreshOrderList();
         initLoginListener();
+        EventBus.getDefault().register(this);
+    }
+
+    @Subscribe
+    public void receive(JumpMainTab jumpMainTab) {
+        if (jumpMainTab.tabPosition == JumpMainTab.RefreshMainPage) {
+            if (AccountManager.isLoginStatus()) {
+                mPresenter.getCustomer();
+                mPresenter.refreshOrderList();
+            }else{
+                setContentGone();
+            }
+        }
     }
 
     private void setImageBGSize(){

@@ -29,10 +29,13 @@ import com.whatsmode.shopify.AppNavigator;
 import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.actionlog.ActionLog;
 import com.whatsmode.shopify.block.account.data.AccountManager;
+import com.whatsmode.shopify.block.cart.JumpMainTab;
 import com.whatsmode.shopify.block.me.event.LoginEvent;
 import com.whatsmode.shopify.common.Constant;
 import com.whatsmode.shopify.common.KeyConstant;
 import com.whatsmode.shopify.mvp.MvpActivity;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.util.HashSet;
@@ -150,7 +153,8 @@ public class SettingInfoActivity extends MvpActivity<SettingInfoContract.Present
         hideLoading();
         setJPushAlias(null);
         AccountManager.getInstance().writeCustomerDefaultAddress(null);
-        RxBus.getInstance().post(new LoginEvent(true));
+        //RxBus.getInstance().post(new LoginEvent(true));
+        EventBus.getDefault().post(new JumpMainTab(JumpMainTab.RefreshMainPage));
         finish();
     }
 

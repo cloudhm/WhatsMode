@@ -129,6 +129,12 @@
     <string name="success_desc">Your bill has been paid</string>
     <string name="home">Home</string>
     <string name="view_order">View Order</string>
+    <string name="yes_">Yes</string>
+    <string name="no_">No</string>
+    <string name="prompt">Prompt</string>
+    <string name="confirm_exit">Confirm exit?</string>
+    <string name="confirm_the_scavenging_cache">Confirm the scavenging cache?</string>
+    <string name="confirm_deletion">Confirm deletion?</string>
 
     <array name="category">
         <item>APPAREL</item>

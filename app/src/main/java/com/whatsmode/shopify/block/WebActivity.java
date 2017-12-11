@@ -59,6 +59,7 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
     private String title;
     private MenuItem menuItemShare;
     private MenuItem menuItemCart;
+    private MenuItem menuItemSearch;
     private BadgeActionProvider mActionProvider;
     private RelativeLayout errorView;
     private ImageView ivLogo;
@@ -76,6 +77,7 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_web, menu);
         menuItemShare = menu.findItem(R.id.action_share);
+        menuItemSearch = menu.findItem(R.id.action_search);
         menuItemCart = menu.findItem(R.id.action_cart);
         mActionProvider = (BadgeActionProvider) MenuItemCompat.getActionProvider(menuItemCart);
         mActionProvider.setOnClickListener(0, what -> {
@@ -93,6 +95,9 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
             case R.id.action_share:
                 ShareUtil.showShare(this,EXTRA_TITLE,"",EXTRA_URL,EXTRA_URL);
                 shareActionLog();
+                break;
+            case R.id.action_search:
+                AppNavigator.jumpToWebActivity(this,STATE_SEARCH,Constant.URL_SEARCH);
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -134,6 +139,7 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
             initWebTitle();
         }
         if (STATE_PRODUCT.equals(title)) {
+            if(!EventBus.getDefault().isRegistered(this))
             EventBus.getDefault().register(this);
         }
     }
@@ -149,11 +155,13 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
             case WebActivity.STATE_COLLECTIONS:
                 menuItemCart.setVisible(false);
                 menuItemShare.setVisible(true);
+                menuItemSearch.setVisible(true);
                 ivLogo.setVisibility(View.GONE);
                 toolbarHolder.titleView.setVisibility(View.VISIBLE);
                 break;
             case WebActivity.STATE_PRODUCT:
                 menuItemShare.setVisible(true);
+                menuItemSearch.setVisible(false);
                 menuItemCart.setVisible(true);
                 ivLogo.setVisibility(View.GONE);
                 toolbarHolder.titleView.setVisibility(View.VISIBLE);
@@ -161,6 +169,7 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
             case WebActivity.STATE_ABOUT_US:
                 menuItemCart.setVisible(false);
                 menuItemShare.setVisible(false);
+                menuItemSearch.setVisible(false);
                 ivLogo.setVisibility(View.VISIBLE);
                 toolbarHolder.titleView.setVisibility(View.GONE);
                 break;
@@ -168,6 +177,7 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
                 menuItemShare.setVisible(false);
                 menuItemCart.setVisible(false);
                 ivLogo.setVisibility(View.GONE);
+                menuItemSearch.setVisible(false);
                 toolbarHolder.titleView.setVisibility(View.VISIBLE);
                 break;
         }

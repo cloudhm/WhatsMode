@@ -23,7 +23,7 @@ public class AndroidJs extends Object {
     // 被JS调用的方法必须加入@JavascriptInterface注解
     @JavascriptInterface
     public void addToCart(String json) {
-       Logger.e("JS调用了Android的hello方法----" + json);
+       //Logger.e("JS调用了Android的hello方法----" + json);
         if (TextUtils.isEmpty(json)) {
             return;
         }

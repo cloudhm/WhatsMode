@@ -18,6 +18,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.innodroid.expandablerecycler.ExpandableRecyclerAdapter;
+import com.whatsmode.library.rx.RxBus;
 import com.whatsmode.library.util.DensityUtil;
 import com.whatsmode.library.util.ListUtils;
 import com.whatsmode.library.util.PreferencesUtil;
@@ -28,10 +29,12 @@ import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.WhatsApplication;
 import com.whatsmode.shopify.actionlog.ActionLog;
 import com.whatsmode.shopify.block.WebActivity;
+import com.whatsmode.shopify.block.account.data.AccountManager;
 import com.whatsmode.shopify.block.cart.CartFragment;
 import com.whatsmode.shopify.block.cart.CartItem;
 import com.whatsmode.shopify.block.cart.JumpMainTab;
 import com.whatsmode.shopify.block.me.StatusBarUtil;
+import com.whatsmode.shopify.block.me.event.LoginEvent;
 import com.whatsmode.shopify.common.Constant;
 import com.whatsmode.shopify.mvp.MvpActivity;
 import com.whatsmode.shopify.ui.helper.BaseFragmentAdapter;
@@ -81,13 +84,35 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
         bottomBar = (BottomBar)findViewById(R.id.bottomBar);
         bottomBarItem = (BottomBarItem) findViewById(R.id.cart_bottom_bar);
         getPresenter().initViewPage(getSupportFragmentManager());
-        EventBus.getDefault().register(this);
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
         defineCartTitle();
     }
 
     @Subscribe
     public void receive(JumpMainTab select){
-        vpContent.setCurrentItem(select.tabPosition,false);
+        if (select.tabPosition == -1) {
+            toolbar.setVisibility(View.VISIBLE);
+            //switch2Mode();
+            //getPresenter().initViewPage(getSupportFragmentManager());
+        }else{
+            vpContent.setCurrentItem(select.tabPosition,false);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (vpContent != null && vpContent.getCurrentItem() == 3) {
+            if (!AccountManager.isLoginStatus()) {
+                toolbar.setVisibility(View.GONE);
+            }else{
+                toolbar.setVisibility(View.VISIBLE);
+            }
+        }else{
+            toolbar.setVisibility(View.VISIBLE);
+        }
     }
 
     @NonNull
@@ -136,6 +161,7 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
 
     @Override
     public void switch2Mode() {
+        toolbar.setVisibility(View.VISIBLE);
         switchMenu(menuItemSearch);
         ivMenu.setVisibility(View.VISIBLE);
         ivLogo.setVisibility(View.VISIBLE);
@@ -157,6 +183,7 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
 
     @Override
     public void switch2Influence() {
+        toolbar.setVisibility(View.VISIBLE);
         switchMenu(menuItemSearch);
         ivMenu.setVisibility(View.VISIBLE);
         ivLogo.setVisibility(View.VISIBLE);
@@ -183,6 +210,7 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
     @Override
     public void switch2Cart() {
         switchMenu(menuEdit);
+        toolbar.setVisibility(View.VISIBLE);
         ivMenu.setVisibility(View.GONE);
         ivLogo.setVisibility(View.GONE);
         toolbarTitle.setVisibility(View.VISIBLE);
@@ -193,6 +221,11 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
     @Override
     public void switch2Mine() {
         switchMenu(null);
+        if (AccountManager.isLoginStatus()) {
+            toolbar.setVisibility(View.VISIBLE);
+        }else{
+            toolbar.setVisibility(View.GONE);
+        }
         toolbarTitle.setVisibility(View.GONE);
         ivMenu.setVisibility(View.GONE);
         ivLogo.setVisibility(View.GONE);

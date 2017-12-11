@@ -1,13 +1,11 @@
 package com.whatsmode.shopify.block.checkout;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -66,7 +64,6 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
     private EditText etGiftCard;
     private TextView mTvGiftAmount;
     private TextView mTvGiftUnit;
-    private Double discount;
     private TextView mTvName;
     private TextView mTvPhone;
     private TextView mTvAddressDetail;
@@ -128,7 +125,9 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
         etGiftCard = (EditText) findViewById(R.id.gift_card_edit);
         checkSignState();
         mCreateState = true;
-
+        if (AccountManager.isLoginStatus()) {
+            // FIXME: 2017/12/11 init address
+        }
         ActionLog.onEvent(Constant.Event.CHECK_OUT);
     }
 
@@ -370,16 +369,17 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
         Intent intent = new Intent(this, AddressListActivity.class);
         startActivityForResult(intent, REQUEST_CODE_ADDRESS);
     }
-
+    private Double discount = 0.0;
     @Override
     public void showGiftCardLegal(String balance) {
         runOnUiThread(() -> {
-            hideLoading();
             if (!TextUtils.isEmpty(balance)) {
                 this.discount = totalPrice - Double.parseDouble(balance);
                 mTvGiftAmount.setText(new StringBuilder("-$").append(Util.getFormatDouble(discount)));
-                mTvTotal.setText(new StringBuilder("$").append(Util.getFormatDouble(totalPrice + shippingCost + taxCost - discount)));
                 mTvGiftUnit.setVisibility(View.VISIBLE);
+                mPresenter.checkShippingMethods(getCheckoutId());
+            }else{
+                hideLoading();
             }
         });
     }
@@ -407,6 +407,7 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
             mTvShippingCost.setText(new StringBuilder("+$").append(String.valueOf(shippingCost)));
             mTvTotal.setText(new StringBuilder("$").append(Util.getFormatDouble(totalPrice + shippingCost + tax)));
             mLayoutCard.setVisibility(View.VISIBLE);
+            mTvTotal.setText(new StringBuilder("$").append(Util.getFormatDouble(totalPrice + shippingCost + taxCost - discount)));
         });
     }
 }

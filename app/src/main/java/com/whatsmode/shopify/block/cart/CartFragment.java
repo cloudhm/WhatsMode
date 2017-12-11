@@ -60,6 +60,7 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
         btnDelete.setOnClickListener(this);
 
         btnCheckout.setOnClickListener(this);
+        if(!EventBus.getDefault().isRegistered(this))
         EventBus.getDefault().register(this);
     }
 
@@ -168,14 +169,21 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
     public void checkTotal() {
         double total = 0.0;
         int badge = 0;
+        int totalQuality = 0;
         for (CartItem cartItem : checkItem) {
             total += cartItem.getPrice() * cartItem.quality;
+            totalQuality += cartItem.quality;
         }
         List<CartItem> totalData = mAdapter.getData();
         for (CartItem cartItem : totalData) {
             badge += cartItem.getQuality();
         }
         tvTotal.setText(new StringBuilder(getString(R.string.unit)).append(Util.getFormatDouble(Math.max(total, 0.0))));
+        if (totalQuality == 0) {
+            btnCheckout.setText(R.string.checkout);
+        }else{
+            btnCheckout.setText(new StringBuilder(getString(R.string.checkout)).append("(").append(totalQuality).append(")"));
+        }
         MainActivity activity = (MainActivity) getActivity();
         activity.refreshBottomBar(badge);
         showOrHideEdit();
@@ -193,14 +201,21 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
     @Override
     public void selectAll(boolean selectAll) {
         Double total = 0.0;
+        int mQuality = 0;
         if (!ListUtils.isEmpty(mAdapter.getData()) && selectAll) {
             checkItem.clear();
             checkItem.addAll(mAdapter.getData());
             for (CartItem cartItem : checkItem) {
                 total += cartItem.getPrice() * cartItem.quality;
+                mQuality += cartItem.quality;
             }
         }else{
             checkItem.clear();
+        }
+        if (mQuality == 0) {
+            btnCheckout.setText(R.string.checkout);
+        }else{
+            btnCheckout.setText(new StringBuilder(getString(R.string.checkout)).append("(").append(mQuality).append(")"));
         }
         tvTotal.setText(new StringBuilder(getString(R.string.unit)).append(Util.getFormatDouble(Math.max(0.0, total))));
     }

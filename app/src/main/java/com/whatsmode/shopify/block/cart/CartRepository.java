@@ -264,7 +264,7 @@ public class CartRepository {
                             giftCheckListener.exist(String.valueOf(response.data().getCheckoutGiftCardApply()
                                     .getCheckout().getAppliedGiftCards().get(0).getBalance()));
                         }else if(ListUtils.isEmpty(response.data().getCheckoutDiscountCodeApply().getUserErrors())){
-                            Storefront.Checkout checkout = response.data().getCheckoutDiscountCodeApply().getCheckout();
+                            //Storefront.Checkout checkout = response.data().getCheckoutDiscountCodeApply().getCheckout();
                             giftCheckListener.exist(String.valueOf(response.data().getCheckoutDiscountCodeApply().getCheckout()
                                     .getPaymentDue().doubleValue()));
                         }else{

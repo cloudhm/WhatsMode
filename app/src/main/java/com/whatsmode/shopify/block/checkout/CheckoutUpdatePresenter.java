@@ -9,6 +9,7 @@ import com.whatsmode.shopify.base.BaseRxPresenter;
 import com.whatsmode.shopify.block.address.Address;
 import com.whatsmode.shopify.block.cart.CartRepository;
 import com.whatsmode.shopify.block.me.Order;
+import com.zchu.log.Logger;
 
 import java.util.List;
 

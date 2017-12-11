@@ -378,6 +378,8 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
                 mTvGiftAmount.setText(new StringBuilder("-$").append(Util.getFormatDouble(discount)));
                 mTvGiftUnit.setVisibility(View.VISIBLE);
                 mPresenter.checkShippingMethods(getCheckoutId());
+            }else{
+                hideLoading();
             }
         });
     }

@@ -196,7 +196,6 @@ public class MyFragment extends MvpFragment<MyContract.Presenter> implements MyC
                 Intent intent = new Intent(getActivity(), AddressListActivity.class);
                 intent.putExtra(KeyConstant.KEY_TYPE_ADDRESS,AddressListActivity.TYPE_VIEW);
                 startActivity(intent);
-                System.out.println("-------------------defaultAddress : "+ AccountManager.getCustomerDefaultAddress());
                 break;
             case R.id.order_history:
                 ShareUtil.showShare(getActivity(),"https://whatsmode.com/","/storage/emulated/0/adv/af20c843-4081-4bc1-b7f8-b73041672e55.png","https://whatsmode.com/","https://whatsmode.com/");

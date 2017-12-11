@@ -1,8 +1,11 @@
 package com.whatsmode.library.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
+import android.graphics.Rect;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
 import org.joda.time.DateTime;
@@ -41,8 +44,28 @@ public class Util {
      */
     public static void inputMethodVisible(Context context, boolean visible) {
         InputMethodManager imm = (InputMethodManager) context.getSystemService(INPUT_METHOD_SERVICE);
-
         imm.toggleSoftInput(0, visible ? InputMethodManager.HIDE_NOT_ALWAYS : InputMethodManager.RESULT_SHOWN);
+    }
+
+    /**
+     * 软键盘hide
+     * @param activity
+     */
+    public static void hideInputMethod(Activity activity){
+        if (null != activity.getCurrentFocus()) {
+            InputMethodManager mInputMethodManager = (InputMethodManager) activity.getSystemService(INPUT_METHOD_SERVICE);
+            mInputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), WindowManager.LayoutParams.SOFT_INPUT_STATE_UNSPECIFIED);
+        }
+    }
+
+    public static boolean isSoftShowing(Activity activity){
+        //获取当前屏幕内容的高度
+        int screenHeight = activity.getWindow().getDecorView().getHeight();
+        //获取View可见区域的bottom
+        Rect rect = new Rect();
+        activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(rect);
+
+        return screenHeight - rect.bottom != 0;
     }
 
     public static final String[] sManth = {"January","February","March","April","May","June","July","August","September","October","November","December"};

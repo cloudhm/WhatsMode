@@ -1,14 +1,15 @@
 package com.whatsmode.shopify.block.me;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.DragEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -26,7 +27,7 @@ import com.whatsmode.library.util.SnackUtil;
 import com.whatsmode.shopify.AppNavigator;
 import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.actionlog.ActionLog;
-import com.whatsmode.shopify.block.account.LoginActivity;
+import com.whatsmode.shopify.block.account.data.AccountManager;
 import com.whatsmode.shopify.block.me.event.LoginEvent;
 import com.whatsmode.shopify.common.Constant;
 import com.whatsmode.shopify.common.KeyConstant;
@@ -139,13 +140,15 @@ public class SettingInfoActivity extends MvpActivity<SettingInfoContract.Present
 
     @Override
     public void updateSuccess() {
-        SnackUtil.toastShow(this,"update success");
+        //SnackUtil.toastShow(this,"update success");
         hideLoading();
     }
 
     @Override
     public void signoutSuccess() {
+        hideLoading();
         setJPushAlias(null);
+        AccountManager.getInstance().writeCustomerDefaultAddress(null);
         RxBus.getInstance().post(new LoginEvent(true));
         finish();
     }
@@ -159,17 +162,41 @@ public class SettingInfoActivity extends MvpActivity<SettingInfoContract.Present
                 startActivity(new Intent(this,ChangePasswordActivity.class));
                 break;
             case R.id.sign_out:
-                performFocusChange();
-                mPresenter.signout();
-                ActionLog.onEvent(Constant.Event.SIGN_OUT);
+                signOut();
                 break;
             case R.id.clear_cache_l:
-                GlideCacheUtil.getInstance().deleteFolderFile(getCacheDir().getAbsolutePath(),false);
-                mCacheSize.setText("0.0B");
+                clearCache();
                 break;
         }
     }
 
+    private void clearCache() {
+        new AlertDialog.Builder(this,R.style.DialogTheme)
+                .setTitle(R.string.prompt)
+                .setMessage(R.string.confirm_the_scavenging_cache)
+                .setNegativeButton(R.string.no_, (dialogInterface, i)
+                        -> dialogInterface.dismiss())
+                .setPositiveButton(R.string.yes_, (dialogInterface, i) -> {
+                    dialogInterface.dismiss();
+                    GlideCacheUtil.getInstance().deleteFolderFile(getCacheDir().getAbsolutePath(),false);
+                    mCacheSize.setText("0.0B");
+                }).create().show();
+    }
+
+    private void signOut() {
+        new AlertDialog.Builder(this,R.style.DialogTheme)
+                .setTitle(R.string.prompt)
+                .setMessage(R.string.confirm_exit)
+                .setNegativeButton(R.string.no_, (dialogInterface, i)
+                        -> dialogInterface.dismiss())
+                .setPositiveButton(R.string.yes_, (dialogInterface, i) -> {
+                    dialogInterface.dismiss();
+                    performFocusChange();
+                    mPresenter.signout();
+                    ActionLog.onEvent(Constant.Event.SIGN_OUT);
+                    showLoading();
+                }).create().show();
+    }
 
     //Ａ版　废弃
     private void changePassword() {

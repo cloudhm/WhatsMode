@@ -35,6 +35,7 @@ import com.whatsmode.shopify.AppNavigator;
 import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.actionlog.ActionLog;
 import com.whatsmode.shopify.block.account.LoginActivity;
+import com.whatsmode.shopify.block.account.data.AccountManager;
 import com.whatsmode.shopify.block.address.Address;
 import com.whatsmode.shopify.block.address.AddressListActivity;
 import com.whatsmode.shopify.block.address.AddressUtil;
@@ -131,11 +132,15 @@ public class MyFragment extends MvpFragment<MyContract.Presenter> implements MyC
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(loginEvent -> {
-                    if (loginEvent.isLogin) {
+                    if (loginEvent.singleRefresh) {
                         mPresenter.getCustomer();
-                        mPresenter.refreshOrderList();
-                    }else{
-                        setContentGone();
+                    }else {
+                        if (loginEvent.isLogin) {
+                            mPresenter.getCustomer();
+                            mPresenter.refreshOrderList();
+                        } else {
+                            setContentGone();
+                        }
                     }
                 });
     }
@@ -191,6 +196,7 @@ public class MyFragment extends MvpFragment<MyContract.Presenter> implements MyC
                 Intent intent = new Intent(getActivity(), AddressListActivity.class);
                 intent.putExtra(KeyConstant.KEY_TYPE_ADDRESS,AddressListActivity.TYPE_VIEW);
                 startActivity(intent);
+                System.out.println("-------------------defaultAddress : "+ AccountManager.getCustomerDefaultAddress());
                 break;
             case R.id.order_history:
                 ShareUtil.showShare(getActivity(),"https://whatsmode.com/","/storage/emulated/0/adv/af20c843-4081-4bc1-b7f8-b73041672e55.png","https://whatsmode.com/","https://whatsmode.com/");

@@ -29,6 +29,7 @@ public class MyPresenter extends BaseRxPresenter<MyContract.View> implements MyC
         MyRepository.create().getCustomer(AccountManager.getCustomerAccessToken(),new CustomerFragment())
                 .map(m -> {
                     Customer customer = Customer.parseCustomer(m);
+                    AccountManager.getInstance().writeCustomerDefaultAddress(customer.getDefaultAddress());
                     return customer;
                 }).observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new SingleObserver<Customer>() {

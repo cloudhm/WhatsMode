@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -16,10 +17,13 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.whatsmode.library.exception.APIException;
+import com.whatsmode.library.rx.RxBus;
+import com.whatsmode.library.util.GlideCacheUtil;
 import com.whatsmode.library.util.SnackUtil;
 import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.block.account.LoginActivity;
 import com.whatsmode.shopify.block.me.StatusBarUtil;
+import com.whatsmode.shopify.block.me.event.LoginEvent;
 import com.whatsmode.shopify.common.KeyConstant;
 import com.whatsmode.shopify.mvp.MvpActivity;
 
@@ -108,9 +112,7 @@ public class AddressListActivity extends MvpActivity<AddressListPresenter> imple
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
                 if (view.getId() == R.id.delete) {
-                    String id = mList.get(position).getId();
-                    mPresenter.deleteAddress(id);
-                    showLoading();
+                    deleteAddress(position);
                 } else if (view.getId() == R.id.update) {
                     Intent intent = new Intent(AddressListActivity.this,AddEditAddressActivity.class);
                     intent.putExtra(KeyConstant.KEY_ADDRESS,mList.get(position));
@@ -136,6 +138,20 @@ public class AddressListActivity extends MvpActivity<AddressListPresenter> imple
             mPresenter.refreshAddressList();
         });
         //mAddressListAdapter.disableLoadMoreIfNotFullPage(mRecyclerView);
+    }
+
+    private void deleteAddress(int position) {
+        new AlertDialog.Builder(this,R.style.DialogTheme)
+                .setTitle(R.string.prompt)
+                .setMessage(R.string.confirm_deletion)
+                .setNegativeButton(R.string.no_, (dialogInterface, i)
+                        -> dialogInterface.dismiss())
+                .setPositiveButton(R.string.yes_, (dialogInterface, i) -> {
+                    dialogInterface.dismiss();
+                    String id = mList.get(position).getId();
+                    mPresenter.deleteAddress(id);
+                    showLoading();
+                }).create().show();
     }
 
     public void completeRefresh(){
@@ -189,13 +205,15 @@ public class AddressListActivity extends MvpActivity<AddressListPresenter> imple
 
     @Override
     public void deleteSuccess() {
-        SnackUtil.toastShow(this,"delete success");
+        //SnackUtil.toastShow(this,"delete success");
         mPresenter.refreshAddressList();
+        RxBus.getInstance().post(LoginEvent.singleRefresh());
     }
 
     @Override
     public void updateDefaultAddressSuccess() {
         mPresenter.refreshAddressList();
+        RxBus.getInstance().post(LoginEvent.singleRefresh());
     }
 
     @Override

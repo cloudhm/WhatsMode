@@ -41,6 +41,8 @@
         android:paddingRight="16dp"
         android:paddingTop="12dp"
         android:paddingBottom="12dp"
+        android:focusableInTouchMode="true"
+        android:focusable="true"
         android:background="@color/white"
         android:orientation="horizontal"
         android:layout_width="match_parent"

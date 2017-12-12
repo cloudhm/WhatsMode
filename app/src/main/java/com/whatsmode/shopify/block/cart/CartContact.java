@@ -30,6 +30,8 @@ public class CartContact{
         void checkSpanner();
 
         void clearCheckItems(boolean selectAll);
+
+        boolean isCurrentDelete();
     }
 
     interface Presenter extends BaseListContract.Presenter<View> {

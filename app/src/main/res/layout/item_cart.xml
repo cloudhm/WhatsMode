@@ -174,4 +174,12 @@
         android:layout_marginRight="13dp"
         android:layout_marginLeft="13dp"
         android:background="@color/separator" />
+
+    <View
+        android:id="@+id/aboveView"
+        android:background="@color/white"
+        android:layout_toRightOf="@+id/iv_radio"
+        android:alpha="0.6"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </RelativeLayout>

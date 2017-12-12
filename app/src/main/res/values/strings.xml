@@ -54,7 +54,7 @@
     <string name="press_again_exist">Press again to exit</string>
     <string name="checkout">CHECKOUT</string>
     <string name="amount_all">Subtotal:</string>
-    <string name="unit">US$</string>
+    <string name="unit">$</string>
     <string name="address">Address</string>
     <string name="product">Product</string>
     <string name="price_information">Price Information</string>

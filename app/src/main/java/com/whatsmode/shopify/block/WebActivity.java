@@ -82,8 +82,9 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
         menuItemCart = menu.findItem(R.id.action_cart);
         mActionProvider = (BadgeActionProvider) MenuItemCompat.getActionProvider(menuItemCart);
         mActionProvider.setOnClickListener(0, what -> {
-            AppNavigator.jumpToMain(this);
-            EventBus.getDefault().post(new JumpMainTab(2));
+            // FIXME: 2017/12/12
+            AppNavigator.jumpToCartAct(this);
+            //EventBus.getDefault().post(new JumpMainTab(2));
             ActionLog.onEvent(Constant.Event.MY_CART);
         });// 设置点击监听。
         initToolBar();

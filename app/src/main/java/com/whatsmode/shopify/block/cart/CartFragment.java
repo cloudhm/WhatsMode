@@ -1,5 +1,6 @@
 package com.whatsmode.shopify.block.cart;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -33,7 +34,7 @@ import java.util.List;
 
 public class CartFragment extends BaseListFragment<CartContact.Presenter> implements CartContact.View, View.OnClickListener {
 
-    private TextView tvTotal;
+    private TextView tvTotal,subIndicator;
     private AlertDialog alertDialog;
     private Button btnDelete;
     private Button btnCheckout;
@@ -55,7 +56,7 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
         btnCheckout.setOnClickListener(this);
         tvTotal = (TextView) view.findViewById(R.id.total_count);
         totalTv = (TextView) view.findViewById(R.id.total);
-
+        subIndicator = (TextView) view.findViewById(R.id.subIndicator);
         btnDelete = (Button) view.findViewById(R.id.delete);
         btnDelete.setOnClickListener(this);
 
@@ -63,7 +64,6 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
         if(!EventBus.getDefault().isRegistered(this))
         EventBus.getDefault().register(this);
     }
-
 
     @Subscribe
     public void receive(CartItem list) {
@@ -114,6 +114,14 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        if (mPresenter != null && mAdapter != null && !ListUtils.isEmpty(mAdapter.getData())) {
+            mPresenter.saveCart(mAdapter.getData());
+        }
+    }
+
+    @Override
     public void onClick(View v) {
         mPresenter.onClickView(v);
     }
@@ -125,7 +133,7 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
     public void onCheckSelect(boolean selected, CartItem cartItems) {
         Double currentTotal;
         if (tvTotal.getText().toString().contains(getString(R.string.unit))) {
-            currentTotal = Double.parseDouble(tvTotal.getText().toString().substring(3));
+            currentTotal = Double.parseDouble(tvTotal.getText().toString().substring(1));
         }else{
             currentTotal = Double.parseDouble(tvTotal.getText().toString());
         }
@@ -184,17 +192,27 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
         }else{
             btnCheckout.setText(new StringBuilder(getString(R.string.checkout)).append("(").append(totalQuality).append(")"));
         }
-        MainActivity activity = (MainActivity) getActivity();
-        activity.refreshBottomBar(badge);
+        Activity activity = getActivity();
+        if (activity instanceof MainActivity) {
+            ((MainActivity)activity).refreshBottomBar(badge);
+        }
         showOrHideEdit();
     }
 
     private void showOrHideEdit() {
-        MainActivity activity = (MainActivity) getActivity();
-        if (mAdapter == null || ListUtils.isEmpty(mAdapter.getData())) {
-            activity.hideEdit(false);
-        }else{
-            activity.hideEdit(true);
+        Activity activity = getActivity();
+        if (activity instanceof MainActivity) {
+            if (mAdapter == null || ListUtils.isEmpty(mAdapter.getData())) {
+                ((MainActivity)activity).hideEdit(false);
+            }else{
+                ((MainActivity)activity).hideEdit(true);
+            }
+        } else if (activity instanceof CartFromProductActivity) {
+            if (mAdapter == null || ListUtils.isEmpty(mAdapter.getData())) {
+                ((CartFromProductActivity)activity).hideEdit(false);
+            }else{
+                ((CartFromProductActivity)activity).hideEdit(true);
+            }
         }
     }
 
@@ -228,19 +246,13 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
     @Override
     public void showDeleteDialog() {
         if (!ListUtils.isEmpty(checkItem) && mAdapter != null) {
-                alertDialog = new AlertDialog.Builder(getActivity())
-                        .setNegativeButton(R.string.cancel, null)
-                        .setPositiveButton(R.string.confirm, (dialog, which) -> {
-                            mAdapter.getData().removeAll(checkItem);
-                            mAdapter.notifyDataSetChanged();
-                            mPresenter.saveCart(mAdapter.getData());
-                            tvTotal.setText("0.0");
-                            checkItem.clear();
-                            checkSpanner();
-                        }).setMessage(R.string.confirm_delete)
-                        .setTitle(R.string.delete)
-                        .create();
-            alertDialog.show();
+            mAdapter.getData().removeAll(checkItem);
+            mAdapter.notifyDataSetChanged();
+            mPresenter.saveCart(mAdapter.getData());
+            tvTotal.setText("0.0");
+            checkItem.clear();
+            checkSpanner();
+            EventBus.getDefault().post(new CartItem());
         }else{
             ToastUtil.showToast(getString(R.string.plz_select_products));
         }
@@ -264,6 +276,7 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
                     checkItem.remove(temp);
                     checkTotal();
                     checkSpanner();
+                    EventBus.getDefault().post(new CartItem());
                 })
                 .setTitle(R.string.delete)
                 .create();
@@ -281,8 +294,12 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
             }else{
                 rlSpannerCheck.setVisibility(View.GONE);
             }
-            MainActivity activity = (MainActivity) getActivity();
-            activity.defineCartTitle();
+            Activity activity = getActivity();
+            if (activity instanceof MainActivity) {
+                ((MainActivity)activity).defineCartTitle();
+            }else if(activity instanceof CartFromProductActivity){
+                ((CartFromProductActivity) activity).defineCartTitle();
+            }
             showOrHideEdit();
         });
     }
@@ -308,11 +325,13 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
             btnDelete.setVisibility(View.GONE);
             tvTotal.setVisibility(View.VISIBLE);
             totalTv.setVisibility(View.VISIBLE);
+            subIndicator.setVisibility(View.VISIBLE);
         }else{
             btnDelete.setVisibility(View.VISIBLE);
             tvTotal.setVisibility(View.GONE);
             totalTv.setVisibility(View.GONE);
             btnCheckout.setVisibility(View.GONE);
+            subIndicator.setVisibility(View.GONE);
         }
         showOrHideEdit();
     }

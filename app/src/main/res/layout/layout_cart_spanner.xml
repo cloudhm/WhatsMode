@@ -37,9 +37,9 @@
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@+id/checkOut"
         android:layout_marginRight="13dp"
-        android:textSize="12sp"
-        android:textColor="@color/amount_color"
-        android:text="US$0.0"
+        android:textSize="16sp"
+        android:textColor="@color/colorAccent"
+        android:text="$0.0"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
     <TextView
@@ -50,6 +50,7 @@
         android:textColor="@color/gray_bbb"
         android:layout_marginLeft="80dp"
         android:text="@string/amount_all"
+        android:textSize="16sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
     <Button
@@ -62,4 +63,12 @@
         android:layout_width="120dp"
         android:text="@string/delete"
         android:layout_height="48dp" />
+    <TextView
+        android:id="@+id/subIndicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignEnd="@+id/total_count"
+        android:text="USD"
+        android:textSize="10sp" />
 </RelativeLayout>

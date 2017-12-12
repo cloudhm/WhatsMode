@@ -3,9 +3,12 @@ package com.whatsmode.shopify.block.main;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
 
+import com.shopify.graphql.support.ID;
 import com.whatsmode.shopify.mvp.MvpPresenter;
 import com.whatsmode.shopify.mvp.MvpView;
 import com.whatsmode.shopify.ui.helper.BaseFragmentAdapter;
+
+import java.util.List;
 
 class MainContact {
     interface View extends MvpView{
@@ -42,5 +45,6 @@ class MainContact {
 
         void onClickView(android.view.View v);
 
+        void checkVariantExist(List<ID> ids);
     }
 }

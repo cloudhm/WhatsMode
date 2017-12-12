@@ -67,6 +67,8 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
             @Override
             protected void convert(CommonViewHolder helper, CartItem item) {
                 ImageView ivIcon  = helper.getView(R.id.icon);
+                ImageView soldOut = helper.getView(R.id.icon_sold_out);
+                soldOut.setVisibility(item.isSoldOut ? View.VISIBLE : View.GONE);
                 View line = helper.getView(R.id.separator);
                 View reduceView = helper.getView(R.id.reduce_view);
                 TextView addView = helper.getView(R.id.add_view);
@@ -247,7 +249,7 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
                 public void onError(String message) {
                     if (isViewAttached()) {
                         getView().hideLoading();
-                        getView().showError(message);
+                        //getView().showError(message);
                     }
                 }
             }).execute();

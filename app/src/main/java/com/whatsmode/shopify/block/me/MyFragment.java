@@ -336,9 +336,10 @@ public class MyFragment extends MvpFragment<MyContract.Presenter> implements MyC
         startActivity(intent);
     }
 
+
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
+    public void onDestroy() {
+        super.onDestroy();
         if (mSubscribe != null && !mSubscribe.isDisposed()) {
             mSubscribe.dispose();
         }

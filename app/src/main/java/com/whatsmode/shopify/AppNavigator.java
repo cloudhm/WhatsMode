@@ -9,6 +9,7 @@ import com.shopify.graphql.support.ID;
 import com.whatsmode.shopify.block.WebActivity;
 import com.whatsmode.shopify.block.account.LoginActivity;
 import com.whatsmode.shopify.block.account.RegisterActivity;
+import com.whatsmode.shopify.block.cart.CartFromProductActivity;
 import com.whatsmode.shopify.block.cart.CartItem;
 import com.whatsmode.shopify.block.cart.CartItemLists;
 import com.whatsmode.shopify.block.checkout.CheckGiftCardActivity;
@@ -52,5 +53,10 @@ public class AppNavigator {
 
     public static void jumpToGiftActivity(Activity activity, ID checkoutId) {
         activity.startActivity(CheckGiftCardActivity.newIntent(activity,checkoutId));
+    }
+
+    public static void jumpToCartAct(Activity activity) {
+        Intent intent = new Intent(activity, CartFromProductActivity.class);
+        activity.startActivity(intent);
     }
 }

@@ -135,6 +135,9 @@
     <string name="confirm_exit">Confirm exit?</string>
     <string name="confirm_the_scavenging_cache">Confirm the scavenging cache?</string>
     <string name="confirm_deletion">Confirm deletion?</string>
+    <string name="snapchat">Snapchat</string>
+    <string name="share_">Share</string>
+    <string name="url">Url</string>
 
     <array name="category">
         <item>APPAREL</item>

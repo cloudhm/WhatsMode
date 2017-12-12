@@ -320,6 +320,6 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
     @Override
     public void onDestroy() {
         super.onDestroy();
-        RxBus.getInstance().unregisterAll();
+        //RxBus.getInstance().unregisterAll();
     }
 }

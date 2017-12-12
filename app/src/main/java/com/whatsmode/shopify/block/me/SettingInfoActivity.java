@@ -153,8 +153,8 @@ public class SettingInfoActivity extends MvpActivity<SettingInfoContract.Present
         hideLoading();
         setJPushAlias(null);
         AccountManager.getInstance().writeCustomerDefaultAddress(null);
-        //RxBus.getInstance().post(new LoginEvent(true));
-        EventBus.getDefault().post(new JumpMainTab(JumpMainTab.RefreshMainPage));
+        RxBus.getInstance().post(new LoginEvent(false));
+        //EventBus.getDefault().post(new JumpMainTab(JumpMainTab.RefreshMainPage));
         finish();
     }
 

@@ -1,20 +1,18 @@
 package com.whatsmode.shopify;
 
-import android.app.Application;
 import android.content.Context;
 import android.support.multidex.MultiDex;
-import android.support.v7.app.AppCompatDelegate;
 
 import com.mob.MobApplication;
 import com.shopify.buy3.GraphClient;
 import com.shopify.buy3.HttpCachePolicy;
+import com.whatsmode.library.util.ToastUtil;
 
 import java.util.concurrent.TimeUnit;
 
 import cn.jpush.android.api.JPushInterface;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
-import com.whatsmode.library.util.ToastUtil;
 
 
 public class WhatsApplication extends MobApplication {
@@ -50,8 +48,6 @@ public class WhatsApplication extends MobApplication {
                 .shopDomain(BuildConfig.SHOP_DOMAIN)
                 .accessToken(BuildConfig.API_KEY)
                 .httpClient(httpClient)
-                .httpCache(getCacheDir(), 1024 * 1024 * 10)
-                .defaultHttpCachePolicy(HttpCachePolicy.CACHE_FIRST.expireAfter(20, TimeUnit.MINUTES))
                 .build();
         ToastUtil.init(this);
     }

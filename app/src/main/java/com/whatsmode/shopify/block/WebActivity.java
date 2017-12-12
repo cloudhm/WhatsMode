@@ -35,6 +35,7 @@ import com.whatsmode.shopify.block.cart.JumpMainTab;
 import com.whatsmode.shopify.block.me.ShareUtil;
 import com.whatsmode.shopify.common.Constant;
 import com.whatsmode.shopify.ui.helper.ToolbarHelper;
+import com.zchu.log.Logger;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -196,6 +197,7 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
+                if(!RegexUtils.isBlock(url))
                 mProgressBar.setVisibility(View.VISIBLE);
             }
 
@@ -226,7 +228,6 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
                     startActivity(WebActivity.newIntent(WebActivity.this,WebActivity.STATE_ABOUT_US,url));
                     aboutUsAnalytics(url);
                 }else if (RegexUtils.isBlock(url)) {
-
                 } else {
                     view.loadUrl(url);
                 }

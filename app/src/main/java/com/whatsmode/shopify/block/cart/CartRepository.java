@@ -21,7 +21,6 @@ import com.zchu.log.Logger;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import io.reactivex.annotations.NonNull;
 
@@ -36,6 +35,7 @@ public class CartRepository {
     private ID checkoutId;
     private ShippingListener shippingListener;
     private OrderDetailListener orderListener;
+    private UpdateAddressListener updateAddressListener;
 
     private CartRepository() {
         client = WhatsApplication.getGraphClient();
@@ -75,6 +75,11 @@ public class CartRepository {
 
     public CartRepository orderListener(OrderDetailListener listener) {
         this.orderListener = listener;
+        return cartRepository;
+    }
+
+    public CartRepository addressUpdateListener(UpdateAddressListener listener){
+        this.updateAddressListener = listener;
         return cartRepository;
     }
 
@@ -285,6 +290,7 @@ public class CartRepository {
         Storefront.QueryRootQuery query = Storefront.query(rootQuery -> rootQuery
                 .node(checkoutId, nodeQuery -> nodeQuery
                         .onCheckout(checkoutQuery -> checkoutQuery
+                                .shippingLine(_queryBuilder -> _queryBuilder.title().price().handle())
                                 .availableShippingRates(availableShippingRatesQuery -> availableShippingRatesQuery
                                         .ready()
                                         .shippingRates(shippingRateQuery -> shippingRateQuery
@@ -307,7 +313,6 @@ public class CartRepository {
                         if (check != null) {
                             List<Storefront.ShippingRate> shippingRates = check.getAvailableShippingRates().getShippingRates();
                             shippingListener.onSuccess(check.getTotalTax().doubleValue(),shippingRates,check.getWebUrl());
-
                         } else {
                             shippingListener.onError(WhatsApplication.getContext().getString(R.string.no_shipping_currently));
                         }
@@ -386,6 +391,47 @@ public class CartRepository {
                 });
     }
 
+    public void checkAddress(ID id) {
+        Storefront.QueryRootQuery query = Storefront.query(_queryBuilder
+                -> _queryBuilder.node(id, new Storefront.NodeQueryDefinition() {
+            @Override
+            public void define(Storefront.NodeQuery _queryBuilder) {
+                _queryBuilder.onCheckout(_queryBuilder1
+                        -> _queryBuilder1
+                        .shippingLine(_queryBuilder2 -> _queryBuilder2.title().price())
+                        .shippingAddress(new Storefront.MailingAddressQueryDefinition() {
+                    @Override
+                    public void define(Storefront.MailingAddressQuery _queryBuilder1) {
+                        _queryBuilder1.address1().address2().city().name().phone().country();
+                    }
+                }));
+            }
+        }));
+        client.queryGraph(query)
+                .enqueue(new GraphCall.Callback<Storefront.QueryRoot>() {
+                    @Override
+                    public void onResponse(@android.support.annotation.NonNull GraphResponse<Storefront.QueryRoot> response) {
+                        if (updateCheckoutListener == null) {
+                                return;
+                        }
+                        Storefront.Checkout checkout = (Storefront.Checkout) response.data().getNode();
+                        if (checkout == null) {
+                            return;
+                        }
+                        Storefront.MailingAddress shippingAddress = checkout.getShippingAddress();
+                        Storefront.ShippingRate shippingLine = checkout.getShippingLine();
+                        if (shippingAddress != null) {
+                            updateAddressListener.onSuccess(shippingAddress,shippingLine);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@android.support.annotation.NonNull GraphError error) {
+
+                    }
+                });
+    }
+
     public interface ShippingListener {
         void onSuccess(Double tax,List<Storefront.ShippingRate> shippingRates,String url);
 
@@ -408,6 +454,10 @@ public class CartRepository {
         void onSuccess(String url);
 
         void onError(String message);
+    }
+
+    public interface UpdateAddressListener{
+        void onSuccess(Storefront.MailingAddress address, Storefront.ShippingRate shippingRate);
     }
 
     public interface OrderDetailListener{

@@ -123,10 +123,18 @@ public class CheckoutUpdatePresenter extends BaseRxPresenter<CheckoutUpdateConta
             @Override
             public void onFailure() {
                 if (isViewAttached()) {
-                    // TODO: 2017/12/7
                     getView().ViewResponseFailed();
                 }
             }
         }).checkOrderExist(checkoutId);
+    }
+
+    @Override
+    public void getAddress(ID id) {
+        CartRepository.create().addressUpdateListener((address, shippingRate) -> {
+            if (isViewAttached()) {
+                getView().updateAddress(address,shippingRate);
+            }
+        }).checkAddress(id);
     }
 }

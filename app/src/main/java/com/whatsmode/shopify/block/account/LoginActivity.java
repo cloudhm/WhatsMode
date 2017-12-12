@@ -122,11 +122,10 @@ public class LoginActivity extends MvpActivity<LoginPresenter> implements LoginC
     public void loginSuccess() {
         ActionLog.onEvent(Constant.Event.SIGN_IN);
         setJPushAlias(AccountManager.getUsername());
-        RxBus.getInstance().post(new LoginEvent(true));
+        EventBus.getDefault().post(new JumpMainTab(JumpMainTab.RefreshMainPage));
+        //RxBus.getInstance().post(new LoginEvent(true));
         hideLoading();
         //AppNavigator.jumpToMain(this);
-        EventBus.getDefault().post(new JumpMainTab(JumpMainTab.RefreshMainPage));
-        RxBus.getInstance().post(new LoginEvent(AccountManager.isLoginStatus()));
         finish();
     }
 

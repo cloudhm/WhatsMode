@@ -1,8 +1,10 @@
 package com.whatsmode.shopify.block.cart;
 
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -66,7 +68,12 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
             protected void convert(CommonViewHolder helper, CartItem item) {
                 ImageView ivIcon  = helper.getView(R.id.icon);
                 View line = helper.getView(R.id.separator);
+                View reduceView = helper.getView(R.id.reduce_view);
+                TextView addView = helper.getView(R.id.add_view);
                 line.setVisibility(helper.getAdapterPosition() == cartItems.size() -1 ? View.GONE:View.VISIBLE);
+                TextView tvQuality = helper.getView(R.id.quality);
+                LinearLayout llReduce = helper.getView(R.id.reduce);
+                LinearLayout llAdd = helper.getView(R.id.add);
                 Glide.with(WhatsApplication.getContext())
                         .load(item.getIcon())
                         .asBitmap()
@@ -86,9 +93,33 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
                     comparePrice.setText(new StringBuilder("$").append(String.valueOf(item.getComparePrice())).append("USD"));
                     comparePrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
                 }
-                TextView tvQuality = helper.getView(R.id.quality);
-                helper.getView(R.id.reduce).setOnClickListener(v -> {
+
+                if (Integer.parseInt(tvQuality.getText().toString()) == 1) {
+                    reduceView.setBackgroundColor(Color.parseColor("#bbbbbb"));
+                }else{
+                    reduceView.setBackgroundColor(Color.BLACK);
+                }
+
+                if (Integer.parseInt(tvQuality.getText().toString()) == 99) {
+                    llAdd.setClickable(false);
+                    addView.setTextColor(Color.parseColor("#bbbbbb"));
+                }else{
+                    llAdd.setClickable(true);
+                    addView.setTextColor(Color.BLACK);
+                }
+                llReduce.setOnClickListener(v -> {
                     item.quality = Math.max(1, Integer.parseInt(tvQuality.getText().toString())- 1);
+                    if (item.quality == 1) {
+                        reduceView.setBackgroundColor(Color.parseColor("#bbbbbb"));
+                        addView.setTextColor(Color.BLACK);
+                    }else{
+                        reduceView.setBackgroundColor(Color.BLACK);
+                        if (item.quality == 99) {
+                            addView.setTextColor(Color.parseColor("#bbbbbb"));
+                        }else{
+                            addView.setTextColor(Color.BLACK);
+                        }
+                    }
                     tvQuality.setText(String.valueOf(item.quality));
                     if (isViewAttached()) {
                         getView().checkTotal();
@@ -103,9 +134,21 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
                     }
                 });
 
-                helper.getView(R.id.add).setOnClickListener(v -> {
+                llAdd.setOnClickListener(v -> {
                     int quality = Integer.parseInt(tvQuality.getText().toString()) + 1;
+                    quality = Math.min(quality, 99);
                     item.quality = quality;
+                    if (item.quality == 99) {
+                        addView.setTextColor(Color.parseColor("#bbbbbb"));
+                        reduceView.setBackgroundColor(Color.BLACK);
+                    }else{
+                        if (item.quality == 1) {
+                            reduceView.setBackgroundColor(Color.parseColor("#bbbbbb"));
+                        }else{
+                            reduceView.setBackgroundColor(Color.BLACK);
+                        }
+                        addView.setTextColor(Color.BLACK);
+                    }
                     tvQuality.setText(String.valueOf(quality));
                     if (isViewAttached()) {
                         getView().checkTotal();

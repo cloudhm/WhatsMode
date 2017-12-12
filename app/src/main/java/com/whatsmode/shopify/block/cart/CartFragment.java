@@ -64,7 +64,6 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
         EventBus.getDefault().register(this);
     }
 
-
     @Subscribe
     public void receive(CartItem list) {
         if (getActivity() == null) {
@@ -114,6 +113,14 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        if (mPresenter != null && mAdapter != null && !ListUtils.isEmpty(mAdapter.getData())) {
+            mPresenter.saveCart(mAdapter.getData());
+        }
+    }
+
+    @Override
     public void onClick(View v) {
         mPresenter.onClickView(v);
     }
@@ -125,7 +132,7 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
     public void onCheckSelect(boolean selected, CartItem cartItems) {
         Double currentTotal;
         if (tvTotal.getText().toString().contains(getString(R.string.unit))) {
-            currentTotal = Double.parseDouble(tvTotal.getText().toString().substring(3));
+            currentTotal = Double.parseDouble(tvTotal.getText().toString().substring(1));
         }else{
             currentTotal = Double.parseDouble(tvTotal.getText().toString());
         }
@@ -228,19 +235,12 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
     @Override
     public void showDeleteDialog() {
         if (!ListUtils.isEmpty(checkItem) && mAdapter != null) {
-                alertDialog = new AlertDialog.Builder(getActivity())
-                        .setNegativeButton(R.string.cancel, null)
-                        .setPositiveButton(R.string.confirm, (dialog, which) -> {
-                            mAdapter.getData().removeAll(checkItem);
-                            mAdapter.notifyDataSetChanged();
-                            mPresenter.saveCart(mAdapter.getData());
-                            tvTotal.setText("0.0");
-                            checkItem.clear();
-                            checkSpanner();
-                        }).setMessage(R.string.confirm_delete)
-                        .setTitle(R.string.delete)
-                        .create();
-            alertDialog.show();
+            mAdapter.getData().removeAll(checkItem);
+            mAdapter.notifyDataSetChanged();
+            mPresenter.saveCart(mAdapter.getData());
+            tvTotal.setText("0.0");
+            checkItem.clear();
+            checkSpanner();
         }else{
             ToastUtil.showToast(getString(R.string.plz_select_products));
         }

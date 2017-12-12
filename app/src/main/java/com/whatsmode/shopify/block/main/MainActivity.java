@@ -94,6 +94,7 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
     public void receive(JumpMainTab select){
         if (select.tabPosition == -1) {
             toolbar.setVisibility(View.VISIBLE);
+            vpContent.setCurrentItem(0);
             //switch2Mode();
             //getPresenter().initViewPage(getSupportFragmentManager());
         }else{

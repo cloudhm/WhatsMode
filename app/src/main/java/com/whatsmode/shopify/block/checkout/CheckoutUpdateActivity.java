@@ -286,22 +286,25 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
             ToastUtil.showToast(getString(R.string.plz_select_address));
         } else if (!TextUtils.isEmpty(webUrl)) {
             waitingReply = true;
-            try {
-                List<CartItem> cartList  = (List<CartItem>) PreferencesUtil.getObject(this, Constant.CART_LOCAL);
-                if (!ListUtils.isEmpty(cartList)) {
-                    //dataSource.cartItems.stream().filter(cartList::contains).forEach(cartList::remove);
-                    for (CartItem cartItem : dataSource.cartItems) {
-                        if (cartList.contains(cartItem)) {
-                            cartList.remove(cartItem);
-                        }
-                    }
-                    PreferencesUtil.putObject(this,Constant.CART_LOCAL,cartList);
-                    EventBus.getDefault().post(new CartItem());
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
             AppNavigator.jumpToWebActivity(CheckoutUpdateActivity.this, WebActivity.STATE_PAY, webUrl);
+        }
+    }
+
+    private void removeOrderContainerFromCart() {
+        try {
+            List<CartItem> cartList  = (List<CartItem>) PreferencesUtil.getObject(this, Constant.CART_LOCAL);
+            if (!ListUtils.isEmpty(cartList)) {
+                //dataSource.cartItems.stream().filter(cartList::contains).forEach(cartList::remove);
+                for (CartItem cartItem : dataSource.cartItems) {
+                    if (cartList.contains(cartItem)) {
+                        cartList.remove(cartItem);
+                    }
+                }
+                PreferencesUtil.putObject(this,Constant.CART_LOCAL,cartList);
+                EventBus.getDefault().post(new CartItem());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -317,12 +320,6 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
     public void ViewResponseFailed() {
         runOnUiThread(() -> {
             waitingReply = false;
-//            AlertDialog alertDialog = new AlertDialog.Builder(CheckoutUpdateActivity.this)
-//                    .setNegativeButton(R.string.no, (dialog, which) -> finish())
-//                    .setPositiveButton(R.string.yes,null)
-//                    .setMessage(R.string.whether_pay_continue)
-//                    .create();
-//            alertDialog.show();
             startActivity(new Intent(CheckoutUpdateActivity.this,CheckoutResponseActivity.class));
         });
     }
@@ -330,6 +327,7 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
     @Override
     public void ViewResponseSuccess(Order order) {
         waitingReply = false;
+        removeOrderContainerFromCart();
         Intent intent = new Intent(this, CheckoutResponseActivity.class);
         intent.putExtra(CheckoutResponseActivity.EXTRA_STATUS, true);
         intent.putExtra(CheckoutResponseActivity.EXTRA_ORDER, order);

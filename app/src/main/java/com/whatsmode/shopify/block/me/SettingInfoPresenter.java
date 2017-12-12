@@ -11,6 +11,7 @@ import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by tom on 17-11-25.
@@ -93,7 +94,8 @@ public class SettingInfoPresenter extends BaseRxPresenter<SettingInfoContract.Vi
                     AccountManager.getInstance().writeCustomerAccessToken(null);
                     return t;
                 })
-                .subscribeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new SingleObserver<String>() {
                     @Override
                     public void onSubscribe(@NonNull Disposable d) {

@@ -13,14 +13,26 @@
         android:paddingRight="15dp"
         android:src="@drawable/cart_select" />
 
+    <RelativeLayout
+        android:id="@+id/icon_layout"
+        android:layout_toRightOf="@+id/iv_radio"
+        android:layout_width="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_height="wrap_content">
     <ImageView
         android:id="@+id/icon"
         android:layout_width="85dp"
         android:layout_height="112dp"
-        android:layout_centerVertical="true"
-        android:layout_toRightOf="@+id/iv_radio"
         android:scaleType="centerCrop" />
-
+    <ImageView
+        android:id="@+id/icon_sold_out"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/soldout"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        android:scaleType="centerCrop" />
+    </RelativeLayout>
     <TextView
         android:id="@+id/description"
         android:layout_width="wrap_content"
@@ -28,7 +40,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="15dp"
         android:layout_marginTop="10dp"
-        android:layout_toRightOf="@+id/icon"
+        android:layout_toRightOf="@+id/icon_layout"
         android:ellipsize="end"
         android:maxLines="2"
         android:text="l Am My Own Favorite PersonSlogan Top"
@@ -42,7 +54,7 @@
         android:layout_below="@id/description"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
-        android:layout_toRightOf="@+id/icon"
+        android:layout_toRightOf="@+id/icon_layout"
         android:text="Red /  S"
         android:textColor="@color/gray_bbb"
         android:textSize="14sp" />
@@ -53,7 +65,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_above="@+id/price"
-        android:layout_toRightOf="@+id/icon"
+        android:layout_toRightOf="@+id/icon_layout"
         android:layout_marginBottom="3dp"
         android:ellipsize="end"
         android:maxLines="1"
@@ -67,7 +79,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="10dp"
         android:layout_marginBottom="10dp"
-        android:layout_toRightOf="@+id/icon"
+        android:layout_toRightOf="@+id/icon_layout"
         android:ellipsize="end"
         android:maxLines="1"
         android:text=""

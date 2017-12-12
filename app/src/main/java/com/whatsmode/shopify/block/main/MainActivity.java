@@ -18,6 +18,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.innodroid.expandablerecycler.ExpandableRecyclerAdapter;
+import com.shopify.graphql.support.ID;
 import com.whatsmode.library.rx.RxBus;
 import com.whatsmode.library.util.DensityUtil;
 import com.whatsmode.library.util.ListUtils;
@@ -32,6 +33,7 @@ import com.whatsmode.shopify.block.WebActivity;
 import com.whatsmode.shopify.block.account.data.AccountManager;
 import com.whatsmode.shopify.block.cart.CartFragment;
 import com.whatsmode.shopify.block.cart.CartItem;
+import com.whatsmode.shopify.block.cart.CartRepository;
 import com.whatsmode.shopify.block.cart.JumpMainTab;
 import com.whatsmode.shopify.block.me.StatusBarUtil;
 import com.whatsmode.shopify.block.me.event.LoginEvent;
@@ -48,6 +50,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends MvpActivity<MainContact.Presenter> implements MainContact.View, View.OnClickListener {
@@ -88,6 +91,7 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
             EventBus.getDefault().register(this);
         }
         defineCartTitle();
+        //checkCartItemExist();
     }
 
     @Subscribe
@@ -191,6 +195,22 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
         toolbarTitle.setVisibility(View.GONE);
         ActionLog.onEvent(Constant.Event.INFLUENCER);
     }
+
+    private void checkCartItemExist() {
+        try {
+            List<CartItem> cartItemList = (List<CartItem>) PreferencesUtil.getObject(WhatsApplication.getContext(), Constant.CART_LOCAL);
+            List<ID> ids = new ArrayList<>();
+            if (!ListUtils.isEmpty(cartItemList)) {
+                for (CartItem cartItem : cartItemList) {
+                    ids.add(new ID(cartItem.getId()));
+                }
+                mPresenter.checkVariantExist(ids);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public void defineCartTitle(){
         try {

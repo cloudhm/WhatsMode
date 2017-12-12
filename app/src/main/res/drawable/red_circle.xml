@@ -8,9 +8,9 @@
                 android:width="16dp"
                 android:height="16dp"/>
             <gradient
-                android:startColor="#c51230"
-                android:centerColor="#c51230"
-                android:endColor="#c51230"/>
+                android:startColor="#e60a5b"
+                android:centerColor="#e60a5b"
+                android:endColor="#e60a5b"/>
 
         </shape>
     </item>

@@ -6,8 +6,17 @@ import android.support.multidex.MultiDex;
 import com.mob.MobApplication;
 import com.shopify.buy3.GraphClient;
 import com.shopify.buy3.HttpCachePolicy;
+import com.shopify.graphql.support.ID;
+import com.whatsmode.library.util.ListUtils;
+import com.whatsmode.library.util.PreferencesUtil;
 import com.whatsmode.library.util.ToastUtil;
+import com.whatsmode.shopify.block.cart.CartItem;
+import com.whatsmode.shopify.block.cart.CartRepository;
+import com.whatsmode.shopify.common.Constant;
+import com.zchu.log.Logger;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import cn.jpush.android.api.JPushInterface;
@@ -38,6 +47,7 @@ public class WhatsApplication extends MobApplication {
         initGraphClient();
         Thread.setDefaultUncaughtExceptionHandler(AppException.getAppExceptionHandler());
     }
+
 
     private void initGraphClient() {
         OkHttpClient httpClient = new OkHttpClient.Builder()

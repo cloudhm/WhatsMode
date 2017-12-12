@@ -252,6 +252,7 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
             tvTotal.setText("0.0");
             checkItem.clear();
             checkSpanner();
+            EventBus.getDefault().post(new CartItem());
         }else{
             ToastUtil.showToast(getString(R.string.plz_select_products));
         }
@@ -275,6 +276,7 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
                     checkItem.remove(temp);
                     checkTotal();
                     checkSpanner();
+                    EventBus.getDefault().post(new CartItem());
                 })
                 .setTitle(R.string.delete)
                 .create();

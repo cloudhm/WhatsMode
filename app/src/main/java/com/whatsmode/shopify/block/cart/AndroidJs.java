@@ -53,7 +53,11 @@ public class AndroidJs extends Object {
             cartItem.name = title;
             //gid://shopify/ProductVariant/{productVariant_id}
             String encrpId = "gid://shopify/ProductVariant/" + productVariantID;
-            cartItem.id  = new String(Base64.encode(encrpId.getBytes(), Base64.DEFAULT));
+            String id = new String(Base64.encode(encrpId.getBytes(), Base64.DEFAULT));
+            if (!TextUtils.isEmpty(id)) {
+                id = id.replace("\n", "");
+            }
+            cartItem.id  = id;
             List<CartItem> cartItemList = (List<CartItem>) PreferencesUtil.getObject
                     (WhatsApplication.getContext(), Constant.CART_LOCAL);
             if (ListUtils.isEmpty(cartItemList)) {

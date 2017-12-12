@@ -1,7 +1,5 @@
 package com.whatsmode.shopify.block.cart;
 
-import com.zchu.log.Logger;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +15,7 @@ public class CartItem implements Serializable{
     Double price;
     Double comparePrice;
     String colorAndSize;
+    boolean isSoldOut;
 
     public String getColorAndSize() {
         return colorAndSize;

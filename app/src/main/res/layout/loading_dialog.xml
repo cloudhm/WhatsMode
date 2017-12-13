@@ -1,32 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
+    android:background="@android:color/transparent"
     android:layout_height="wrap_content"
     >
 
-
-
-    <FrameLayout
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_centerInParent="true">
-
-
-        <com.whatsmode.shopify.ui.widget.ProgressBarCircularIndeterminate
-            android:id="@+id/loadingProgress"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center"
-            android:visibility="gone"
-            android:background="@color/cpb_red" />
-
         <ImageView
             android:id="@+id/loading"
-            android:layout_gravity="center"
+            android:layout_centerInParent="true"
             android:src="@drawable/anim_loading"
-            android:layout_width="40dp"
-            android:layout_height="40dp" />
-    </FrameLayout>
-
-
+            android:layout_width="32dp"
+            android:layout_height="32dp" />
+        <ImageView
+            android:layout_below="@+id/loading"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/loading_text"
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 </RelativeLayout>

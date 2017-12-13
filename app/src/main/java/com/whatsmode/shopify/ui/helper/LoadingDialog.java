@@ -17,8 +17,6 @@ import com.whatsmode.shopify.WhatsApplication;
 public class LoadingDialog extends Dialog {
 
     private Context mContext;
-    private ImageView ivLoading;
-    private AnimationDrawable frameAnim;
 
     public LoadingDialog(Context context) {
         super(context, R.style.LoadingDialog);
@@ -39,7 +37,7 @@ public class LoadingDialog extends Dialog {
     public void init() {
         LayoutInflater inflater = LayoutInflater.from(mContext);
         View view = inflater.inflate(R.layout.loading_dialog, null);
-        ivLoading = (ImageView) view.findViewById(R.id.loading);
+        ImageView ivLoading = (ImageView) view.findViewById(R.id.loading);
         // 把AnimationDrawable设置为ImageView的背景
         AnimationDrawable drawable = (AnimationDrawable) ivLoading.getDrawable();
         drawable.start();

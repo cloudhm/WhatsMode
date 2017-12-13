@@ -2,13 +2,16 @@
 <animation-list xmlns:android="http://schemas.android.com/apk/res/android"
     android:oneshot="false" >
     <item
-        android:drawable="@drawable/nav_cart"
-        android:duration="500"/>
+        android:drawable="@drawable/huangguan"
+        android:duration="330"/>
     <item
-        android:drawable="@drawable/nav_account"
-        android:duration="500"/>
+        android:drawable="@drawable/maozi"
+        android:duration="330"/>
     <item
-        android:drawable="@drawable/nav_home"
-        android:duration="500"/>
+        android:drawable="@drawable/xiezi"
+        android:duration="330"/>
+    <item
+        android:drawable="@drawable/yifu"
+        android:duration="330"/>
 
 </animation-list>

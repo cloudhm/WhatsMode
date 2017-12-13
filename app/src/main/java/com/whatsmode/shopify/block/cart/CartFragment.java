@@ -35,7 +35,6 @@ import java.util.List;
 public class CartFragment extends BaseListFragment<CartContact.Presenter> implements CartContact.View, View.OnClickListener {
 
     private TextView tvTotal,subIndicator;
-    private AlertDialog alertDialog;
     private Button btnDelete;
     private Button btnCheckout;
     private TextView totalTv;
@@ -154,8 +153,25 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
             ivCheckAll.setSelected(false);
             currentTotal -= cartItems.price * cartItems.quality;
         }
-        tvTotal.setText(new StringBuilder(getString(R.string.unit)).append(Util.getFormatDouble(Math.max(0.0, currentTotal))));
+        if (!isCurrentDelete) {
+            tvTotal.setText(new StringBuilder(getString(R.string.unit)).append(Util.getFormatDouble(Math.max(0.0, currentTotal))));
+            defineCheckoutButton();
+        }
     }
+
+    public void defineCheckoutButton(){
+        int checkoutCount = 0;
+        for (CartItem cartItem : checkItem) {
+            if(!cartItem.isSoldOut)
+                checkoutCount += cartItem.getQuality();
+        }
+        if (checkoutCount == 0) {
+            btnCheckout.setText(R.string.checkout);
+        }else{
+            btnCheckout.setText(new StringBuilder(getString(R.string.checkout)).append("(").append(checkoutCount).append(")"));
+        }
+    }
+
 
     @Override
     public void showSuccess(Double price,ID id,List<CartItem> response) {
@@ -164,8 +180,13 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
 
     @Override
     public void showError(String message) {
-        getActivity().runOnUiThread(() -> ToastUtil.showToast(message));
-
+        getActivity().runOnUiThread(() ->{
+            ToastUtil.showToast(message);
+            mPresenter.setSelectAll(false,true);
+            ivCheckAll.setSelected(false);
+            checkTotal();
+            EventBus.getDefault().post(new CartItem());
+        });
     }
 
     @Override
@@ -177,26 +198,21 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
     public void checkTotal() {
         double total = 0.0;
         int badge = 0;
-        int totalQuality = 0;
         for (CartItem cartItem : checkItem) {
             total += cartItem.getPrice() * cartItem.quality;
-            totalQuality += cartItem.quality;
         }
         List<CartItem> totalData = mAdapter.getData();
         for (CartItem cartItem : totalData) {
+            if(!cartItem.isSoldOut)
             badge += cartItem.getQuality();
         }
         tvTotal.setText(new StringBuilder(getString(R.string.unit)).append(Util.getFormatDouble(Math.max(total, 0.0))));
-        if (totalQuality == 0) {
-            btnCheckout.setText(R.string.checkout);
-        }else{
-            btnCheckout.setText(new StringBuilder(getString(R.string.checkout)).append("(").append(totalQuality).append(")"));
-        }
         Activity activity = getActivity();
         if (activity instanceof MainActivity) {
             ((MainActivity)activity).refreshBottomBar(badge);
         }
         showOrHideEdit();
+        defineCheckoutButton();
     }
 
     private void showOrHideEdit() {
@@ -222,10 +238,21 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
         int mQuality = 0;
         if (!ListUtils.isEmpty(mAdapter.getData()) && selectAll) {
             checkItem.clear();
-            checkItem.addAll(mAdapter.getData());
+            if (isCurrentDelete) {
+                checkItem.addAll(mAdapter.getData());
+            }else {
+                for (Object o : mAdapter.getData()) {
+                    CartItem cartItem = (CartItem) o;
+                    if (!cartItem.isSoldOut) {
+                        checkItem.add(cartItem);
+                    }
+                }
+            }
             for (CartItem cartItem : checkItem) {
-                total += cartItem.getPrice() * cartItem.quality;
-                mQuality += cartItem.quality;
+                if (!cartItem.isSoldOut) {
+                    total += cartItem.getPrice() * cartItem.quality;
+                    mQuality += cartItem.quality;
+                }
             }
         }else{
             checkItem.clear();
@@ -260,7 +287,7 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
 
     @Override
     public void deleteItem(CartItem item) {
-        alertDialog = new AlertDialog.Builder(getActivity())
+        AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
                 .setMessage(R.string.confirm_delete)
                 .setNegativeButton(R.string.cancel, null)
                 .setPositiveButton(R.string.confirm, (dialog, which) -> {
@@ -270,7 +297,7 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
                     CartItem temp = null;
                     for (CartItem cartItem : checkItem) {
                         if (cartItem.getId().equals(item.getId())) {
-                            temp =  cartItem;
+                            temp = cartItem;
                         }
                     }
                     checkItem.remove(temp);
@@ -316,6 +343,11 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
     }
 
 
+    boolean isCurrentDelete = false;
+    public boolean isCurrentDelete(){
+        return isCurrentDelete;
+    }
+
     public void deleteCartItems(String title) {
         if (TextUtils.isEmpty(title)) {
             return;
@@ -326,13 +358,23 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
             tvTotal.setVisibility(View.VISIBLE);
             totalTv.setVisibility(View.VISIBLE);
             subIndicator.setVisibility(View.VISIBLE);
+            isCurrentDelete = false;
         }else{
+            isCurrentDelete = true;
+
             btnDelete.setVisibility(View.VISIBLE);
             tvTotal.setVisibility(View.GONE);
             totalTv.setVisibility(View.GONE);
             btnCheckout.setVisibility(View.GONE);
             subIndicator.setVisibility(View.GONE);
         }
+        checkItem.clear();
+        mPresenter.setSelectAll(false,true);
+        ivCheckAll.setSelected(false);
+        if (mAdapter != null) {
+            mAdapter.notifyDataSetChanged();
+        }
+        checkTotal();
         showOrHideEdit();
     }
 

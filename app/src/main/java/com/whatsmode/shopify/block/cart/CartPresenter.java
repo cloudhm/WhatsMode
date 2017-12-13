@@ -5,6 +5,7 @@ import android.graphics.Paint;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -67,6 +68,10 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
             @Override
             protected void convert(CommonViewHolder helper, CartItem item) {
                 ImageView ivIcon  = helper.getView(R.id.icon);
+                View view = helper.getView(R.id.aboveView);
+                view.setVisibility(item.isSoldOut?View.VISIBLE:View.GONE);
+                LinearLayout operationLayout = helper.getView(R.id.operation_layout);
+                operationLayout.setVisibility(item.isSoldOut?View.GONE:View.VISIBLE);
                 ImageView soldOut = helper.getView(R.id.icon_sold_out);
                 soldOut.setVisibility(item.isSoldOut ? View.VISIBLE : View.GONE);
                 View line = helper.getView(R.id.separator);
@@ -128,7 +133,17 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
                     }
                 });
                 View ivCheck = helper.getView(R.id.iv_radio);
+                if (isViewAttached()) {
+                    if (item.isSoldOut) {
+                        ivCheck.setEnabled(getView().isCurrentDelete()?true:false);
+                    }else{
+                        ivCheck.setVisibility(View.VISIBLE);
+                    }
+                }
                 ivCheck.setSelected(selectAll);
+                if (item.isSoldOut && !getView().isCurrentDelete()) {
+                    ivCheck.setSelected(false);
+                }
                 ivCheck.setOnClickListener(v -> {
                     if (isViewAttached()) {
                         ivCheck.setSelected(!ivCheck.isSelected());
@@ -157,6 +172,7 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
                     }
                 });
                 helper.itemView.setOnClickListener(v -> {
+                    if (!item.isSoldOut)
                     getView().jumpToDetail(item);
                 });
                 helper.itemView.setOnLongClickListener(v -> {
@@ -249,7 +265,7 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
                 public void onError(String message) {
                     if (isViewAttached()) {
                         getView().hideLoading();
-                        //getView().showError(message);
+                        getView().showError(message);
                     }
                 }
             }).execute();

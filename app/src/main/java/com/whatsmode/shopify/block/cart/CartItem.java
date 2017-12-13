@@ -15,7 +15,7 @@ public class CartItem implements Serializable{
     Double price;
     Double comparePrice;
     String colorAndSize;
-    boolean isSoldOut;
+    public boolean isSoldOut;
 
     public String getColorAndSize() {
         return colorAndSize;

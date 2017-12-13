@@ -13,8 +13,10 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.whatsmode.library.util.ScreenUtils;
+import com.whatsmode.shopify.AppNavigator;
 import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.WhatsApplication;
+import com.whatsmode.shopify.block.cart.CartFromProductActivity;
 import com.whatsmode.shopify.block.cart.JumpMainTab;
 import com.whatsmode.shopify.common.Constant;
 import com.whatsmode.shopify.mvp.MvpFragment;
@@ -103,12 +105,18 @@ public abstract class BaseListFragment<P extends BaseListContract.Presenter> ext
     @Override
     public void setAdapter(BaseQuickAdapter adapter) {
         this.mAdapter = adapter;
-        if (Constant.CART_FRAGMENT_NAME.equals(this.getClass().getName())&& mAdapter.getEmptyView() == null) {
+        if (Constant.CART_FRAGMENT_NAME.equals(this.getClass().getName()) && mAdapter.getEmptyView() == null) {
             View empty = LayoutInflater.from(getActivity()).inflate(R.layout.empty_cart, null);
             mAdapter.setEmptyView(empty);
-            empty.findViewById(R.id.shopping).setOnClickListener(v -> EventBus.getDefault().post(new JumpMainTab(0)));
+            empty.findViewById(R.id.shopping).setOnClickListener(v -> {
+                if (getActivity() instanceof CartFromProductActivity) {
+                    AppNavigator.jumpToMain(getActivity());
+                } else {
+                    EventBus.getDefault().post(new JumpMainTab(0));
+                }
+            });
+            recyclerView.setAdapter(adapter);
         }
-        recyclerView.setAdapter(adapter);
     }
 
     @Override

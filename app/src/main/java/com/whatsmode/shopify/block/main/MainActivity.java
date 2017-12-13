@@ -218,6 +218,7 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
             int badge = 0;
             if (!ListUtils.isEmpty(cartItemList)) {
                 for (CartItem cartItem : cartItemList) {
+                    if(!cartItem.isSoldOut)
                     badge += cartItem.getQuality();
                 }
             }

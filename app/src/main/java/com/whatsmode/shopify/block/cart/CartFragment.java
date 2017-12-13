@@ -131,7 +131,6 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
     @Override
     public void onCheckSelect(boolean selected, CartItem cartItems) {
         Double currentTotal;
-
         if (tvTotal.getText().toString().contains(getString(R.string.unit))) {
             currentTotal = Double.parseDouble(tvTotal.getText().toString().substring(1));
         }else{
@@ -154,8 +153,10 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
             ivCheckAll.setSelected(false);
             currentTotal -= cartItems.price * cartItems.quality;
         }
-        tvTotal.setText(new StringBuilder(getString(R.string.unit)).append(Util.getFormatDouble(Math.max(0.0, currentTotal))));
-        defineCheckoutButton();
+        if (!isCurrentDelete) {
+            tvTotal.setText(new StringBuilder(getString(R.string.unit)).append(Util.getFormatDouble(Math.max(0.0, currentTotal))));
+            defineCheckoutButton();
+        }
     }
 
     public void defineCheckoutButton(){
@@ -179,8 +180,13 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
 
     @Override
     public void showError(String message) {
-        getActivity().runOnUiThread(() -> ToastUtil.showToast(message));
-
+        getActivity().runOnUiThread(() ->{
+            ToastUtil.showToast(message);
+            mPresenter.setSelectAll(false,true);
+            ivCheckAll.setSelected(false);
+            checkTotal();
+            EventBus.getDefault().post(new CartItem());
+        });
     }
 
     @Override
@@ -232,7 +238,16 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
         int mQuality = 0;
         if (!ListUtils.isEmpty(mAdapter.getData()) && selectAll) {
             checkItem.clear();
-            checkItem.addAll(mAdapter.getData());
+            if (isCurrentDelete) {
+                checkItem.addAll(mAdapter.getData());
+            }else {
+                for (Object o : mAdapter.getData()) {
+                    CartItem cartItem = (CartItem) o;
+                    if (!cartItem.isSoldOut) {
+                        checkItem.add(cartItem);
+                    }
+                }
+            }
             for (CartItem cartItem : checkItem) {
                 if (!cartItem.isSoldOut) {
                     total += cartItem.getPrice() * cartItem.quality;
@@ -359,6 +374,7 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
         if (mAdapter != null) {
             mAdapter.notifyDataSetChanged();
         }
+        checkTotal();
         showOrHideEdit();
     }
 

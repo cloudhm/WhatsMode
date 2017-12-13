@@ -265,7 +265,7 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
                 public void onError(String message) {
                     if (isViewAttached()) {
                         getView().hideLoading();
-                        //getView().showError(message);
+                        getView().showError(message);
                     }
                 }
             }).execute();

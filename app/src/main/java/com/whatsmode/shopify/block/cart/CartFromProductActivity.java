@@ -36,6 +36,7 @@ public class CartFromProductActivity extends BaseActivity {
             int badge = 0;
             if (!ListUtils.isEmpty(cartItemList)) {
                 for (CartItem cartItem : cartItemList) {
+                    if(!cartItem.isSoldOut)
                     badge += cartItem.getQuality();
                 }
             }

@@ -10,15 +10,15 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="13dp"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
         <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="13dp"
-            android:layout_weight="1">
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_marginRight="13dp"
+            android:layout_marginLeft="13dp">
 
             <com.github.siyamed.shapeimageview.RoundedImageView
                 android:id="@+id/new_arrive"
@@ -28,58 +28,31 @@
                 android:src="@drawable/left_bg_new"
                 android:scaleType="centerCrop" />
 
-            <TextView
-                android:id="@+id/new_prefix"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="7dp"
-                android:text="@string/new_arrive"
-                android:textColor="@color/white"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/new_suffix"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/new_prefix"
-                android:layout_centerHorizontal="true"
-                android:text="@string/new_arrive_suffix"
-                android:textColor="@color/white"
-                android:textSize="14sp" />
         </RelativeLayout>
 
         <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="13dp"
-            android:layout_weight="1">
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginRight="13dp"
+            android:layout_marginLeft="13dp">
 
             <com.github.siyamed.shapeimageview.RoundedImageView
                 android:id="@+id/discover"
                 android:layout_width="match_parent"
                 app:siRadius="3dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:src="@drawable/left_bg_discover"
                 android:scaleType="centerCrop" />
 
-            <TextView
-                android:id="@+id/discover_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="@string/discover_tv"
-                android:textColor="@color/white"
-                android:textSize="14sp" />
         </RelativeLayout>
 
         <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="70dp"
+            android:layout_width="match_parent"
+            android:layout_marginTop="6dp"
             android:layout_marginLeft="13dp"
-            android:layout_marginRight="13dp"
-            android:layout_weight="1">
+            android:layout_marginRight="13dp">
 
             <com.github.siyamed.shapeimageview.RoundedImageView
                 android:id="@+id/sale"
@@ -88,15 +61,6 @@
                 android:layout_height="match_parent"
                 android:src="@drawable/left_bg_sale"
                 android:scaleType="centerCrop" />
-
-            <TextView
-                android:id="@+id/sale_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="@string/sale"
-                android:textColor="@color/white"
-                android:textSize="14sp" />
         </RelativeLayout>
     </LinearLayout>
 

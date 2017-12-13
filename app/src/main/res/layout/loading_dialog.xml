@@ -9,13 +9,7 @@
             android:id="@+id/loading"
             android:layout_centerInParent="true"
             android:src="@drawable/anim_loading"
-            android:layout_width="32dp"
-            android:layout_height="32dp" />
-        <ImageView
-            android:layout_below="@+id/loading"
-            android:layout_centerHorizontal="true"
-            android:src="@drawable/loading_text"
-            android:layout_marginTop="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_width="48dp"
+            android:layout_height="48dp" />
+
 </RelativeLayout>

@@ -38,7 +38,6 @@ public class LoadingDialog extends Dialog {
         LayoutInflater inflater = LayoutInflater.from(mContext);
         View view = inflater.inflate(R.layout.loading_dialog, null);
         ImageView ivLoading = (ImageView) view.findViewById(R.id.loading);
-        // 把AnimationDrawable设置为ImageView的背景
         AnimationDrawable drawable = (AnimationDrawable) ivLoading.getDrawable();
         drawable.start();
         setContentView(view);

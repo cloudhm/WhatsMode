@@ -94,7 +94,6 @@ public class SettingInfoPresenter extends BaseRxPresenter<SettingInfoContract.Vi
                     AccountManager.getInstance().writeCustomerAccessToken(null);
                     return t;
                 })
-                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new SingleObserver<String>() {
                     @Override

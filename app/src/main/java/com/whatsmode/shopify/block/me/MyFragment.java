@@ -6,15 +6,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,32 +26,21 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.whatsmode.library.exception.APIException;
 import com.whatsmode.library.rx.RxBus;
 import com.whatsmode.library.util.ScreenUtils;
-import com.whatsmode.library.util.SnackUtil;
 import com.whatsmode.shopify.AppNavigator;
 import com.whatsmode.shopify.R;
-import com.whatsmode.shopify.actionlog.ActionLog;
-import com.whatsmode.shopify.block.account.LoginActivity;
-import com.whatsmode.shopify.block.account.data.AccountManager;
 import com.whatsmode.shopify.block.address.Address;
 import com.whatsmode.shopify.block.address.AddressListActivity;
 import com.whatsmode.shopify.block.address.AddressUtil;
 import com.whatsmode.shopify.block.address.LoadType;
-import com.whatsmode.shopify.block.cart.JumpMainTab;
 import com.whatsmode.shopify.block.me.event.LoginEvent;
-import com.whatsmode.shopify.common.Constant;
 import com.whatsmode.shopify.common.KeyConstant;
 import com.whatsmode.shopify.mvp.MvpFragment;
-import com.zchu.log.Logger;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -108,10 +93,10 @@ public class MyFragment extends MvpFragment<MyContract.Presenter> implements MyC
         mPresenter.getCustomer();
         mPresenter.refreshOrderList();
         initLoginListener();
-        EventBus.getDefault().register(this);
+        //EventBus.getDefault().register(this);
     }
 
-    @Subscribe
+    /*@Subscribe
     public void receive(JumpMainTab jumpMainTab) {
         if (jumpMainTab.tabPosition == JumpMainTab.RefreshMainPage) {
             if (AccountManager.isLoginStatus()) {
@@ -121,7 +106,7 @@ public class MyFragment extends MvpFragment<MyContract.Presenter> implements MyC
                 setContentGone();
             }
         }
-    }
+    }*/
 
     private void setImageBGSize(){
         int screenWidth = ScreenUtils.getScreenWidth(getContext());
@@ -152,7 +137,7 @@ public class MyFragment extends MvpFragment<MyContract.Presenter> implements MyC
                 .subscribe(loginEvent -> {
                     if (loginEvent.singleRefresh) {
                         mPresenter.getCustomer();
-                    }else {
+                    } else {
                         if (loginEvent.isLogin) {
                             mPresenter.getCustomer();
                             mPresenter.refreshOrderList();
@@ -354,9 +339,10 @@ public class MyFragment extends MvpFragment<MyContract.Presenter> implements MyC
         startActivity(intent);
     }
 
+
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
+    public void onDestroy() {
+        super.onDestroy();
         if (mSubscribe != null && !mSubscribe.isDisposed()) {
             mSubscribe.dispose();
         }

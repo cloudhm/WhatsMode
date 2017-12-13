@@ -3,12 +3,17 @@ package com.whatsmode.shopify.block.me;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.view.View;
 
 import com.whatsmode.library.util.Util;
 import com.whatsmode.shopify.R;
+import com.zhy.base.fileprovider.FileProvider7;
+
+import java.io.File;
 
 import cn.sharesdk.onekeyshare.OnekeyShare;
 
@@ -41,8 +46,16 @@ public class ShareUtil {
         //oks.setSiteUrl("http://sharesdk.cn");
 
         // 构造一个图标
+        Bitmap snapchat = BitmapFactory.decodeResource(context.getResources(), R.drawable.ssdk_snapchat);
+        View.OnClickListener listenerSnap = new View.OnClickListener() {
+            public void onClick(View v) {
+                share(context, FileProvider7.getUriForFile(context, new File(imagePath)));
+            }
+        };
+        oks.setCustomerLogo(Util.scaleBitmap(snapchat,0.54f),context.getString(R.string.snapchat), listenerSnap);
+
+        // 构造一个图标
         Bitmap enableLogo = BitmapFactory.decodeResource(context.getResources(), R.drawable.ssdk_url);
-        String label = "Url";
         View.OnClickListener listener = new View.OnClickListener() {
             public void onClick(View v) {
                 //获取剪贴板管理器：
@@ -53,11 +66,20 @@ public class ShareUtil {
                 cm.setPrimaryClip(mClipData);
             }
         };
-        oks.setCustomerLogo(Util.scaleBitmap(enableLogo,0.54f), label, listener);
+        oks.setCustomerLogo(Util.scaleBitmap(enableLogo,0.54f), context.getString(R.string.url), listener);
 
-// 启动分享GUI
+        // 启动分享GUI
         oks.show(context);
 
 
+    }
+
+    public static void share(Context context, Uri uri) {
+        Intent shareIntent = new Intent();
+        shareIntent.setAction(Intent.ACTION_SEND);
+        shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+        shareIntent.setType("image/*");
+        context.startActivity(
+                Intent.createChooser(shareIntent, context.getString(R.string.share_)));
     }
 }

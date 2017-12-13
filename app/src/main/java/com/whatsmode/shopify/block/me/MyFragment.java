@@ -28,6 +28,7 @@ import com.whatsmode.library.rx.RxBus;
 import com.whatsmode.library.util.ScreenUtils;
 import com.whatsmode.shopify.AppNavigator;
 import com.whatsmode.shopify.R;
+import com.whatsmode.shopify.block.account.data.AccountManager;
 import com.whatsmode.shopify.block.address.Address;
 import com.whatsmode.shopify.block.address.AddressListActivity;
 import com.whatsmode.shopify.block.address.AddressUtil;
@@ -169,12 +170,13 @@ public class MyFragment extends MvpFragment<MyContract.Presenter> implements MyC
     }
 
     private void findView(View view){
-        view.findViewById(R.id.avatar).setOnClickListener(this);
+        //view.findViewById(R.id.avatar).setOnClickListener(this);
         mViewAddress = (TextView) view.findViewById(R.id.view_address);
         mViewAddress.setOnClickListener(this);
         mName = (TextView) view.findViewById(R.id.name);
         mEmail = (TextView) view.findViewById(R.id.email);
         view.findViewById(R.id.order_history).setOnClickListener(this);
+        view.findViewById(R.id.avatar_l).setOnClickListener(this);
     }
 
     @NonNull
@@ -191,9 +193,9 @@ public class MyFragment extends MvpFragment<MyContract.Presenter> implements MyC
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.avatar:
+            case R.id.avatar_l:
                 startActivity(new Intent(getActivity(), SettingInfoActivity.class));
-                //ActionLog.onEvent(Constant.Event.CREATE_ACCOUNT);
+                //ShareUtil.shareFull(getActivity());
                 break;
             case R.id.view_address:
                 Intent intent = new Intent(getActivity(), AddressListActivity.class);

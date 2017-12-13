@@ -114,4 +114,19 @@
         <item name="android:textAllCaps">false</item>
     </style>
 
+    <style name="Dialog_Fullscreen">
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowNoTitle">false</item>
+        <item name="android:windowCloseOnTouchOutside">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowAnimationStyle">@style/Dialog_Animation</item>
+    </style>
+
+    //进入和退出的动画命名
+    <style name="Dialog_Animation">
+        <item name="android:windowEnterAnimation">@anim/dialog_top_enter</item>
+        <item name="android:windowExitAnimation">@anim/dialog_top_exit</item>
+    </style>
 </resources>

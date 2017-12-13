@@ -23,6 +23,17 @@ import cn.sharesdk.onekeyshare.OnekeyShare;
 
 public class ShareUtil {
     public static void showShare(Context context,String text, String imagePath, String url,String link) {
+
+        //onekeyShare(context,text,imagePath,url,link);
+        customShare(context,text,imagePath,url,link);
+    }
+
+    private static void customShare(Context context,String text, String imagePath, String url,String link){
+        ShareDialog dialog = new ShareDialog(context);
+        dialog.setShareData(text,imagePath,url,link);
+    }
+
+    private static void onekeyShare(Context context,String text, String imagePath, String url,String link){
         OnekeyShare oks = new OnekeyShare();
         //关闭sso授权
         oks.disableSSOWhenAuthorize();
@@ -49,7 +60,7 @@ public class ShareUtil {
         Bitmap snapchat = BitmapFactory.decodeResource(context.getResources(), R.drawable.ssdk_snapchat);
         View.OnClickListener listenerSnap = new View.OnClickListener() {
             public void onClick(View v) {
-                share(context, FileProvider7.getUriForFile(context, new File(imagePath)));
+                shareSystem(context, FileProvider7.getUriForFile(context, new File(imagePath)));
             }
         };
         oks.setCustomerLogo(Util.scaleBitmap(snapchat,0.54f),context.getString(R.string.snapchat), listenerSnap);
@@ -58,28 +69,35 @@ public class ShareUtil {
         Bitmap enableLogo = BitmapFactory.decodeResource(context.getResources(), R.drawable.ssdk_url);
         View.OnClickListener listener = new View.OnClickListener() {
             public void onClick(View v) {
-                //获取剪贴板管理器：
-                ClipboardManager cm = (ClipboardManager)context. getSystemService(Context.CLIPBOARD_SERVICE);
-                // 创建普通字符型ClipData
-                ClipData mClipData = ClipData.newPlainText("Label", link);
-                // 将ClipData内容放到系统剪贴板里。
-                cm.setPrimaryClip(mClipData);
+                clipboar(context,link);
             }
         };
         oks.setCustomerLogo(Util.scaleBitmap(enableLogo,0.54f), context.getString(R.string.url), listener);
 
         // 启动分享GUI
         oks.show(context);
-
-
     }
 
-    public static void share(Context context, Uri uri) {
+    public static void clipboar(Context context,String link){
+        //获取剪贴板管理器：
+        ClipboardManager cm = (ClipboardManager)context. getSystemService(Context.CLIPBOARD_SERVICE);
+        // 创建普通字符型ClipData
+        ClipData mClipData = ClipData.newPlainText("Label", link);
+        // 将ClipData内容放到系统剪贴板里。
+        cm.setPrimaryClip(mClipData);
+    }
+
+    public static void shareSystem(Context context, Uri uri) {
         Intent shareIntent = new Intent();
         shareIntent.setAction(Intent.ACTION_SEND);
         shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
         shareIntent.setType("image/*");
         context.startActivity(
                 Intent.createChooser(shareIntent, context.getString(R.string.share_)));
+    }
+
+    public static void shareFull(Context context){
+        ShareDialog dialog = new ShareDialog(context);
+        dialog.show();
     }
 }

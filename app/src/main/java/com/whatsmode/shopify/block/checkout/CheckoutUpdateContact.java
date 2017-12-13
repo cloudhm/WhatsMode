@@ -43,6 +43,8 @@ public class CheckoutUpdateContact {
         void ViewResponseSuccess(Order order);
 
         void updateAddress(Storefront.MailingAddress address, Storefront.ShippingRate shippingRate);
+
+        void fillAddress();
     }
 
     interface Presenter extends MvpPresenter<View> {
@@ -51,9 +53,9 @@ public class CheckoutUpdateContact {
 
         void checkGiftCard(String cardNum, ID id);
 
-        void checkShippingMethods(ID id);
+        void checkShippingMethods(ID id,boolean isDefault);
 
-        void bindAddress(ID id, Address a);
+        void bindAddress(ID id, Address a,boolean isDefault);
 
         void checkOrderExist(ID checkoutId);
 

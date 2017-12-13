@@ -17,8 +17,15 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_gravity="center"
+            android:visibility="gone"
             android:background="@color/cpb_red" />
 
+        <ImageView
+            android:id="@+id/loading"
+            android:layout_gravity="center"
+            android:src="@drawable/anim_loading"
+            android:layout_width="40dp"
+            android:layout_height="40dp" />
     </FrameLayout>
 
 

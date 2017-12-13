@@ -45,6 +45,7 @@ import com.whatsmode.shopify.ui.helper.ToolbarHelper;
 import com.whatsmode.shopify.ui.widget.BottomBar;
 import com.whatsmode.shopify.ui.widget.BottomBarItem;
 import com.whatsmode.shopify.ui.widget.NoScrollViewPager;
+import com.zchu.log.Logger;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -178,9 +179,7 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
         if (mTempMenu != null) {
             mTempMenu.setVisible(false);
         }
-        if (menuItem != null) {
             mTempMenu = menuItem;
-        }
         if (menuItem == menuItemSearch) {
             menuItem.setVisible(true);
         }

@@ -69,12 +69,13 @@ public class CheckoutUpdatePresenter extends BaseRxPresenter<CheckoutUpdateConta
     }
 
     @Override
-    public void checkShippingMethods(ID id) {
+    public void checkShippingMethods(ID id,boolean isDefault) {
         CartRepository.create().bindUser(id)
                 .shippingListener(new CartRepository.ShippingListener() {
                     @Override
                     public void onSuccess(Double tax,List<Storefront.ShippingRate> shippingRates,String url) {
                         if (isViewAttached()) {
+                            getView().fillAddress();
                             getView().onShippingResponse(tax,shippingRates,url);
                         }
                     }
@@ -82,7 +83,11 @@ public class CheckoutUpdatePresenter extends BaseRxPresenter<CheckoutUpdateConta
                     @Override
                     public void onError(String message) {
                         if (isViewAttached()) {
-                            getView().showError(message);
+                            if (isDefault) {
+                                getView().showError(new StringBuilder("Default Address's").append(message).toString());
+                            }else{
+                                getView().showError(message);
+                            }
                         }
                     }
                 })
@@ -90,20 +95,24 @@ public class CheckoutUpdatePresenter extends BaseRxPresenter<CheckoutUpdateConta
     }
 
     @Override
-    public void bindAddress(ID id, Address a) {
+    public void bindAddress(ID id, Address a,boolean isDefault) {
         CartRepository.create().bindUser(id)
                 .updateCheckoutListener(new CartRepository.UpdateCheckoutListener() {
                     @Override
                     public void onSuccess(String url) {
                         if (isViewAttached()) {
-                            checkShippingMethods(id);
+                            checkShippingMethods(id,isDefault);
                         }
                     }
 
                     @Override
                     public void onError(String message) {
                         if (isViewAttached()) {
-                            getView().showError(message);
+                            if (isDefault) {
+                                getView().showError(new StringBuilder("Default Address's").append(message).toString());
+                            }else{
+                                getView().showError(message);
+                            }
                         }
                     }
                 })

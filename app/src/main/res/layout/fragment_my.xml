@@ -78,7 +78,7 @@
             android:id="@+id/log_in"
             android:layout_above="@+id/create_account"
             android:layout_marginBottom="10dp"
-            android:text="@string/log_in"
+            android:text="@string/sign_in_"
             android:textSize="@dimen/sp_16"
             android:textColor="@color/white"
             android:textAllCaps="false"

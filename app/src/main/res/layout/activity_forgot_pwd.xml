@@ -83,7 +83,7 @@
 
     <Button
         android:id="@+id/continue_sure"
-        android:text="@string/continue_text"
+        android:text="@string/submit"
         android:layout_marginTop="28dp"
         android:textSize="@dimen/sp_18"
         android:textColor="@drawable/btn_text_selector"
@@ -97,7 +97,7 @@
 
     <Button
         android:id="@+id/back"
-        android:text="@string/back"
+        android:text="@string/cancel"
         android:layout_marginTop="6dp"
         android:textSize="@dimen/sp_18"
         android:textColor="@color/btn_sure"

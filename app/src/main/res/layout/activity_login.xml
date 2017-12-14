@@ -118,7 +118,7 @@
     <Button
         android:id="@+id/login"
         android:onClick="login"
-        android:text="@string/sign_in"
+        android:text="@string/sign_in_"
         android:layout_marginTop="28dp"
         android:textSize="@dimen/sp_18"
         android:textColor="@drawable/btn_text_selector"

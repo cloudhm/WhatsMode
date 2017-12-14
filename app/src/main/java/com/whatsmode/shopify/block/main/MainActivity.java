@@ -53,6 +53,7 @@ import org.greenrobot.eventbus.Subscribe;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class MainActivity extends MvpActivity<MainContact.Presenter> implements MainContact.View, View.OnClickListener {
 
@@ -288,7 +289,8 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
 
     @Override
     public void showSearch() {
-        AppNavigator.jumpToWebActivity(this, WebActivity.STATE_SEARCH, Constant.URL_SEARCH);
+        String suffix = Constant.influence_arrars[new Random().nextInt(Constant.influence_arrars.length)];
+        AppNavigator.jumpToWebActivity(this, WebActivity.STATE_SEARCH, new StringBuilder(Constant.URL_SEARCH).append("?q=").append(suffix).toString());
         ActionLog.onEvent(Constant.Event.SREARCH);
     }
 
@@ -369,6 +371,10 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
     }
 
     public void hideEdit(boolean visiable) {
-        menuEdit.setVisible(visiable);
+        if (visiable && vpContent.getCurrentItem() == 2) {
+            menuEdit.setVisible(true);
+        }else{
+            menuEdit.setVisible(false);
+        }
     }
 }

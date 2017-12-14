@@ -67,7 +67,6 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
     private ImageView ivLogo;
     private ToolbarHelper.ToolbarHolder toolbarHolder;
 
-
     public static Intent newIntent(Context context,String title, String url) {
         Intent intent = new Intent(context, WebActivity.class);
         intent.putExtra(EXTRA_URL, url);
@@ -83,7 +82,6 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
         menuItemCart = menu.findItem(R.id.action_cart);
         mActionProvider = (BadgeActionProvider) MenuItemCompat.getActionProvider(menuItemCart);
         mActionProvider.setOnClickListener(0, what -> {
-            // FIXME: 2017/12/12
             AppNavigator.jumpToCartAct(this);
             //EventBus.getDefault().post(new JumpMainTab(2));
             ActionLog.onEvent(Constant.Event.MY_CART);
@@ -199,8 +197,11 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
-                if(!RegexUtils.isBlock(url))
-                mProgressBar.setVisibility(View.VISIBLE);
+                if (!RegexUtils.isBlock(url)) {
+                    mProgressBar.setVisibility(View.VISIBLE);
+                }else{
+                    mProgressBar.setVisibility(View.GONE);
+                }
             }
 
             @Override
@@ -229,8 +230,7 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
                 } else if (RegexUtils.isPages(url)){
                     startActivity(WebActivity.newIntent(WebActivity.this,WebActivity.STATE_ABOUT_US,url));
                     aboutUsAnalytics(url);
-                }else if (RegexUtils.isBlock(url)) {
-                } else {
+                }else if (!RegexUtils.isBlock(url)) {
                     view.loadUrl(url);
                 }
                 return true;
@@ -270,6 +270,8 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        mWebView.removeAllViews();
+        mWebView.destroy();
         EventBus.getDefault().unregister(this);
     }
 

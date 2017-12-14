@@ -27,7 +27,19 @@ public class Constant {
     public static final String EXTERNAL = "external";
     public static final String USER_AGENT = "mobile-Android";
     public static final String ABOUT_US = "https://whatsmode.com/pages/introduce-us";
-
+    public static final  String influence_arrars[] = {"Adelaine Morin", "Aleksandra Wojtysiak", "Alessandra Cara", "Alexandra Kusio", "Alinagvozdeva", "Amanda Wizping",
+            "Anna Albus", "Annabellagutman", "Anotherarabgurl", "Beautyfineprint", "Claudia Dibenedetto", "CloeCouture",
+            "Demi Flydi", "Donabogut", "Diandra Maria Picone", "Donabogut", "Donatella Gazze", "Elsalucia", "Emmyinstyle",
+            "Essy Park", "Fabiana Russo", "Fabiola Picone", "Federica La Spina", "Fg Nar", "Flavia Berruti", "Gaia Schiavetti",
+            "Giovanna Caruso", "Giulia Magno", "Hangngyn", "Hodan.ysf", "Ida Di Filippo", "Jass Dz", "Jennifer Quattrucci", "Jesenia Sosa",
+            "Jessica Du", "Jmayo", "Karolayne Alexandre Darosa", "Karolinasworld", "KERSTYN INOUYE", "La Demi", "Liliana Loreggia",
+            "Loveyoli", "Majestic At", "Maria Yuzhakova", "Marilyn Hucek", "Marina Del Regno", "Martiiitram", "Minilucie",
+            "Missperfectfashion and Beauty", "Mordilyn Chioma Amadi", "Moscolovita", "Mundoflavs", "Natalia Morgillo",
+            "Nely Major", "Nicole", "Ossspva", "Pamela Jean Noble", "Pia Adelina", "Radmila", "Rosalba Carnevale", "Sarah Rocksdale",
+            "Shanique Wallace", "Simona Musci", "Simplygailg", "Snoopy Kirsten", "Sosarmenia", "Stelaplaka", "stephanie petrey",
+            "Stylevinaigrette", "Susanna Giovanardi", "Tar Mar", "The Girl From Mars", "Thecaramelcurly", "The Sassy Jess",
+            "Trish Lindo", "Valentina Fantini", "Veronica D'onofrio", "Yasmeena Rasheed", "Zaira D'urso"
+    };
 
     static {
         ROOTPATH_CUSTOMER_USERINFO = WhatsApplication.getContext().getFilesDir().getAbsolutePath()

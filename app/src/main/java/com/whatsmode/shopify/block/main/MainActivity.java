@@ -370,8 +370,8 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
         bottomBarItem.setBadge(i);
     }
 
-    public void hideEdit(boolean visiable) {
-        if (visiable && vpContent.getCurrentItem() == 2) {
+    public void hideEdit(boolean visible) {
+        if (visible && vpContent.getCurrentItem() == 2) {
             menuEdit.setVisible(true);
         }else{
             menuEdit.setVisible(false);

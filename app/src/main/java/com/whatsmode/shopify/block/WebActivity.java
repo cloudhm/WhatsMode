@@ -13,7 +13,6 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
@@ -32,16 +31,14 @@ import com.whatsmode.shopify.base.BaseActivity;
 import com.whatsmode.shopify.block.cart.AndroidJs;
 import com.whatsmode.shopify.block.cart.BadgeActionProvider;
 import com.whatsmode.shopify.block.cart.CartItem;
-import com.whatsmode.shopify.block.cart.JumpMainTab;
 import com.whatsmode.shopify.block.me.ShareUtil;
 import com.whatsmode.shopify.common.Constant;
 import com.whatsmode.shopify.ui.helper.ToolbarHelper;
-import com.zchu.log.Logger;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.net.URL;
+import static android.webkit.WebSettings.LOAD_CACHE_ELSE_NETWORK;
 
 
 public class WebActivity extends BaseActivity implements View.OnClickListener {
@@ -131,6 +128,7 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
         toolbarHolder.titleView.setVisibility(View.VISIBLE);
         ivLogo = (ImageView) findViewById(R.id.logo);
         mWebView = (WebView) findViewById(R.id.webview);
+        mWebView.getSettings().setCacheMode(LOAD_CACHE_ELSE_NETWORK);
         mWebView.getSettings().setUserAgentString(Constant.USER_AGENT);
         mProgressBar = (ProgressBar) findViewById(R.id.indeterminateBar);
         mUrl = getIntent().getStringExtra(EXTRA_URL);

@@ -28,8 +28,8 @@ import io.reactivex.annotations.NonNull;
 
 public class CartRepository {
 
-    private GraphClient client;
     private static CartRepository cartRepository;
+    private GraphClient client;
     private List<CartItem> dataSource;
     private QueryListener mListener;
     private UpdateCheckoutListener updateCheckoutListener;
@@ -48,6 +48,23 @@ public class CartRepository {
             cartRepository = new CartRepository();
         }
         return cartRepository;
+    }
+
+    public static void modifyCartItemStates(List<CartItem> ids) {
+        try {
+            List<CartItem> cartItemList = (List<CartItem>) PreferencesUtil.getObject(WhatsApplication.getContext(), Constant.CART_LOCAL);
+            if (!ListUtils.isEmpty(cartItemList) && !ListUtils.isEmpty(ids)) {
+                for (CartItem cartItem : cartItemList) {
+                    if (ids.contains(cartItem)) {
+                        cartItem.isSoldOut = true;
+                    }
+                }
+                PreferencesUtil.putObject(WhatsApplication.getContext(), Constant.CART_LOCAL, cartItemList);
+                EventBus.getDefault().post(new CartItem());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     CartRepository parameter(List<CartItem> dataSource) {
@@ -141,8 +158,8 @@ public class CartRepository {
     void execute() {
 
         Storefront.MutationQuery query = Storefront.mutation(mutationQuery
-                        -> mutationQuery.checkoutCreate(generateInput(dataSource), createPayloadQuery
-                        -> createPayloadQuery.checkout(checkoutQuery
+                -> mutationQuery.checkoutCreate(generateInput(dataSource), createPayloadQuery
+                -> createPayloadQuery.checkout(checkoutQuery
                         -> checkoutQuery.webUrl().totalPrice().lineItems(new Storefront.CheckoutQuery.LineItemsArgumentsDefinition() {
                     @Override
                     public void define(Storefront.CheckoutQuery.LineItemsArguments args) {
@@ -174,9 +191,9 @@ public class CartRepository {
                         }));
                     }
                 })
-                ).userErrors(userErrorQuery -> userErrorQuery
-                        .field()
-                        .message())));
+        ).userErrors(userErrorQuery -> userErrorQuery
+                .field()
+                .message())));
         client.mutateGraph(query).enqueue(new GraphCall.Callback<Storefront.Mutation>() {
             @Override
             public void onResponse(@NonNull GraphResponse<Storefront.Mutation> response) {
@@ -236,23 +253,12 @@ public class CartRepository {
     }
 
     private Storefront.CheckoutCreateInput generateInput(List<CartItem> data) {
-
-//        Storefront.CheckoutCreateInput input = new Storefront.CheckoutCreateInput()
-//                .setLineItemsInput(Input.value(Arrays.asList(
-//                        new Storefront.CheckoutLineItemInput(new ID("mFyaWFu"), 5),
-//                        new Storefront.CheckoutLineItemInput(new ID("8vc2hGl"), 3)
-//                )));
-
         ArrayList<Storefront.CheckoutLineItemInput> arrayList = new ArrayList<>();
         for (CartItem cartItem : data) {
             Storefront.CheckoutLineItemInput itemInput = new Storefront.
                     CheckoutLineItemInput(cartItem.getQuality(), new ID(cartItem.getId().replace("\n", "")));
             arrayList.add(itemInput);
         }
-//        ArrayList<Storefront.CheckoutLineItemInput> arrayList =
-//                data.stream().map(cartItem ->
-//                        new Storefront.CheckoutLineItemInput(cartItem.quality, new ID(cartItem.getId().replace("\n",""))))
-//                        .collect(Collectors.toCollection(ArrayList::new));
         return new Storefront.CheckoutCreateInput()
                 .setLineItemsInput(Input.value(arrayList));
     }
@@ -284,7 +290,6 @@ public class CartRepository {
                             giftCheckListener.exist(String.valueOf(response.data().getCheckoutGiftCardApply()
                                     .getCheckout().getAppliedGiftCards().get(0).getBalance()));
                         } else if (ListUtils.isEmpty(response.data().getCheckoutDiscountCodeApply().getUserErrors())) {
-                            //Storefront.Checkout checkout = response.data().getCheckoutDiscountCodeApply().getCheckout();
                             giftCheckListener.exist(String.valueOf(response.data().getCheckoutDiscountCodeApply().getCheckout()
                                     .getPaymentDue().doubleValue()));
                         } else {
@@ -383,7 +388,6 @@ public class CartRepository {
                     }
                 });
     }
-
 
     public void checkOrderExist(ID checkoutId) {
         Storefront.QueryRootQuery query = Storefront.query(_queryBuilder
@@ -486,23 +490,6 @@ public class CartRepository {
 
                     }
                 });
-    }
-
-    public static void modifyCartItemStates(List<CartItem> ids) {
-        try {
-            List<CartItem> cartItemList = (List<CartItem>) PreferencesUtil.getObject(WhatsApplication.getContext(), Constant.CART_LOCAL);
-            if (!ListUtils.isEmpty(cartItemList) && !ListUtils.isEmpty(ids)) {
-                for (CartItem cartItem : cartItemList) {
-                    if (ids.contains(cartItem)) {
-                        cartItem.isSoldOut = true;
-                    }
-                }
-                PreferencesUtil.putObject(WhatsApplication.getContext(), Constant.CART_LOCAL, cartItemList);
-                EventBus.getDefault().post(new CartItem());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
 

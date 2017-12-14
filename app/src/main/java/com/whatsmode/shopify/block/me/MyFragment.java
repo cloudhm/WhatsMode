@@ -270,7 +270,7 @@ public class MyFragment extends MvpFragment<MyContract.Presenter> implements MyC
         completeRefresh();
         setContentVisible();
         if(customer == null) return;
-        mName.setText(customer.getLastName() + " " + customer.getFirstName());
+        mName.setText(customer.getFirstName() + " " + customer.getLastName());
         mEmail.setText(customer.getEmail());
         Address defaultAddress = customer.getDefaultAddress();
         if (defaultAddress != null && defaultAddress.isDefault()) {

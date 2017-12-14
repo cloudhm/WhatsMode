@@ -257,6 +257,10 @@
 
             <LinearLayout
                 android:id="@+id/province_l"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            <LinearLayout
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
                 android:background="@color/white"
@@ -300,6 +304,7 @@
                 android:background="@color/separator"
                 android:layout_width="match_parent"
                 android:layout_height="2px"/>
+            </LinearLayout>
 
             <LinearLayout
                 android:paddingTop="12dp"

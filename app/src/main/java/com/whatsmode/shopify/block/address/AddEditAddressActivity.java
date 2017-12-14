@@ -12,6 +12,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bigkoo.pickerview.OptionsPickerView;
@@ -67,6 +68,7 @@ public class AddEditAddressActivity extends MvpActivity<AddEditAddressPresenter>
 
     private int mAction;
     private TextView mTitle;
+    private LinearLayout mProvinceL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +86,8 @@ public class AddEditAddressActivity extends MvpActivity<AddEditAddressPresenter>
         mZip = (EditText) findViewById(R.id.zip);
         mPhone = (EditText) findViewById(R.id.phone);
         mTitle = (TextView) findViewById(R.id.title);
-        findViewById(R.id.province_l).setOnClickListener(this);
+        mProvinceL = (LinearLayout) findViewById(R.id.province_l);
+        mProvinceL.setOnClickListener(this);
         findViewById(R.id.country_l).setOnClickListener(this);
         findViewById(R.id.done).setOnClickListener(this);
 
@@ -109,6 +112,8 @@ public class AddEditAddressActivity extends MvpActivity<AddEditAddressPresenter>
         mCountry.setText(address.getCountry());
         mZip.setText(address.getZip());
         mPhone.setText(address.getPhone());
+
+        showHideProvince(address.getCountry());
     }
 
     private void init(){
@@ -254,6 +259,14 @@ public class AddEditAddressActivity extends MvpActivity<AddEditAddressPresenter>
         SnackUtil.toastShow(this,msg);
     }
 
+    private void showHideProvince(String country){
+        List<Site> provinceTemp = getProvince(country);
+        if (provinceTemp.isEmpty()) {
+            mProvinceL.setVisibility(View.GONE);
+        }else{
+            mProvinceL.setVisibility(View.VISIBLE);
+        }
+    }
 
     private void initCustomOptionPicker(){
         mOptionsPickerView = new OptionsPickerView.Builder(this, new OptionsPickerView.OnOptionsSelectListener() {
@@ -264,6 +277,7 @@ public class AddEditAddressActivity extends MvpActivity<AddEditAddressPresenter>
                         Site site = mPickerDateCountry.get(options1);
                         mCountry.setText(site.data);
                         mProvince.setText("");
+                        showHideProvince(site.data);
                     }
                 } else if (mAction == ACTION_SELECT_PROVINCES) {
                     if (mPickerDateProvinces.size() > options1 && options1 >= 0) {
@@ -284,7 +298,7 @@ public class AddEditAddressActivity extends MvpActivity<AddEditAddressPresenter>
                         ivCancel.setOnClickListener(v12 -> mOptionsPickerView.dismiss());
 
                     }
-                })
+                }).setSelectOptions(70)
                 .build();
     }
 
@@ -297,20 +311,25 @@ public class AddEditAddressActivity extends MvpActivity<AddEditAddressPresenter>
                 mAction = ACTION_SELECT_PROVINCES;
                 String country = mCountry.getText().toString();
                 if (TextUtils.isEmpty(country)) {
-                    SnackUtil.toastShow(this,"please select country");
+                    SnackUtil.toastShow(this,R.string.country_empty_prompt);
                     return;
                 }
                 List<Site> provinceList = getProvince(country);
-                mOptionsPickerView.setPicker(provinceList);
-                mOptionsPickerView.show();
+                if (!provinceList.isEmpty()) {
+                    mOptionsPickerView.setSelectOptions(getProvincePosition(provinceList));
+                    mOptionsPickerView.setPicker(provinceList);
+                    mOptionsPickerView.show();
+                }
                 break;
             case R.id.country_l:
                 Util.hideInputMethod(this);
                 mAction = ACTION_SELECT_COUNTRY;
                 if (mPickerDateCountry.isEmpty()) {
-                    List<Site> countryList = getCountry();
+                    List<Site> countryList = Site.getCountry(this);
                     mPickerDateCountry.addAll(countryList);
                 }
+
+                mOptionsPickerView.setSelectOptions(getCountryPosition());
                 mOptionsPickerView.setPicker(mPickerDateCountry);
                 mOptionsPickerView.show();
                 break;
@@ -320,66 +339,36 @@ public class AddEditAddressActivity extends MvpActivity<AddEditAddressPresenter>
         }
     }
 
-    private List<Site> getProvince(@NonNull String country){
-        try {
-            if (mCountryJsonObject == null) {
-                InputStream is = getAssets().open("countries.json");
-                String json = Util.convertInputStreamToString(is);
-                JSONObject jsonObject = new JSONObject(json);
-                mCountryJsonObject = jsonObject;
-            }
-            List<Site> sites = jsonObjectToList(mCountryJsonObject,country);
-            mPickerDateProvinces.clear();
-            mPickerDateProvinces.addAll(sites);
-            return mPickerDateProvinces;
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
+    public int getCountryPosition(){
+        String countryTemp = mCountry.getText().toString();
+        int position = 0;
+        if (TextUtils.isEmpty(countryTemp)) {
+            position = 70;
+        }else{
+            position = Site.getPosition(mPickerDateCountry,countryTemp);
         }
-        return new ArrayList<>();
+        return position;
     }
 
-    private List<Site> jsonObjectToList(JSONObject jsonObject, String country) {
-        List<Site> sites = new ArrayList<>();
-        if (jsonObject != null) {
-            JSONObject countryJson = jsonObject.optJSONObject(country);
-            if (countryJson != null) {
-                JSONArray provinces = countryJson.optJSONArray("provinces");
-                if (provinces != null && provinces.length() > 0) {
-                    for (int i = 0; i < provinces.length(); i++) {
-                        sites.add(new Site(provinces.optString(i)));
-                    }
-                }
-            }
+    public int getProvincePosition(List<Site> sites){
+        String temp = mProvince.getText().toString();
+        int position = 0;
+        if (TextUtils.isEmpty(temp)) {
+            return position;
+        }else{
+            return Site.getPosition(sites,temp);
         }
-        return sites;
     }
 
-    private List<Site> getCountry(){
-        try {
-            InputStream is = getAssets().open("country.json");
-            String json = Util.convertInputStreamToString(is);
-            JSONArray jsonArray = new JSONArray(json);
-            List<Site> sites = jsonArrayToList(jsonArray);
-            return sites;
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
+    private List<Site> getProvince(String country) {
+        if (mCountryJsonObject == null) {
+            JSONObject province = Site.getCountriesForProvince(this, country);
+            mCountryJsonObject = province;
         }
-        return new ArrayList<>();
-    }
-
-    private List<Site> jsonArrayToList(JSONArray jsonArray) {
-        List<Site> sites = new ArrayList<>();
-        if (jsonArray != null && jsonArray.length() > 0) {
-            for (int i = 0; i < jsonArray.length(); i++) {
-                String s = jsonArray.optString(i);
-                sites.add(new Site(s));
-            }
-        }
-        return sites;
+        List<Site> sites = Site.jsonObjectToList(mCountryJsonObject,country);
+        mPickerDateProvinces.clear();
+        mPickerDateProvinces.addAll(sites);
+        return mPickerDateProvinces;
     }
 
 

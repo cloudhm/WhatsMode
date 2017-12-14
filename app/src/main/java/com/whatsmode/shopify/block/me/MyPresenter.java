@@ -168,7 +168,7 @@ public class MyPresenter extends BaseRxPresenter<MyContract.View> implements MyC
 
         @Override
         public void define(Storefront.CustomerQuery _queryBuilder) {
-            _queryBuilder.orders(args -> {args.first(first);if(!isRefresh) args.after(cursor);},
+            _queryBuilder.orders(args -> {args.reverse(true);args.first(first);if(!isRefresh) args.after(cursor);},
                     o -> {o.pageInfo(e -> e.hasNextPage().hasPreviousPage())
                             .edges(q -> q.cursor().node(qd -> qd.orderNumber()
                                     .currencyCode().customerLocale().email()

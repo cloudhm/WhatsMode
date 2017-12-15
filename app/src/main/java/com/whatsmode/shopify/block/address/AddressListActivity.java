@@ -220,6 +220,7 @@ public class AddressListActivity extends MvpActivity<AddressListPresenter> imple
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                setResult(RESULT_CANCELED);
                 finish();
                 break;
         }

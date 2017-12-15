@@ -35,6 +35,9 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
 
     @Override
     public void doLoadData(boolean isRefresh) {
+        if (isRefresh && mAdapter != null) {
+            saveCart(mAdapter.getData());
+        }
         Observable.create((ObservableOnSubscribe<List<CartItem>>) e -> {
             try {
                 List<CartItem> cartItemList = (List<CartItem>) PreferencesUtil.getObject(WhatsApplication.getContext(), Constant.CART_LOCAL);

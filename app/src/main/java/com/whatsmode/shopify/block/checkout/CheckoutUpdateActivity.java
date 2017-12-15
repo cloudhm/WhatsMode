@@ -40,6 +40,7 @@ import com.whatsmode.shopify.common.Constant;
 import com.whatsmode.shopify.common.KeyConstant;
 import com.whatsmode.shopify.mvp.MvpActivity;
 import com.whatsmode.shopify.ui.helper.ToolbarHelper;
+import com.zchu.log.Logger;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -191,6 +192,8 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
                     mPresenter.bindAddress(id, currentAddress,false);
                     break;
             }
+        } else if (resultCode == RESULT_CANCELED) {
+            // FIXME: 2017/12/15 
         }
     }
 

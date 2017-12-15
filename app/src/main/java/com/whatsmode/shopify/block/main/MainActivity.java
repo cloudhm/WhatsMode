@@ -271,9 +271,11 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
 
     private void initPopWindowView() {
         View customView = getLayoutInflater().inflate(R.layout.category_menu,null, false);
-        customView.findViewById(R.id.new_arrive).setOnClickListener(this);
-        customView.findViewById(R.id.discover).setOnClickListener(this);
-        customView.findViewById(R.id.sale).setOnClickListener(this);
+
+//        customView.findViewById(R.id.new_arrive).setOnClickListener(this);
+//        customView.findViewById(R.id.discover).setOnClickListener(this);
+//        customView.findViewById(R.id.sale).setOnClickListener(this);
+
         customView.findViewById(R.id.about_us).setOnClickListener(this);
         RecyclerView recycler = (RecyclerView) customView.findViewById(R.id.recycleView);
         CategoryAdapter adapter = new CategoryAdapter(this);

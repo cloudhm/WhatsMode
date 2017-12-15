@@ -1,12 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:padding="13dp"
     android:background="@color/white"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <include
+        android:id="@+id/menu_bar"
+        android:visibility="gone"
+        layout="@layout/menu_header_item" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
     <TextView android:id="@+id/item_header_name"
         tools:text="Group Name"
         android:textStyle="bold"
@@ -22,5 +31,5 @@
         android:layout_height="8dp"
         android:layout_gravity="center_vertical"
         android:src="@drawable/btn_close"/>
-
+    </LinearLayout>
 </LinearLayout>

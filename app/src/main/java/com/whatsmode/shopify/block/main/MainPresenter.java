@@ -85,21 +85,21 @@ class MainPresenter extends MvpBasePresenter<MainContact.View> implements MainCo
                     getView().showMenu();
                 }
                 break;
-            case R.id.new_arrive:
-                if (isViewAttached()) {
-                    getView().jumpToAds(0);
-                }
-                break;
-            case R.id.sale:
-                if (isViewAttached()) {
-                    getView().jumpToAds(2);
-                }
-                break;
-            case R.id.discover:
-                if (isViewAttached()) {
-                    getView().jumpToAds(1);
-                }
-                break;
+//            case R.id.new_arrive:
+//                if (isViewAttached()) {
+//                    getView().jumpToAds(0);
+//                }
+//                break;
+//            case R.id.sale:
+//                if (isViewAttached()) {
+//                    getView().jumpToAds(2);
+//                }
+//                break;
+//            case R.id.discover:
+//                if (isViewAttached()) {
+//                    getView().jumpToAds(1);
+//                }
+//                break;
             case R.id.about_us:
                 getView().jumpToAboutUs();
                 break;
@@ -111,13 +111,11 @@ class MainPresenter extends MvpBasePresenter<MainContact.View> implements MainCo
         CartRepository.create().checkExistListener(new CartRepository.CheckExistListener() {
             @Override
             public void onSuccess(List<ID> idResponse) {
-                Logger.e(ids.size() + "-----" + idResponse.size());
                 for (ID id : idResponse) {
                     if (ids.contains(id)) {
                         ids.remove(id);
                     }
                 }
-                Logger.e("--after--" + ids.size());
                 if (!ListUtils.isEmpty(ids)) {
                    // CartRepository.modifyCartItemStates(ids);
                 }

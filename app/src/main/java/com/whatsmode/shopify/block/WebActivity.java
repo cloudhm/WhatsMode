@@ -91,7 +91,7 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_share:
-                ShareUtil.showShare(this,EXTRA_TITLE,"",EXTRA_URL,EXTRA_URL);
+                ShareUtil.showShare(this,EXTRA_TITLE,"",mUrl,mUrl);
                 shareActionLog();
                 break;
             case R.id.action_search:

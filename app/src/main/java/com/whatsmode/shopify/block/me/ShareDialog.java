@@ -86,7 +86,6 @@ public class ShareDialog extends Dialog implements View.OnClickListener {
             @Override
             public void onError(Platform platform, int i, Throwable throwable) {
                 SnackUtil.toastShow(mContext,R.string.ssdk_oks_share_failed);
-                System.out.println("-----------------------i:"+i+",throwable:"+throwable);
             }
 
             @Override
@@ -115,6 +114,7 @@ public class ShareDialog extends Dialog implements View.OnClickListener {
                 break;
             case R.id.url:
                 ShareUtil.clipboar(mContext,mLink);
+                SnackUtil.toastShow(mContext,R.string.url_copy_success);
                 break;
             case R.id.close:
                 break;

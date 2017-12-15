@@ -32,7 +32,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         all {
-            buildConfigField "String", "SHOP_DOMAIN", "\"whatsmodetest.myshopify.com\""
+            buildConfigField "String", "SHOP_DOMAIN", "\"whatsmode.com\""
             buildConfigField "String", "API_KEY", "\"6c54edda1f76ffe052d27d6918e3e615\""  //"\"42edd7ced5774d40a6d50abb03c295df\""
         }
     }

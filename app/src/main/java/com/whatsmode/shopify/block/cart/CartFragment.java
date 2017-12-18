@@ -62,6 +62,7 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
         btnCheckout.setOnClickListener(this);
         if(!EventBus.getDefault().isRegistered(this))
         EventBus.getDefault().register(this);
+        ivCheckAll.setSelected(true);
     }
 
     @Subscribe
@@ -335,9 +336,8 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
     public void clearCheckItems(boolean selectAll) {
         if (checkItem != null) {
             checkItem.clear();
-            if (selectAll) {
-                checkItem.addAll(mAdapter.getData());
-            }
+            checkItem.addAll(mAdapter.getData());
+            ivCheckAll.setSelected(true);
             checkTotal();
         }
     }

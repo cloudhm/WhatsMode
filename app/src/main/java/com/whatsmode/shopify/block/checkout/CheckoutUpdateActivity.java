@@ -167,7 +167,7 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
             signInLayout.setVisibility(View.VISIBLE);
             addAddressLayout.setVisibility(View.GONE);
         }
-        if (!addressValid) {
+        if (!addressValid && currentAddress == null) {
             addAddressLayout.setVisibility(View.VISIBLE);
             addressDetailLayout.setVisibility(View.GONE);
         } else {
@@ -202,9 +202,11 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
                     break;
             }
         } else if (resultCode == RESULT_CANCELED) {
-            currentAddress = AccountManager.getCustomerDefaultAddress();
-            showLoading();
-            mPresenter.bindAddress(id, currentAddress,true);
+            if (AccountManager.getCustomerDefaultAddress() != null) {
+                currentAddress = AccountManager.getCustomerDefaultAddress();
+                showLoading();
+                mPresenter.bindAddress(id, currentAddress,true);
+            }
         }
     }
 

@@ -28,8 +28,12 @@ public class CheckoutUpdatePresenter extends BaseRxPresenter<CheckoutUpdateConta
                     getView().jumpToLogin();
                 }
                 break;
-            case R.id.iv_add:
             case R.id.address_detail:
+                if (isViewAttached()) {
+                    getView().jumpToAddressList();
+                }
+                break;
+            case R.id.iv_add:
                 if (isViewAttached()) {
                     getView().jumpToSelectAddress();
                 }

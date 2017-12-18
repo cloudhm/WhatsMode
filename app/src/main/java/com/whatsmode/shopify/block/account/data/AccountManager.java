@@ -7,8 +7,11 @@ import com.whatsmode.library.util.SerializableUtil;
 import com.whatsmode.library.util.SnackUtil;
 import com.whatsmode.shopify.WhatsApplication;
 import com.whatsmode.shopify.block.address.Address;
+import com.whatsmode.shopify.block.address.AddressDefaultSuccess;
 import com.whatsmode.shopify.common.Constant;
 import com.whatsmode.shopify.common.KeyConstant;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.io.Serializable;
@@ -46,6 +49,7 @@ public class AccountManager {
     public void writeCustomerDefaultAddress(Address address) {
         mDefaultAddress = address;
         SerializableUtil.writeObject(address,getSerializableDefaultAddressFile());
+        EventBus.getDefault().post(new AddressDefaultSuccess());
     }
 
     public String getSerializableUserInfoFile(){

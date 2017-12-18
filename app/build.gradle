@@ -30,9 +30,9 @@ android {
     signingConfigs{
         myConfig{
             storeFile file("whatsmode.jks")
-            storePassword "mode2017"
-            keyAlias "whatsmode"
-            keyPassword "mode2017"
+            storePassword "tju128"
+            keyAlias "10buck"
+            keyPassword "tju128"
         }
     }
     buildTypes {

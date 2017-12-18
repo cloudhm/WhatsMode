@@ -32,6 +32,7 @@ import com.whatsmode.shopify.block.WebActivity;
 import com.whatsmode.shopify.block.account.data.AccountManager;
 import com.whatsmode.shopify.block.address.AddEditAddressActivity;
 import com.whatsmode.shopify.block.address.Address;
+import com.whatsmode.shopify.block.address.AddressDefaultSuccess;
 import com.whatsmode.shopify.block.address.AddressListActivity;
 import com.whatsmode.shopify.block.cart.CartItem;
 import com.whatsmode.shopify.block.cart.CartItemLists;
@@ -43,6 +44,7 @@ import com.whatsmode.shopify.ui.helper.ToolbarHelper;
 import com.zchu.log.Logger;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.List;
 
@@ -65,7 +67,7 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
     public static final int REQUEST_CODE_ADDRESS = 1001;
     private EditText etGiftCard;
     private TextView mTvGiftAmount;
-    //private TextView mTvGiftUnit;
+    private TextView mTvGiftUnit;
     private TextView mTvName;
     private TextView mTvPhone;
     private TextView mTvAddressDetail;
@@ -125,7 +127,7 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
         addItemToLayout();
 
         mTvGiftAmount = (TextView) findViewById(R.id.gift_amount);
-        //mTvGiftUnit = (TextView) findViewById(R.id.gift_unit);
+        mTvGiftUnit = (TextView) findViewById(R.id.gift_unit);
 
         etGiftCard = (EditText) findViewById(R.id.gift_card_edit);
         mCreateState = true;
@@ -137,6 +139,7 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
         }
         checkSignState();
         ActionLog.onEvent(Constant.Event.CHECK_OUT);
+        EventBus.getDefault().register(this);
     }
 
     private void getParseData() {
@@ -174,6 +177,13 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
         }
     }
 
+    @Subscribe
+    public void receive(AddressDefaultSuccess addressDefaultSuccess) {
+        currentAddress = AccountManager.getCustomerDefaultAddress();
+        showLoading();
+        mPresenter.bindAddress(id,currentAddress,true);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -187,13 +197,14 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
                             currentAddress = (Address) data.getSerializableExtra(KeyConstant.KEY_EXTRA_ADDRESS);
                         }
                     }
-                    //fillAddress();
                     showLoading();
                     mPresenter.bindAddress(id, currentAddress,false);
                     break;
             }
         } else if (resultCode == RESULT_CANCELED) {
-            // FIXME: 2017/12/15 
+            currentAddress = AccountManager.getCustomerDefaultAddress();
+            showLoading();
+            mPresenter.bindAddress(id, currentAddress,true);
         }
     }
 
@@ -211,6 +222,12 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
                     .append(currentAddress.getCountry()));
             btnPay.setEnabled(true);
         });
+    }
+
+    @Override
+    public void jumpToAddressList() {
+        Intent intent = new Intent(this, AddressListActivity.class);
+        startActivityForResult(intent, REQUEST_CODE_ADDRESS);
     }
 
     private void addItemToLayout() {
@@ -258,12 +275,12 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
     @Override
     protected void onResume() {
         super.onResume();
-        checkSignState();
         if (waitingReply) {
             showLoading();
             mPresenter.checkOrderExist(getCheckoutId());
             mPresenter.getAddress(id);
         }
+        checkSignState();
     }
 
     public static Intent newIntent(Context context, Double price,ID id, CartItemLists cartItemList) {
@@ -398,7 +415,7 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
 
     @Override
     public void jumpToSelectAddress() {
-        Intent intent = new Intent(this, AddressListActivity.class);
+        Intent intent = new Intent(this, AddEditAddressActivity.class);
         startActivityForResult(intent, REQUEST_CODE_ADDRESS);
     }
     private Double discount = 0.0;
@@ -408,7 +425,7 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
             if (!TextUtils.isEmpty(balance)) {
                 this.discount = totalPrice - Double.parseDouble(balance);
                 mTvGiftAmount.setText(new StringBuilder("-$").append(Util.getFormatDouble(discount)));
-                //mTvGiftUnit.setVisibility(View.VISIBLE);
+                mTvGiftUnit.setVisibility(View.VISIBLE);
                 mPresenter.checkShippingMethods(getCheckoutId(),false);
             }else{
                 hideLoading();
@@ -443,5 +460,11 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
             mTvTotal.setText(new StringBuilder("$").append(Util.getFormatDouble(totalPrice + shippingCost + taxCost - discount)));
             checkSignState();
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }

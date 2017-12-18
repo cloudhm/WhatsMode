@@ -8,62 +8,6 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="13dp"
-        android:orientation="vertical">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:layout_marginRight="13dp"
-            android:layout_marginLeft="13dp">
-
-            <com.github.siyamed.shapeimageview.RoundedImageView
-                android:id="@+id/new_arrive"
-                android:layout_width="match_parent"
-                app:siRadius="3dp"
-                android:layout_height="match_parent"
-                android:src="@drawable/left_bg_new"
-                android:scaleType="centerCrop" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:layout_marginTop="6dp"
-            android:layout_marginRight="13dp"
-            android:layout_marginLeft="13dp">
-
-            <com.github.siyamed.shapeimageview.RoundedImageView
-                android:id="@+id/discover"
-                android:layout_width="match_parent"
-                app:siRadius="3dp"
-                android:layout_height="match_parent"
-                android:src="@drawable/left_bg_discover"
-                android:scaleType="centerCrop" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_height="70dp"
-            android:layout_width="match_parent"
-            android:layout_marginTop="6dp"
-            android:layout_marginLeft="13dp"
-            android:layout_marginRight="13dp">
-
-            <com.github.siyamed.shapeimageview.RoundedImageView
-                android:id="@+id/sale"
-                android:layout_width="match_parent"
-                app:siRadius="3dp"
-                android:layout_height="match_parent"
-                android:src="@drawable/left_bg_sale"
-                android:scaleType="centerCrop" />
-        </RelativeLayout>
-    </LinearLayout>
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycleView"
         android:layout_width="match_parent"

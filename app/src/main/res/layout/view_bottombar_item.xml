@@ -3,25 +3,31 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/bottomBar_item_iconView"
-        android:layout_width="24.0dp"
-        android:layout_height="24.0dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="8.0dp"
-       />
-    <TextView
-        android:id="@+id/tv_badge"
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:layout_marginTop="7dp"
-        android:layout_toRightOf="@+id/bottomBar_item_iconView"
-        android:background="@drawable/red_circle"
-        android:gravity="center"
-        android:text="0"
-        android:textColor="@android:color/white"
-        android:textSize="9sp" />
+        android:layout_centerHorizontal="true">
+
+        <ImageView
+            android:id="@+id/bottomBar_item_iconView"
+            android:layout_width="24.0dp"
+            android:layout_height="24.0dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="8.0dp" />
+
+        <TextView
+            android:id="@+id/tv_badge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/red_circle"
+            android:gravity="center"
+            android:text="0"
+            android:textColor="@android:color/white"
+            android:textSize="9sp" />
+    </RelativeLayout>
+
     <TextView
         android:id="@+id/bottomBar_item_textView"
         android:layout_width="wrap_content"

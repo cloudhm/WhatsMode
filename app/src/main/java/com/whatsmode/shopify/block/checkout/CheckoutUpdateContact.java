@@ -45,6 +45,8 @@ public class CheckoutUpdateContact {
         void updateAddress(Storefront.MailingAddress address, Storefront.ShippingRate shippingRate);
 
         void fillAddress();
+
+        void jumpToAddressList();
     }
 
     interface Presenter extends MvpPresenter<View> {

@@ -35,6 +35,9 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
 
     @Override
     public void doLoadData(boolean isRefresh) {
+//        if (isRefresh && mAdapter != null) {
+//            saveCart(mAdapter.getData());
+//        }
         Observable.create((ObservableOnSubscribe<List<CartItem>>) e -> {
             try {
                 List<CartItem> cartItemList = (List<CartItem>) PreferencesUtil.getObject(WhatsApplication.getContext(), Constant.CART_LOCAL);
@@ -50,13 +53,14 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
                 .subscribe(cartItems -> {
                     if (isViewAttached()) {
                         getView().setAdapter(createAdapter(cartItems));
+                        getView().clearCheckItems(selectAll);
                         if (!ListUtils.isEmpty(cartItems)) {
                             getView().showContent(true);
                         } else {
                             getView().showTheEnd();
                         }
                         getView().checkSpanner();
-                        getView().clearCheckItems(selectAll);
+
                     }
                 });
     }
@@ -141,6 +145,11 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
                     }
                 }
                 ivCheck.setSelected(selectAll);
+                if (getView().getCheckedCartItem().contains(item)) {
+                    ivCheck.setSelected(true);
+                }else{
+                    ivCheck.setSelected(false);
+                }
                 if (item.isSoldOut && !getView().isCurrentDelete()) {
                     ivCheck.setSelected(false);
                 }
@@ -209,7 +218,7 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
         }
     }
 
-    public boolean selectAll;
+    public boolean selectAll = true;
 
     @Override
     public void onClickView(View v) {

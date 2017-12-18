@@ -9,7 +9,6 @@ import com.whatsmode.shopify.base.BaseRxPresenter;
 import com.whatsmode.shopify.block.address.Address;
 import com.whatsmode.shopify.block.cart.CartRepository;
 import com.whatsmode.shopify.block.me.Order;
-import com.zchu.log.Logger;
 
 import java.util.List;
 
@@ -28,8 +27,12 @@ public class CheckoutUpdatePresenter extends BaseRxPresenter<CheckoutUpdateConta
                     getView().jumpToLogin();
                 }
                 break;
-            case R.id.iv_add:
             case R.id.address_detail:
+                if (isViewAttached()) {
+                    getView().jumpToAddressList();
+                }
+                break;
+            case R.id.iv_add:
                 if (isViewAttached()) {
                     getView().jumpToSelectAddress();
                 }

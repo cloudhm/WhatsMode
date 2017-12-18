@@ -26,14 +26,20 @@ android {
 
         multiDexEnabled true
     }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+    signingConfigs{
+        myConfig{
+            storeFile file("whatsmode.jks")
+            storePassword "tju128"
+            keyAlias "10buck"
+            keyPassword "tju128"
         }
+    }
+    buildTypes {
         all {
             buildConfigField "String", "SHOP_DOMAIN", "\"whatsmode.com\""
-            buildConfigField "String", "API_KEY", "\"6c54edda1f76ffe052d27d6918e3e615\""  //"\"42edd7ced5774d40a6d50abb03c295df\""
+            buildConfigField "String", "API_KEY", "\"6c54edda1f76ffe052d27d6918e3e615\""
+            //"\"42edd7ced5774d40a6d50abb03c295df\""
         }
     }
 
@@ -46,14 +52,7 @@ android {
         sourceCompatibility 1.8
         targetCompatibility 1.8
     }
-    signingConfigs{
-        signingConfig{
-            storeFile file("whatsmode.jks")
-            storePassword "mode2017"
-            keyAlias "whatsmode"
-            keyPassword "mode2017"
-        }
-    }
+
 }
 
 dependencies {
@@ -69,10 +68,11 @@ dependencies {
     compile files('libs/ShareSDK-Facebook-3.1.1.jar')
     compile files('libs/ShareSDK-Instagram-3.1.1.jar')
     compile files('libs/ShareSDK-WhatsApp-3.1.1.jar')
-
     //JPush
-    compile 'cn.jiguang.sdk:jpush:3.0.9'  // 此处以JPush 3.0.9 版本为例。
-    compile 'cn.jiguang.sdk:jcore:1.1.7'  // 此处以JCore 1.1.7 版本为例。
+    compile 'cn.jiguang.sdk:jpush:3.0.9'
+    // 此处以JPush 3.0.9 版本为例。
+    compile 'cn.jiguang.sdk:jcore:1.1.7'
+    // 此处以JCore 1.1.7 版本为例。
     compile 'com.google.android.gms:play-services-auth:11.0.4'
     compile 'com.google.android.gms:play-services-analytics:11.0.4'
     compile 'com.google.firebase:firebase-core:11.0.4'

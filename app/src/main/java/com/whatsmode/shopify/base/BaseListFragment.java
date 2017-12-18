@@ -64,6 +64,12 @@ public abstract class BaseListFragment<P extends BaseListContract.Presenter> ext
         }
     }
 
+    public void setRefreshEnable(boolean enable) {
+        mSwipeToLoadLayout.post(() -> {
+            mSwipeToLoadLayout.setRefreshing(false);
+            mSwipeToLoadLayout.setRefreshEnabled(enable);
+        });
+    }
 
     @Override
     public void onRefresh() {

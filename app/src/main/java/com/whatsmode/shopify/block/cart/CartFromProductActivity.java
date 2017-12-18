@@ -30,6 +30,15 @@ public class CartFromProductActivity extends BaseActivity {
                 .replace(R.id.container, mFragment)
                 .commit();
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mFragment != null) {
+            mFragment.saveCart();
+        }
+    }
+
     public String defineCartTitle(){
         try {
             List<CartItem> cartItemList = (List<CartItem>) PreferencesUtil.getObject(WhatsApplication.getContext(), Constant.CART_LOCAL);
@@ -70,4 +79,5 @@ public class CartFromProductActivity extends BaseActivity {
     public void hideEdit(boolean visiable) {
         menuEdit.setVisible(visiable);
     }
+
 }

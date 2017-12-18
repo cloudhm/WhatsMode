@@ -15,7 +15,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.shopify.graphql.support.ID;
-import com.whatsmode.library.rx.RxBus;
 import com.whatsmode.library.rx.Util;
 import com.whatsmode.library.util.ListUtils;
 import com.whatsmode.library.util.ToastUtil;
@@ -82,6 +81,13 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
                 showOrHideEdit();
             }
         });
+    }
+
+    public void saveCart(){
+        if (mPresenter != null) {
+            mPresenter.saveCart(mAdapter.getData());
+            EventBus.getDefault().post(new CartItem());
+        }
     }
 
     @Override
@@ -211,6 +217,8 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
         Activity activity = getActivity();
         if (activity instanceof MainActivity) {
             ((MainActivity)activity).refreshBottomBar(badge);
+        } else if (activity instanceof CartFromProductActivity) {
+            ((CartFromProductActivity) (activity)).defineCartTitle();
         }
         showOrHideEdit();
         defineCheckoutButton();
@@ -340,6 +348,7 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
             ivCheckAll.setSelected(true);
             checkTotal();
         }
+        setRefreshEnable(false);
     }
 
 

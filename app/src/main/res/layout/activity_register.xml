@@ -209,6 +209,7 @@
         android:textColor="@color/black"
         android:textSize="@dimen/sp_16"
         android:textStyle="bold"
+        android:layout_marginBottom="24dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 

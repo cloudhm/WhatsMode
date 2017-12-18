@@ -47,7 +47,7 @@ public class ActionLog {
     }
     public void logEventByFlurry(LogParam param){
 
-        //logFromGoogle(param);
+        logFromGoogle(param);
         logFromFirebase(param);
     }
 

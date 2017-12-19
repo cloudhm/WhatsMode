@@ -20,6 +20,7 @@ import com.whatsmode.library.util.ListUtils;
 import com.whatsmode.library.util.ToastUtil;
 import com.whatsmode.shopify.AppNavigator;
 import com.whatsmode.shopify.R;
+import com.whatsmode.shopify.WhatsApplication;
 import com.whatsmode.shopify.base.BaseListFragment;
 import com.whatsmode.shopify.block.WebActivity;
 import com.whatsmode.shopify.block.main.MainActivity;
@@ -189,10 +190,12 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
     public void showError(String message) {
         getActivity().runOnUiThread(() ->{
             ToastUtil.showToast(message);
-            mPresenter.setSelectAll(false,true);
-            ivCheckAll.setSelected(false);
-            checkTotal();
-            EventBus.getDefault().post(new CartItem());
+            if (!WhatsApplication.getContext().getString(R.string.plz_select_products).equals(message)) {
+                mPresenter.setSelectAll(false,true);
+                ivCheckAll.setSelected(false);
+                checkTotal();
+                EventBus.getDefault().post(new CartItem());
+            }
         });
     }
 
@@ -344,8 +347,12 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
     public void clearCheckItems(boolean selectAll) {
         if (checkItem != null) {
             checkItem.clear();
-            checkItem.addAll(mAdapter.getData());
-            ivCheckAll.setSelected(true);
+            if (!isCurrentDelete) {
+                checkItem.addAll(mAdapter.getData());
+                ivCheckAll.setSelected(true);
+            }else{
+                ivCheckAll.setSelected(false);
+            }
             checkTotal();
         }
         setRefreshEnable(false);

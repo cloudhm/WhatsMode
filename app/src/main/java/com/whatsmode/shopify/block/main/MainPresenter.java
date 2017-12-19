@@ -14,7 +14,6 @@ import com.whatsmode.shopify.block.me.MyFragment;
 import com.whatsmode.shopify.common.Constant;
 import com.whatsmode.shopify.mvp.MvpBasePresenter;
 import com.whatsmode.shopify.ui.helper.BaseFragmentAdapter;
-import com.zchu.log.Logger;
 
 import java.util.ArrayList;
 import java.util.List;

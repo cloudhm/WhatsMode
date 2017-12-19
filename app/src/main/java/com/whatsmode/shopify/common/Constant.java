@@ -15,6 +15,7 @@ public class Constant {
     public static final String CREATING_CUSTOMER_LIMIT_EXCEEDED_PLEASE_TRY_AGAIN_LATER = "Creating Customer Limit exceeded. Please try again later.";
 
     public static final String ROOTPATH_CUSTOMER_USERINFO;
+    public static final String ROOTPATH_IMAGE_CACHE;
     public static final String USERINFO = "userinfo";
     public static final String DEFAULT_ADDRESS = "default_address";
     public static final String URL_TAB_INFLUENCE = "https://whatsmode.com/pages/influencer-brands-1";
@@ -27,6 +28,10 @@ public class Constant {
     public static final String EXTERNAL = "external";
     public static final String USER_AGENT = "mobile-Android";
     public static final String ABOUT_US = "https://whatsmode.com/pages/introduce-us";
+
+    public static final String DEFAULT_CONTACT_US = "intent://user/283544598790548/?intent_trigger=mme&ref=messenger_commerce_1163199097047119_https%3A%2F%2Fwhatsmode.com%2F&nav=discover#Intent;scheme=fb-messenger;package=com.facebook.orca;end";
+    public static final String DEFAULT_CONTACT_US_REDICT = "https://m.facebook.com/msg/283544598790548/?ref=messenger_commerce_1163199097047119_https%3A%2F%2Fwhatsmode.com%2Fpages%2Fholiday&show_interstitial=0&mdotme_uri=https%3A%2F%2Fm.me%2F283" +
+            "544598790548%3Fref%3Dmessenger_commerce_1163199097047119_https%253A%252F%252Fwhatsmode.com%252Fpages%252Fholiday&handler=m.me&referer&refsrc=http%3A%2F%2Fm.me%2F283544598790548%3Fref%3Dmessenger_commerce_1163199097047119_https%253A%252F%252Fwhatsm&_rdr";
     public static final  String influence_arrars[] = {"Adelaine Morin", "Aleksandra Wojtysiak", "Alessandra Cara", "Alexandra Kusio", "Alinagvozdeva", "Amanda Wizping",
             "Anna Albus", "Annabellagutman", "Anotherarabgurl", "Beautyfineprint", "Claudia Dibenedetto", "CloeCouture",
             "Demi Flydi", "Donabogut", "Diandra Maria Picone", "Donabogut", "Donatella Gazze", "Elsalucia", "Emmyinstyle",
@@ -44,6 +49,8 @@ public class Constant {
     static {
         ROOTPATH_CUSTOMER_USERINFO = WhatsApplication.getContext().getFilesDir().getAbsolutePath()
                 + File.separator + "cache";
+        ROOTPATH_IMAGE_CACHE = WhatsApplication.getContext().getFilesDir().getAbsolutePath()
+                + File.separator + "image";
     }
 
 

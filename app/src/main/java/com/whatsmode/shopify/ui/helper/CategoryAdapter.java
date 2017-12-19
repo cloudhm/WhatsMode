@@ -14,7 +14,6 @@ import com.whatsmode.shopify.WhatsApplication;
 import com.whatsmode.shopify.actionlog.ActionLog;
 import com.whatsmode.shopify.block.WebActivity;
 import com.whatsmode.shopify.common.Constant;
-import com.zchu.log.Logger;
 
 import java.util.ArrayList;
 import java.util.List;

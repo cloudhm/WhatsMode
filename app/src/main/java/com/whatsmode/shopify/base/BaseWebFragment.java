@@ -1,7 +1,10 @@
 package com.whatsmode.shopify.base;
 
 import android.annotation.TargetApi;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -39,6 +42,17 @@ public class BaseWebFragment extends BaseFragment implements View.OnClickListene
         return fragment;
     }
 
+    private boolean appInstalledOrNot(String uri) {
+        PackageManager pm = getActivity().getPackageManager();
+        try {
+            pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
+            return true;
+        } catch (PackageManager.NameNotFoundException e) {
+        }
+
+        return false;
+    }
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -48,7 +62,7 @@ public class BaseWebFragment extends BaseFragment implements View.OnClickListene
         btnRefresh.setOnClickListener(this);
 
         WebSettings settings = mWebView.getSettings();
-        settings.setUserAgentString(Constant.USER_AGENT);
+        //settings.setUserAgentString(Constant.USER_AGENT);
         mProgressBar = (ProgressBar) view.findViewById(R.id.indeterminateBar);
         mWebView.setWebViewClient(new WebViewClient() {
             @Override
@@ -96,7 +110,12 @@ public class BaseWebFragment extends BaseFragment implements View.OnClickListene
                     ActionLog.onEvent(Constant.Event.PRODUCT_DETAIL);
                 } else if (RegexUtils.isCollection(url)) {
                     AppNavigator.jumpToWebActivity(getContext(),WebActivity.STATE_COLLECTIONS,url);
-                }else{
+                }else if((RegexUtils.isPages(url))){
+                    AppNavigator.jumpToWebActivity(getContext(),WebActivity.STATE_COLLECTIONS,url);
+                } else if (RegexUtils.contactUsUrl(url)) {
+                    AppNavigator.jumpToWebActivity(getContext(),"",url);
+                    return true;
+                } else {
                     view.loadUrl(url);
                 }
                 return true;

@@ -107,7 +107,7 @@ public class RegexUtils {
     }
 
     public static boolean isCollection(String url) {
-        return !TextUtils.isEmpty(url) && url.contains("/collections/");
+        return !TextUtils.isEmpty(url) && url.contains("collections");
     }
     /**
      * 验证电话号码
@@ -301,5 +301,9 @@ public class RegexUtils {
 
     public static boolean isTermsConditions(String url){
         return url != null && url.equals("terms-conditions");
+    }
+
+    public static boolean contactUsUrl(String url){
+        return !TextUtils.isEmpty(url) && url.contains("https://m.me/283544598790548?ref=messenger_commerce_1163199097047119_https://whatsmode.com/");
     }
 }

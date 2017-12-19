@@ -4,9 +4,12 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.view.MenuItemCompat;
 import android.text.TextUtils;
@@ -33,10 +36,14 @@ import com.whatsmode.shopify.block.cart.BadgeActionProvider;
 import com.whatsmode.shopify.block.cart.CartItem;
 import com.whatsmode.shopify.block.me.ShareUtil;
 import com.whatsmode.shopify.common.Constant;
+import com.whatsmode.shopify.ui.helper.SDFileHelper;
 import com.whatsmode.shopify.ui.helper.ToolbarHelper;
+import com.zchu.log.Logger;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+
+import java.io.File;
 
 import static android.webkit.WebSettings.LOAD_CACHE_ELSE_NETWORK;
 
@@ -63,6 +70,7 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
     private RelativeLayout errorView;
     private ImageView ivLogo;
     private ToolbarHelper.ToolbarHolder toolbarHolder;
+    private long currentTimeStep;
 
     public static Intent newIntent(Context context,String title, String url) {
         Intent intent = new Intent(context, WebActivity.class);
@@ -91,7 +99,8 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_share:
-                ShareUtil.showShare(this,EXTRA_TITLE,"",mUrl,mUrl);
+                String imageUrl = SDFileHelper.getFilePath(currentTimeStep);
+                ShareUtil.showShare(this,EXTRA_TITLE,imageUrl,mUrl,mUrl);
                 shareActionLog();
                 break;
             case R.id.action_search:
@@ -123,9 +132,9 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
         errorView = (RelativeLayout) findViewById(R.id.net_error_view);
         Button btnRefresh = (Button)findViewById(R.id.refresh);
         btnRefresh.setOnClickListener(this);
-
+        currentTimeStep = SystemClock.currentThreadTimeMillis();
         toolbarHolder = ToolbarHelper.initToolbar(this, R.id.toolbar, true, title);
-        toolbarHolder.titleView.setVisibility(View.VISIBLE);
+        toolbarHolder.titleView.setVisibility(View.GONE);
         ivLogo = (ImageView) findViewById(R.id.logo);
         mWebView = (WebView) findViewById(R.id.webview);
         mWebView.getSettings().setCacheMode(LOAD_CACHE_ELSE_NETWORK);
@@ -134,6 +143,7 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
         mUrl = getIntent().getStringExtra(EXTRA_URL);
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.addJavascriptInterface(new AndroidJs(), "android");//AndroidtoJS类对象映射到js的test对象
+        mWebView.addJavascriptInterface(new JsInterfaceObtainImage(this,currentTimeStep), "imagelistner");
         if (!TextUtils.isEmpty(mUrl)){
             initWebTitle();
         }
@@ -156,14 +166,14 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
                 menuItemShare.setVisible(true);
                 menuItemSearch.setVisible(true);
                 ivLogo.setVisibility(View.GONE);
-                toolbarHolder.titleView.setVisibility(View.VISIBLE);
+                toolbarHolder.titleView.setVisibility(View.GONE);
                 break;
             case WebActivity.STATE_PRODUCT:
                 menuItemShare.setVisible(true);
                 menuItemSearch.setVisible(false);
                 menuItemCart.setVisible(true);
                 ivLogo.setVisibility(View.GONE);
-                toolbarHolder.titleView.setVisibility(View.VISIBLE);
+                toolbarHolder.titleView.setVisibility(View.GONE);
                 break;
             case WebActivity.STATE_ABOUT_US:
                 menuItemCart.setVisible(false);
@@ -177,7 +187,7 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
                 menuItemCart.setVisible(false);
                 ivLogo.setVisibility(View.GONE);
                 menuItemSearch.setVisible(false);
-                toolbarHolder.titleView.setVisibility(View.VISIBLE);
+                toolbarHolder.titleView.setVisibility(View.GONE);
                 break;
         }
     }
@@ -190,6 +200,7 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
                 super.onPageFinished(view, url);
                 mProgressBar.setVisibility(View.GONE);
                 initToolBar();
+                addLocalJs();
             }
 
             @Override
@@ -204,9 +215,9 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
 
             @Override
             public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-                super.onReceivedError(view, errorCode, description, failingUrl);
+                //super.onReceivedError(view, errorCode, description, failingUrl);
                 mProgressBar.setVisibility(View.GONE);
-                if (mUrl.equals(failingUrl)) {
+                if (mUrl.equals(failingUrl) || failingUrl.equals(Constant.DEFAULT_CONTACT_US)) {
                     mWebView.setVisibility(View.GONE);
                     view.loadUrl("about:blank");
                     errorView.setVisibility(View.VISIBLE);
@@ -215,7 +226,7 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
             @TargetApi(Build.VERSION_CODES.M)
             @Override
             public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
-                super.onReceivedError(view, request, error);
+                //super.onReceivedError(view, request, error);
                 onReceivedError(view,error.getErrorCode(),error.getDescription().toString(),request.getUrl().toString());
             }
 
@@ -223,13 +234,20 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 if (RegexUtils.isProduct(url)) {
                     startActivity(WebActivity.newIntent(WebActivity.this,WebActivity.STATE_PRODUCT,url));
+                }else if (RegexUtils.contactUsUrl(url)) {
+                    //AppNavigator.jumpToWebActivity(WebActivity.this,"",Constant.DEFAULT_CONTACT_US_REDICT);
+                    return true;
                 } else if (RegexUtils.isCollection(url)) {
                     startActivity(WebActivity.newIntent(WebActivity.this,WebActivity.STATE_COLLECTIONS,url));
                 } else if (RegexUtils.isPages(url)){
                     startActivity(WebActivity.newIntent(WebActivity.this,WebActivity.STATE_ABOUT_US,url));
                     aboutUsAnalytics(url);
-                }else if (!RegexUtils.isBlock(url)) {
-                    view.loadUrl(url);
+                } else if (RegexUtils.isContactUs(url)) {
+                    AppNavigator.jumpToWebActivity(WebActivity.this,WebActivity.STATE_ABOUT_US,url);
+                }  else {
+                    if (!RegexUtils.isBlock(url)) {
+                        view.loadUrl(url);
+                    }
                 }
                 return true;
             }
@@ -281,5 +299,11 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
             mWebView.postDelayed(() -> mWebView.setVisibility(View.VISIBLE), 2000);
             mProgressBar.setVisibility(View.VISIBLE);
         }
+    }
+
+    public void addLocalJs() {
+        mWebView.loadUrl("javascript:(function(){ " + "var objs = document.getElementsByTagName(\"img\");"
+                + " var array=new Array(); " + " for(var j=0;j<objs.length;j++){ " + "array[j]=objs[j].src;" + " }  "
+                + "window.imagelistner.getImage(array);   })()");
     }
 }

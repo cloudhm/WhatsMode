@@ -41,7 +41,6 @@ import com.whatsmode.shopify.common.Constant;
 import com.whatsmode.shopify.common.KeyConstant;
 import com.whatsmode.shopify.mvp.MvpActivity;
 import com.whatsmode.shopify.ui.helper.ToolbarHelper;
-import com.zchu.log.Logger;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -221,6 +220,7 @@ public class CheckoutUpdateActivity extends MvpActivity<CheckoutUpdateContact.Pr
                     .append(currentAddress.getAddress1())
                     .append(currentAddress.getAddress2())
                     .append(currentAddress.getCity())
+                    .append("  ")
                     .append(currentAddress.getCountry()));
             btnPay.setEnabled(true);
         });

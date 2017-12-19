@@ -45,12 +45,10 @@ import com.whatsmode.shopify.ui.helper.ToolbarHelper;
 import com.whatsmode.shopify.ui.widget.BottomBar;
 import com.whatsmode.shopify.ui.widget.BottomBarItem;
 import com.whatsmode.shopify.ui.widget.NoScrollViewPager;
-import com.zchu.log.Logger;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;

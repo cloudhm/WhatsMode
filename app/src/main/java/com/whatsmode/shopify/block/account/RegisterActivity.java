@@ -24,6 +24,7 @@ import com.whatsmode.shopify.AppNavigator;
 import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.actionlog.ActionLog;
 import com.whatsmode.shopify.block.me.StatusBarUtil;
+import com.whatsmode.shopify.block.me.StringUtil;
 import com.whatsmode.shopify.common.Constant;
 import com.whatsmode.shopify.common.KeyConstant;
 import com.whatsmode.shopify.mvp.MvpActivity;
@@ -137,7 +138,7 @@ public class RegisterActivity extends MvpActivity<RegisterPresenter> implements 
         if (Constant.EMAIL_HAS_ALREADY_BEEN_TAKEN.equals(msg)) {
             finish();
         }
-        SnackUtil.toastShow(this,msg);
+        SnackUtil.toastShow(this, StringUtil.replaceString(msg));
     }
 
     @Override

@@ -132,15 +132,16 @@
     <string name="yes_">Yes</string>
     <string name="no_">No</string>
     <string name="prompt">Prompt</string>
-    <string name="confirm_exit">Confirm exit?</string>
-    <string name="confirm_the_scavenging_cache">Confirm the scavenging cache?</string>
-    <string name="confirm_deletion">Confirm deletion?</string>
+    <string name="confirm_exit">Would you like logging out?</string>
+    <string name="confirm_the_scavenging_cache">Would you like clearing cache?</string>
+    <string name="confirm_deletion">Would you like deleting address?</string>
     <string name="snapchat">Snapchat</string>
     <string name="share_">Share</string>
     <string name="url">Url</string>
     <string name="sign_in_">Sign In</string>
     <string name="submit">Submit</string>
     <string name="url_copy_success">URL replication success</string>
+    <string name="replace_unidentified_customer">email or password is error,please check.</string>
 
     <array name="category">
         <item>APPAREL</item>

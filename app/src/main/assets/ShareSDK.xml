@@ -55,8 +55,8 @@
     <Facebook
         Id="8"
         SortId="8"
-		ConsumerKey="1975203222803491"
-		ConsumerSecret="73c4562e6f24bf95ec5779daff9e3cb8"
+		ConsumerKey="1446193455684318"
+		ConsumerSecret="ee63767f996c64f97e23e4786814f62c"
 		RedirectUrl="https://whatsmode.com/"
 		ShareByAppClient="true"
 		Enable="true" />

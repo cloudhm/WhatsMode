@@ -218,7 +218,7 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
         if (activity instanceof MainActivity) {
             ((MainActivity)activity).refreshBottomBar(badge);
         } else if (activity instanceof CartFromProductActivity) {
-            ((CartFromProductActivity) (activity)).defineCartTitle();
+            ((CartFromProductActivity) (activity)).defineCartTitle(badge);
         }
         showOrHideEdit();
         defineCheckoutButton();
@@ -334,7 +334,7 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
             if (activity instanceof MainActivity) {
                 ((MainActivity)activity).defineCartTitle();
             }else if(activity instanceof CartFromProductActivity){
-                ((CartFromProductActivity) activity).defineCartTitle();
+                ((CartFromProductActivity) activity).defineCartTitle(0);
             }
             showOrHideEdit();
         });

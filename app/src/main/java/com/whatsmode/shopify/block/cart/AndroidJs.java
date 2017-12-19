@@ -27,7 +27,6 @@ public class AndroidJs extends Object {
         if (TextUtils.isEmpty(json)) {
             return;
         }
-        // FIXME: 2017/11/30
         try {
             JSONObject jsonObject = new JSONObject(json);
             String title = jsonObject.getString("productTitle");
@@ -64,17 +63,17 @@ public class AndroidJs extends Object {
                 cartItemList = new ArrayList<>();
                 cartItemList.add(cartItem);
             }else {
-                CartItem modiyItem = null;
+                CartItem modifyItem = null;
                 for (CartItem item : cartItemList) {
                     if (item.id.equals(cartItem.id)) {
-                        modiyItem = item;
+                        modifyItem = item;
                         break;
                     }
                 }
-                if (modiyItem == null) {
+                if (modifyItem == null) {
                     cartItemList.add(cartItem);
                 }else{
-                    modiyItem.quality += cartItem.quality;
+                    modifyItem.quality += cartItem.quality;
                 }
             }
             PreferencesUtil.putObject(WhatsApplication.getContext(), Constant.CART_LOCAL, cartItemList);

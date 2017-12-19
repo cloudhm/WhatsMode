@@ -19,11 +19,13 @@ public class CartFromProductActivity extends BaseActivity {
 
     private MenuItem menuEdit;
     CartFragment mFragment;
+    private ToolbarHelper.ToolbarHolder toolbarHolder;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart_from_web);
-        ToolbarHelper.ToolbarHolder toolbarHolder = ToolbarHelper.initToolbar(this, R.id.toolbar, true, defineCartTitle());
+        toolbarHolder = ToolbarHelper.initToolbar(this, R.id.toolbar, true, defineCartTitle(0));
         toolbarHolder.titleView.setVisibility(View.VISIBLE);
         mFragment = new CartFragment();
         getSupportFragmentManager().beginTransaction()
@@ -39,7 +41,11 @@ public class CartFromProductActivity extends BaseActivity {
         }
     }
 
-    public String defineCartTitle(){
+    public String defineCartTitle(int badges){
+        if (badges != 0) {
+            toolbarHolder.titleView.setText("My Cart(" + badges + ")");
+            return "My Cart(" + badges + ")";
+        }
         try {
             List<CartItem> cartItemList = (List<CartItem>) PreferencesUtil.getObject(WhatsApplication.getContext(), Constant.CART_LOCAL);
             int badge = 0;
@@ -76,8 +82,8 @@ public class CartFromProductActivity extends BaseActivity {
         return true;
     }
 
-    public void hideEdit(boolean visiable) {
-        menuEdit.setVisible(visiable);
+    public void hideEdit(boolean visible) {
+        menuEdit.setVisible(visible);
     }
 
 }

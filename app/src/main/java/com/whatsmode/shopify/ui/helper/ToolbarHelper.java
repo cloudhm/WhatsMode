@@ -40,7 +40,7 @@ public class ToolbarHelper {
             actionBar.setDisplayShowTitleEnabled(false);
             if (canBack) {
                 actionBar.setDisplayHomeAsUpEnabled(true);
-                toolbar.setNavigationIcon(WhatsApplication.getContext().getResources().getDrawable(R.drawable.icon_reback, activity.getTheme()));
+                toolbar.setNavigationIcon(WhatsApplication.getContext().getResources().getDrawable(R.drawable.icon_reback));
                 toolbar.setNavigationOnClickListener(v -> activity.onBackPressed());
             }
 

@@ -5,7 +5,6 @@ import android.graphics.Paint;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -15,7 +14,6 @@ import com.whatsmode.library.util.ListUtils;
 import com.whatsmode.library.util.PreferencesUtil;
 import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.WhatsApplication;
-import com.whatsmode.shopify.actionlog.ActionLog;
 import com.whatsmode.shopify.base.BaseRxPresenter;
 import com.whatsmode.shopify.common.Constant;
 import com.whatsmode.shopify.ui.helper.CommonAdapter;
@@ -75,7 +73,11 @@ class CartPresenter extends BaseRxPresenter<CartContact.View> implements CartCon
                 View view = helper.getView(R.id.aboveView);
                 view.setVisibility(item.isSoldOut?View.VISIBLE:View.GONE);
                 LinearLayout operationLayout = helper.getView(R.id.operation_layout);
-                operationLayout.setVisibility(item.isSoldOut?View.GONE:View.VISIBLE);
+                if (getView().isCurrentDelete() || item.isSoldOut) {
+                    operationLayout.setVisibility(View.GONE);
+                } else {
+                    operationLayout.setVisibility(View.VISIBLE);
+                }
                 ImageView soldOut = helper.getView(R.id.icon_sold_out);
                 soldOut.setVisibility(item.isSoldOut ? View.VISIBLE : View.GONE);
                 View line = helper.getView(R.id.separator);

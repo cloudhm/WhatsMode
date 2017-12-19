@@ -31,6 +31,7 @@ import com.whatsmode.shopify.block.account.data.AccountManager;
 import com.whatsmode.shopify.block.cart.JumpMainTab;
 import com.whatsmode.shopify.block.me.MyFragment;
 import com.whatsmode.shopify.block.me.StatusBarUtil;
+import com.whatsmode.shopify.block.me.StringUtil;
 import com.whatsmode.shopify.block.me.event.LoginEvent;
 import com.whatsmode.shopify.common.Constant;
 import com.whatsmode.shopify.common.KeyConstant;
@@ -137,7 +138,7 @@ public class LoginActivity extends MvpActivity<LoginPresenter> implements LoginC
             startActivity(new Intent(this,RegisterActivity.class));
         }*/
         hideLoading();
-        SnackUtil.toastShow(this, msg);
+        SnackUtil.toastShow(this, StringUtil.replaceString(msg));
     }
 
     @Override

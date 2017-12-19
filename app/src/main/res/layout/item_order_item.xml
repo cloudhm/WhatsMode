@@ -27,7 +27,7 @@
         android:overScrollMode="never"
         android:layout_below="@+id/order_num"
         android:layout_marginTop="12dp"
-        android:background="@color/separator"
+        android:background="@color/white"
         />
 
     <TextView

@@ -61,7 +61,7 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void splash() {
-        Animation alphaAnimation = new AlphaAnimation(1.0f, 0.1f);
+        Animation alphaAnimation = new AlphaAnimation(1.0f, 0.05f);
         alphaAnimation.setDuration(500);//设置动画持续时间为500毫秒
         alphaAnimation.setFillAfter(true);//设置动画结束后保持当前的位置（即不返回到动画开始前的位置）
         mSplash.startAnimation(alphaAnimation);

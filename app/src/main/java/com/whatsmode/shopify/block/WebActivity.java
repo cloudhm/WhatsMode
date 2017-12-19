@@ -245,10 +245,20 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
                 } else if (RegexUtils.isContactUs(url)) {
                     AppNavigator.jumpToWebActivity(WebActivity.this,WebActivity.STATE_ABOUT_US,url);
                 }  else {
-                    if (!RegexUtils.isBlock(url)) {
-                        view.loadUrl(url);
+
+                    if (url.startsWith("https")) {
+                        Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse(url));
+                        startActivity(intent);
+                    } else if (url.startsWith("intent")) {
+                        finish();
                     }
+                    return false;
+
+                    /*if (!RegexUtils.isBlock(url)) {
+                        view.loadUrl(url);
+                    }*/
                 }
+
                 return true;
             }
 

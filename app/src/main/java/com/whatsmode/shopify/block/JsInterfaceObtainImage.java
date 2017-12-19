@@ -25,15 +25,16 @@ public class JsInterfaceObtainImage {
     }
 
     @JavascriptInterface
-    public void getImage(String[] urls) {
+    public void getImage(String urls) {
 
-        Logger.e("========进入js方法========" + urls[0]);
-        if (urls != null && urls.length > 0) {
-//            for (int i = 0; i < urls.length; i++) {
-//                SDFileHelper.savaFileToSD(urls);
-//                Logger.e("===" + i + "==="+urls[i]);
-//            }
-            SDFileHelper.savePicture(currentTimeStep+"",urls[0]);
-        }
+        Logger.e("========进入js方法========" + urls);
+//        if (urls != null && urls.length > 0) {
+////            for (int i = 0; i < urls.length; i++) {
+////                SDFileHelper.savaFileToSD(urls);
+////                Logger.e("===" + i + "==="+urls[i]);
+////            }
+//            SDFileHelper.savePicture(currentTimeStep+"",urls[0]);
+//        }
+        SDFileHelper.savePicture(currentTimeStep+"",urls);
     }
 }

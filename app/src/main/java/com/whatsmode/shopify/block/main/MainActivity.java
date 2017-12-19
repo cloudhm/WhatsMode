@@ -19,7 +19,6 @@ import android.widget.TextView;
 
 import com.innodroid.expandablerecycler.ExpandableRecyclerAdapter;
 import com.shopify.graphql.support.ID;
-import com.whatsmode.library.rx.RxBus;
 import com.whatsmode.library.util.DensityUtil;
 import com.whatsmode.library.util.ListUtils;
 import com.whatsmode.library.util.PreferencesUtil;
@@ -33,10 +32,8 @@ import com.whatsmode.shopify.block.WebActivity;
 import com.whatsmode.shopify.block.account.data.AccountManager;
 import com.whatsmode.shopify.block.cart.CartFragment;
 import com.whatsmode.shopify.block.cart.CartItem;
-import com.whatsmode.shopify.block.cart.CartRepository;
 import com.whatsmode.shopify.block.cart.JumpMainTab;
 import com.whatsmode.shopify.block.me.StatusBarUtil;
-import com.whatsmode.shopify.block.me.event.LoginEvent;
 import com.whatsmode.shopify.common.Constant;
 import com.whatsmode.shopify.mvp.MvpActivity;
 import com.whatsmode.shopify.ui.helper.BaseFragmentAdapter;
@@ -289,7 +286,7 @@ public class MainActivity extends MvpActivity<MainContact.Presenter> implements 
 
     @Override
     public void showSearch() {
-        String suffix = Constant.influence_arrars[new Random().nextInt(Constant.influence_arrars.length)];
+        String suffix = Constant.influence_arrays[new Random().nextInt(Constant.influence_arrays.length)];
         AppNavigator.jumpToWebActivity(this, WebActivity.STATE_SEARCH, new StringBuilder(Constant.URL_SEARCH).append("?q=").append(suffix).toString());
         ActionLog.onEvent(Constant.Event.SREARCH);
     }

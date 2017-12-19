@@ -26,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
+import com.bumptech.glide.Glide;
 import com.whatsmode.library.util.RegexUtils;
 import com.whatsmode.shopify.AppNavigator;
 import com.whatsmode.shopify.R;
@@ -99,7 +100,7 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_share:
-                String imageUrl = SDFileHelper.getFilePath(currentTimeStep);
+                String imageUrl = SDFileHelper.getFilePath(currentTimeStep) + ".jpg";
                 ShareUtil.showShare(this,EXTRA_TITLE,imageUrl,mUrl,mUrl);
                 shareActionLog();
                 break;
@@ -192,6 +193,22 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
+    private void prefixNotHttp(String url) {
+        if (!url.startsWith("http")) {
+            try {
+                // 以下固定写法
+                final Intent intent = new Intent(Intent.ACTION_VIEW,
+                        Uri.parse(url));
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                        | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
+            } catch (Exception e) {
+                // 防止没有安装的情况
+                e.printStackTrace();
+            }
+        }
+    }
+
     @SuppressLint("SetJavaScriptEnabled")
     private void initWebTitle() {
         mWebView.setWebViewClient(new WebViewClient(){
@@ -217,10 +234,14 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
             public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
                 //super.onReceivedError(view, errorCode, description, failingUrl);
                 mProgressBar.setVisibility(View.GONE);
-                if (mUrl.equals(failingUrl) || failingUrl.equals(Constant.DEFAULT_CONTACT_US)) {
+                //prefixNotHttp(failingUrl);
+                if (mUrl.equals(failingUrl)) {
                     mWebView.setVisibility(View.GONE);
                     view.loadUrl("about:blank");
                     errorView.setVisibility(View.VISIBLE);
+                }
+                if (failingUrl.equals(Constant.DEFAULT_CONTACT_US)) {
+                    prefixNotHttp(failingUrl);
                 }
             }
             @TargetApi(Build.VERSION_CODES.M)
@@ -232,6 +253,7 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                prefixNotHttp(url);
                 if (RegexUtils.isProduct(url)) {
                     startActivity(WebActivity.newIntent(WebActivity.this,WebActivity.STATE_PRODUCT,url));
                 }else if (RegexUtils.contactUsUrl(url)) {
@@ -312,8 +334,22 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
     }
 
     public void addLocalJs() {
-        mWebView.loadUrl("javascript:(function(){ " + "var objs = document.getElementsByTagName(\"img\");"
-                + " var array=new Array(); " + " for(var j=0;j<objs.length;j++){ " + "array[j]=objs[j].src;" + " }  "
-                + "window.imagelistner.getImage(array);   })()");
+
+//        mWebView.loadUrl("javascript:(function(){ " + "var objs = document.getElementsByTagName(\"img\");"
+//                + " var array=new Array(); " + " for(var j=0;j<objs.length;j++){ " + "array[j]=objs[j].src;" + " }  "
+//                + "window.imagelistner.getImage(array);   })()");
+
+        mWebView.loadUrl("javascript:(function getOgMap(){" +
+                "    var image = null, url = null;" +
+                "    [].slice.call(document.getElementsByTagName('meta')).forEach(function(item){" +
+                "         if(item.getAttribute('property')==='og:image'){" +
+                "             image=item.getAttribute('content');" +
+                "         } else if(item.getAttribute('property')==='og:url'){" +
+                "             url=item.getAttribute('content');" +
+                "         }" +
+                "    });" +
+                "alert(image);"+
+                "window.imagelistner.getImage(image);" +
+                "})()");
     }
 }

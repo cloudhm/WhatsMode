@@ -1,5 +1,7 @@
 package com.whatsmode.shopify.common;
 
+import android.os.Environment;
+
 import com.whatsmode.shopify.WhatsApplication;
 
 import java.io.File;
@@ -32,7 +34,7 @@ public class Constant {
     public static final String DEFAULT_CONTACT_US = "intent://user/283544598790548/?intent_trigger=mme&ref=messenger_commerce_1163199097047119_https%3A%2F%2Fwhatsmode.com%2F&nav=discover#Intent;scheme=fb-messenger;package=com.facebook.orca;end";
     public static final String DEFAULT_CONTACT_US_REDICT = "https://m.facebook.com/msg/283544598790548/?ref=messenger_commerce_1163199097047119_https%3A%2F%2Fwhatsmode.com%2Fpages%2Fholiday&show_interstitial=0&mdotme_uri=https%3A%2F%2Fm.me%2F283" +
             "544598790548%3Fref%3Dmessenger_commerce_1163199097047119_https%253A%252F%252Fwhatsmode.com%252Fpages%252Fholiday&handler=m.me&referer&refsrc=http%3A%2F%2Fm.me%2F283544598790548%3Fref%3Dmessenger_commerce_1163199097047119_https%253A%252F%252Fwhatsm&_rdr";
-    public static final  String influence_arrars[] = {"Adelaine Morin", "Aleksandra Wojtysiak", "Alessandra Cara", "Alexandra Kusio", "Alinagvozdeva", "Amanda Wizping",
+    public static final  String influence_arrays[] = {"Adelaine Morin", "Aleksandra Wojtysiak", "Alessandra Cara", "Alexandra Kusio", "Alinagvozdeva", "Amanda Wizping",
             "Anna Albus", "Annabellagutman", "Anotherarabgurl", "Beautyfineprint", "Claudia Dibenedetto", "CloeCouture",
             "Demi Flydi", "Donabogut", "Diandra Maria Picone", "Donabogut", "Donatella Gazze", "Elsalucia", "Emmyinstyle",
             "Essy Park", "Fabiana Russo", "Fabiola Picone", "Federica La Spina", "Fg Nar", "Flavia Berruti", "Gaia Schiavetti",
@@ -49,7 +51,7 @@ public class Constant {
     static {
         ROOTPATH_CUSTOMER_USERINFO = WhatsApplication.getContext().getFilesDir().getAbsolutePath()
                 + File.separator + "cache";
-        ROOTPATH_IMAGE_CACHE = WhatsApplication.getContext().getFilesDir().getAbsolutePath()
+        ROOTPATH_IMAGE_CACHE = Environment.getExternalStorageDirectory().getAbsolutePath()
                 + File.separator + "image";
     }
 

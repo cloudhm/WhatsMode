@@ -105,6 +105,7 @@ public class BaseWebFragment extends BaseFragment implements View.OnClickListene
 
             public boolean shouldOverrideUrlLoading(WebView view, String url){
                 //  重写此方法表明点击网页里面的链接还是在当前的webview里跳转，不跳到浏览器那边
+                prefixNotHttp(url);
                 if (RegexUtils.isProduct(url)) {
                     AppNavigator.jumpToWebActivity(getActivity(), WebActivity.STATE_PRODUCT,url);
                     ActionLog.onEvent(Constant.Event.PRODUCT_DETAIL);
@@ -113,7 +114,7 @@ public class BaseWebFragment extends BaseFragment implements View.OnClickListene
                 }else if((RegexUtils.isPages(url))){
                     AppNavigator.jumpToWebActivity(getContext(),WebActivity.STATE_COLLECTIONS,url);
                 } else if (RegexUtils.contactUsUrl(url)) {
-                    AppNavigator.jumpToWebActivity(getContext(),"",url);
+                    AppNavigator.jumpToWebActivity(getContext(),"","intent://user/283544598790548/?intent_trigger=mme&ref=messenger_commerce_1163199097047119_https%3A%2F%2Fwhatsmode.com%2F&nav=discover#Intent;scheme=fb-messenger;package=com.facebook.orca;end");
                     return true;
                 } else {
                     view.loadUrl(url);
@@ -127,6 +128,22 @@ public class BaseWebFragment extends BaseFragment implements View.OnClickListene
                 String url = getArguments().getString(KEY_URL);
                 mUrl = url;
                 mWebView.loadUrl(url);
+            }
+        }
+    }
+
+    private void prefixNotHttp(String url) {
+        if (!url.startsWith("http")) {
+            try {
+                // 以下固定写法
+                final Intent intent = new Intent(Intent.ACTION_VIEW,
+                        Uri.parse(url));
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                        | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                getActivity().startActivity(intent);
+            } catch (Exception e) {
+                // 防止没有安装的情况
+                e.printStackTrace();
             }
         }
     }

@@ -1,6 +1,7 @@
 package com.whatsmode.shopify.ui.helper;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Environment;
 import android.widget.Toast;
 
@@ -33,6 +34,7 @@ public class SDFileHelper {
 
     //Glide保存图片
     public static void savePicture(final String suffix, String url) {
+        //url = "https://img14.360buyimg.com/da/jfs/t4024/266/968344120/18745/d610233c/5863a879Nb8f02aeb.jpg";
         client = new OkHttpClient();
         final Request request = new Request.Builder().get()
                 .url(url)
@@ -53,10 +55,7 @@ public class SDFileHelper {
                 if (!dir1.exists()) {
                     dir1.mkdirs();
                 }
-                String fileName = filePath + "/" + suffix;
-                File file = new File(fileName);
-                file.createNewFile();
-                //这里就不要用openFileOutput了,那个是往手机内存中写数据的
+                String fileName = filePath + "/" + suffix + ".jpg";
                 FileOutputStream output = new FileOutputStream(fileName);
                 byte[] temp = new byte[1024];
                 int length = 0;
@@ -64,13 +63,14 @@ public class SDFileHelper {
                 while ((length = in.read(temp)) != -1) {
                     // 目标文件写入一部分内容
                     output.write(temp, 0, length);
+                    output.flush();
                 }
                 //将bytes写入到输出流中
                 output.flush();
+                in.close();
                 output.close();
                 //关闭输出流
-                Logger.e("---complete---");
-                //ToastUtil.showToast("图片已成功保存到" + filePath);
+                Logger.e("---savePath---" + fileName);
             }
         });
     }
@@ -84,7 +84,7 @@ public class SDFileHelper {
             if (!dir1.exists()) {
                 dir1.mkdirs();
             }
-            filename = filePath + "/" + filename;
+            filename = filePath + "/" + filename + ".jpg";
             //这里就不要用openFileOutput了,那个是往手机内存中写数据的
             FileOutputStream output = new FileOutputStream(filename);
             output.write(bytes);

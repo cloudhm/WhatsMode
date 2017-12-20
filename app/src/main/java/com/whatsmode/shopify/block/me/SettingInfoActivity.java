@@ -48,11 +48,12 @@ import cn.jpush.android.api.TagAliasCallback;
  * Created by tom on 17-11-25.
  */
 
-public class SettingInfoActivity extends MvpActivity<SettingInfoContract.Presenter> implements SettingInfoContract.View, View.OnClickListener, View.OnFocusChangeListener, CompoundButton.OnCheckedChangeListener {
+public class SettingInfoActivity extends MvpActivity<SettingInfoContract.Presenter> implements SettingInfoContract.View, View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
+    public static final int REQUEST_CODE = 0x11;
     private Toolbar mToolbar;
-    private EditText mFirstName;
-    private EditText mLastName;
+    private TextView mFirstName;
+    private TextView mLastName;
     private EditText mEmail;
     private TextView mChangePassword;
     private TextView mClearCache;
@@ -69,10 +70,12 @@ public class SettingInfoActivity extends MvpActivity<SettingInfoContract.Present
         StatusBarUtil.StatusBarLightMode(this);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
 
-        mFirstName = (EditText) findViewById(R.id.first_name);
-        mLastName = (EditText) findViewById(R.id.last_name);
-        mFirstName.setOnFocusChangeListener(this);
-        mLastName.setOnFocusChangeListener(this);
+        mFirstName = (TextView) findViewById(R.id.first_name);
+        mLastName = (TextView) findViewById(R.id.last_name);
+        //mFirstName.setOnFocusChangeListener(this);
+        //mLastName.setOnFocusChangeListener(this);
+        findViewById(R.id.first_name_l).setOnClickListener(this);
+        findViewById(R.id.last_name_l).setOnClickListener(this);
         mEmail = (EditText) findViewById(R.id.email);
         mChangePassword = (TextView) findViewById(R.id.change_password);
         mClearCache = (TextView) findViewById(R.id.clear_cache);
@@ -126,6 +129,7 @@ public class SettingInfoActivity extends MvpActivity<SettingInfoContract.Present
 
     @Override
     public void showCustomer(Customer customer) {
+        hideLoading();
         mFirstName.setText(customer.getFirstName());
         mLastName.setText(customer.getLastName());
         mEmail.setText(customer.getEmail());
@@ -163,14 +167,28 @@ public class SettingInfoActivity extends MvpActivity<SettingInfoContract.Present
         switch (view.getId()) {
             case R.id.change_password:
                 //changePassword();
-                performFocusChange();
-                startActivity(new Intent(this,ChangePasswordActivity.class));
+                //performFocusChange();
+                Intent pw = new Intent(this, ChangePasswordActivity.class);
+                pw.putExtra(KeyConstant.KEY_MY_TYPE,ChangePasswordActivity.TYPE_CHANGE_PASSWORD);
+                startActivityForResult(pw,REQUEST_CODE);
                 break;
             case R.id.sign_out:
                 signOut();
                 break;
             case R.id.clear_cache_l:
                 clearCache();
+                break;
+            case R.id.first_name_l:
+                Intent firstName = new Intent(this, ChangePasswordActivity.class);
+                firstName.putExtra(KeyConstant.KEY_MY_TYPE,ChangePasswordActivity.TYPE_FIRST_NAME);
+                firstName.putExtra(KeyConstant.KEY_MY_VALUE,mFirstName.getText().toString());
+                startActivityForResult(firstName,REQUEST_CODE);
+                break;
+            case R.id.last_name_l:
+                Intent lastName = new Intent(this, ChangePasswordActivity.class);
+                lastName.putExtra(KeyConstant.KEY_MY_TYPE,ChangePasswordActivity.TYPE_LAST_NAME);
+                lastName.putExtra(KeyConstant.KEY_MY_VALUE,mLastName.getText().toString());
+                startActivityForResult(lastName,REQUEST_CODE);
                 break;
         }
     }
@@ -196,7 +214,7 @@ public class SettingInfoActivity extends MvpActivity<SettingInfoContract.Present
                         -> dialogInterface.dismiss())
                 .setPositiveButton(R.string.yes_, (dialogInterface, i) -> {
                     dialogInterface.dismiss();
-                    performFocusChange();
+                    //performFocusChange();
                     mPresenter.signout();
                     ActionLog.onEvent(Constant.Event.SIGN_OUT);
                     showLoading();
@@ -286,7 +304,7 @@ public class SettingInfoActivity extends MvpActivity<SettingInfoContract.Present
             }
         }
     };
-
+/*
     @Override
     public void onFocusChange(View view, boolean b) {
         if(b) return;
@@ -320,7 +338,7 @@ public class SettingInfoActivity extends MvpActivity<SettingInfoContract.Present
         if (!TextUtils.equals(lastName, mLastNameValue)) {
             onFocusChange(mLastName,false);
         }
-    }
+    }*/
 
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -334,5 +352,14 @@ public class SettingInfoActivity extends MvpActivity<SettingInfoContract.Present
         //save status
         PreferencesUtil.putBoolean(this,KeyConstant.KEY_IS_OPEN_JPUSH,b);
         ActionLog.onEvent(Constant.Event.PUSH_NOTIFICATION);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
+            mPresenter.getCustomer();
+            showLoading();
+        }
     }
 }

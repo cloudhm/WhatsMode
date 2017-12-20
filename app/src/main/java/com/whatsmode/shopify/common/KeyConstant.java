@@ -16,4 +16,6 @@ public class KeyConstant {
     public static final String KEY_IS_FIRST_START = "key_is_first_start";
     public static final String KEY_EXTRA_ADDRESS = "key_extra_address";
     public static final String KEY_IS_OPEN_JPUSH = "key_is_open_jpush";
+    public static final String KEY_MY_TYPE = "key_my_type";
+    public static final String KEY_MY_VALUE = "key_my_value";
 }

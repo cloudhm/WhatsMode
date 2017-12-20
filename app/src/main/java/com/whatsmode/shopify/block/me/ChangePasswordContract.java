@@ -14,5 +14,6 @@ public interface ChangePasswordContract {
     }
     interface Presenter extends MvpPresenter<View>{
         void setPassword(String currentPwd,String newPwd);
+        void setName(String firstName,String lastName);
     }
 }

@@ -1,17 +1,9 @@
 package com.whatsmode.shopify.ui.helper;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Environment;
-import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.whatsmode.library.util.ToastUtil;
-import com.whatsmode.shopify.WhatsApplication;
 import com.whatsmode.shopify.common.Constant;
-import com.zchu.log.Logger;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -70,7 +62,6 @@ public class SDFileHelper {
                 in.close();
                 output.close();
                 //关闭输出流
-                Logger.e("---savePath---" + fileName);
             }
         });
     }

@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
@@ -26,7 +25,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
-import com.bumptech.glide.Glide;
 import com.whatsmode.library.util.RegexUtils;
 import com.whatsmode.shopify.AppNavigator;
 import com.whatsmode.shopify.R;
@@ -39,12 +37,9 @@ import com.whatsmode.shopify.block.me.ShareUtil;
 import com.whatsmode.shopify.common.Constant;
 import com.whatsmode.shopify.ui.helper.SDFileHelper;
 import com.whatsmode.shopify.ui.helper.ToolbarHelper;
-import com.zchu.log.Logger;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-
-import java.io.File;
 
 import static android.webkit.WebSettings.LOAD_CACHE_ELSE_NETWORK;
 
@@ -266,10 +261,12 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
                     aboutUsAnalytics(url);
                 } else if (RegexUtils.isContactUs(url)) {
                     AppNavigator.jumpToWebActivity(WebActivity.this,WebActivity.STATE_ABOUT_US,url);
-                }  else {
-                    if (!RegexUtils.isBlock(url)) {
+                } else if (!RegexUtils.isBlock(url)) {
                         view.loadUrl(url);
-                    }
+                }else if (RegexUtils.isJumperMessage(url)) {
+                    Uri parse = Uri.parse(url);
+                    Intent intent = new Intent(Intent.ACTION_VIEW, parse);
+                    startActivity(intent);
                 }
                 return true;
             }

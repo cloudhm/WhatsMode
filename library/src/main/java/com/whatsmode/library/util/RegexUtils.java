@@ -306,4 +306,8 @@ public class RegexUtils {
     public static boolean contactUsUrl(String url){
         return !TextUtils.isEmpty(url) && url.contains("https://m.me/283544598790548?ref=messenger_commerce_1163199097047119_https://whatsmode.com/");
     }
+
+    public static boolean isJumperMessage(String url) {
+        return !TextUtils.isEmpty(url) && url.equals("https://m.me/283544598790548?ref=messenger_commerce_1163199097047119_https://whatsmode.com/");
+    }
 }

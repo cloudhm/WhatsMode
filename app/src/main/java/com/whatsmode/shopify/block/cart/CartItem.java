@@ -92,6 +92,11 @@ public class CartItem implements Serializable{
     public CartItem() {
     }
 
+    public CartItem(int mainFromFragment) {
+        this.mainFromFragment = mainFromFragment;
+    }
+    public int mainFromFragment;
+
     static List<CartItem> mockItem(){
         /**
          * {

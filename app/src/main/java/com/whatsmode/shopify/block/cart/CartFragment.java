@@ -24,6 +24,7 @@ import com.whatsmode.shopify.WhatsApplication;
 import com.whatsmode.shopify.base.BaseListFragment;
 import com.whatsmode.shopify.block.WebActivity;
 import com.whatsmode.shopify.block.main.MainActivity;
+import com.zchu.log.Logger;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -52,7 +53,6 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
         btnCheckout = (Button) view.findViewById(R.id.checkOut);
         ivCheckAll = (ImageView) view.findViewById(R.id.checkOut_select);
         ivCheckAll.setOnClickListener(this);
-        btnCheckout.setOnClickListener(this);
         tvTotal = (TextView) view.findViewById(R.id.total_count);
         totalTv = (TextView) view.findViewById(R.id.total);
         subIndicator = (TextView) view.findViewById(R.id.subIndicator);
@@ -71,6 +71,9 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
             return;
         }
         getActivity().runOnUiThread(() -> {
+            if (list.mainFromFragment == 1 && getActivity() instanceof CartFromProductActivity) {
+                return;
+            }
             mPresenter.doLoadData(true);
             checkSpanner();
             if (mPresenter.isSelectAll()) {
@@ -146,7 +149,7 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
         }
         if (selected) {
             checkItem.add(cartItems);
-            if (checkItem.size() == mAdapter.getData().size()) {
+            if (mAdapter != null && checkItem.size() == mAdapter.getData().size()) {
                 mPresenter.setSelectAll(true,true);
                 ivCheckAll.setSelected(true);
             }
@@ -210,6 +213,9 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
         int badge = 0;
         for (CartItem cartItem : checkItem) {
             total += cartItem.getPrice() * cartItem.quality;
+        }
+        if (mAdapter == null) {
+            return;
         }
         List<CartItem> totalData = mAdapter.getData();
         for (CartItem cartItem : totalData) {
@@ -397,6 +403,5 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
     @Override
     public void onDestroy() {
         super.onDestroy();
-        //RxBus.getInstance().unregisterAll();
     }
 }

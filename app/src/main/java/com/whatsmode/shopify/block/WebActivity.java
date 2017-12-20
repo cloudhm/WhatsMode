@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
@@ -37,9 +38,13 @@ import com.whatsmode.shopify.block.me.ShareUtil;
 import com.whatsmode.shopify.common.Constant;
 import com.whatsmode.shopify.ui.helper.SDFileHelper;
 import com.whatsmode.shopify.ui.helper.ToolbarHelper;
+import com.zchu.log.Logger;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+
+import java.net.URISyntaxException;
+import java.util.List;
 
 import static android.webkit.WebSettings.LOAD_CACHE_ELSE_NETWORK;
 
@@ -54,6 +59,7 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
     public static final String STATE_PRODUCT = "PRODUCT";  // 商品詳情頁
     public static final String STATE_COLLECTIONS = "COLLECTIONS"; // 網紅
     public static final String STATE_ABOUT_US = "ABOUT_US"; // 關於我們
+    public static final String STATE_CONTACT_US = "CONTACT_US";
 
     private ProgressBar mProgressBar;
     private WebView mWebView;
@@ -133,10 +139,13 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
         toolbarHolder.titleView.setVisibility(View.GONE);
         ivLogo = (ImageView) findViewById(R.id.logo);
         mWebView = (WebView) findViewById(R.id.webview);
-        mWebView.getSettings().setCacheMode(LOAD_CACHE_ELSE_NETWORK);
-        mWebView.getSettings().setUserAgentString(Constant.USER_AGENT);
-        mProgressBar = (ProgressBar) findViewById(R.id.indeterminateBar);
         mUrl = getIntent().getStringExtra(EXTRA_URL);
+        mWebView.getSettings().setCacheMode(LOAD_CACHE_ELSE_NETWORK);
+        if (!TextUtils.isEmpty(mUrl) && !mUrl.startsWith(Constant.CHECKOUT_URL)) {
+            mWebView.getSettings().setUserAgentString(Constant.USER_AGENT);
+        }
+        mProgressBar = (ProgressBar) findViewById(R.id.indeterminateBar);
+
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.addJavascriptInterface(new AndroidJs(), "android");//AndroidtoJS类对象映射到js的test对象
         mWebView.addJavascriptInterface(new JsInterfaceObtainImage(this,currentTimeStep), "imagelistner");
@@ -188,22 +197,6 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
-    private void prefixNotHttp(String url) {
-        if (!url.startsWith("http")) {
-            try {
-                // 以下固定写法
-                final Intent intent = new Intent(Intent.ACTION_VIEW,
-                        Uri.parse(url));
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                        | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                startActivity(intent);
-            } catch (Exception e) {
-                // 防止没有安装的情况
-                e.printStackTrace();
-            }
-        }
-    }
-
     @SuppressLint("SetJavaScriptEnabled")
     private void initWebTitle() {
         mWebView.setWebViewClient(new WebViewClient(){
@@ -227,38 +220,88 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
 
             @Override
             public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-                //super.onReceivedError(view, errorCode, description, failingUrl);
                 mProgressBar.setVisibility(View.GONE);
-                //prefixNotHttp(failingUrl);
                 if (mUrl.equals(failingUrl)) {
                     mWebView.setVisibility(View.GONE);
                     view.loadUrl("about:blank");
                     errorView.setVisibility(View.VISIBLE);
                 }
-                if (failingUrl.equals(Constant.DEFAULT_CONTACT_US)) {
-                    prefixNotHttp(failingUrl);
-                }
+//                if (failingUrl.equals(Constant.DEFAULT_CONTACT_US)) {
+//                    prefixNotHttp(failingUrl);
+//                }
             }
             @TargetApi(Build.VERSION_CODES.M)
             @Override
             public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
-                //super.onReceivedError(view, request, error);
                 onReceivedError(view,error.getErrorCode(),error.getDescription().toString(),request.getUrl().toString());
             }
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                //prefixNotHttp(url);
-                if (RegexUtils.isProduct(url)) {
+                if (RegexUtils.isProduct(url) && !RegexUtils.isJumperMessage(url)) {
                     startActivity(WebActivity.newIntent(WebActivity.this,WebActivity.STATE_PRODUCT,url));
-                }else if (RegexUtils.isCollection(url)) {
+                }else if (RegexUtils.isCollection(url) && !RegexUtils.isJumperMessage(url)) {
                     startActivity(WebActivity.newIntent(WebActivity.this,WebActivity.STATE_COLLECTIONS,url));
                 } else if (RegexUtils.isPages(url) && !RegexUtils.isJumperMessage(url)){
                     startActivity(WebActivity.newIntent(WebActivity.this,WebActivity.STATE_ABOUT_US,url));
                     aboutUsAnalytics(url);
-                } else if (RegexUtils.isContactUs(url)) {
+                } else if (RegexUtils.isContactUs(url) && !RegexUtils.isJumperMessage(url)) {
                     AppNavigator.jumpToWebActivity(WebActivity.this,WebActivity.STATE_ABOUT_US,url);
                 }  else if (!RegexUtils.isBlock(url)) {
+                        try {
+                            //处理intent协议
+                            if (url.startsWith("intent://")) {
+                                Intent intent;
+                                try {
+                                    intent = Intent.parseUri(url, Intent.URI_INTENT_SCHEME);
+                                    intent.addCategory("android.intent.category.BROWSABLE");
+                                    intent.setComponent(null);
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
+                                        intent.setSelector(null);
+                                    }
+
+                                    List<ResolveInfo> resolves = getPackageManager().queryIntentActivities(intent, 0);
+
+                                    if (resolves.size() > 0) {
+                                        startActivityIfNeeded(intent, -1);
+                                        if (STATE_CONTACT_US.equalsIgnoreCase(title)) {
+                                            finish();
+                                        }
+                                    }else{
+                                        intent = new Intent(Intent.ACTION_VIEW,
+                                                Uri.parse(Constant.DOWNLOAD_MESSENGER));
+                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                                                | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                                        startActivity(intent);
+                                        finish();
+                                    }
+                                    return true;
+                                } catch (URISyntaxException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            // 处理自定义scheme协议
+                            if (!url.startsWith("http")) {
+                                try {
+                                    // 以下固定写法
+                                    final Intent intent = new Intent(Intent.ACTION_VIEW,
+                                            Uri.parse(url));
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                                            | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                                    startActivity(intent);
+                                    finish();
+                                } catch (Exception e) {
+                                    // 防止没有安装的情况
+                                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                                    startActivity(intent);
+                                    e.printStackTrace();
+                                }
+                                return true;
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    /*
                     if (RegexUtils.isJumperMessage(url)) {
                         Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse(url));
                         startActivity(intent);
@@ -267,9 +310,9 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
                     }else {
                         view.loadUrl(url);
                     }
+                    */
                     return false;
                 }
-
                 return true;
             }
 
@@ -323,10 +366,6 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
     }
 
     public void addLocalJs() {
-
-//        mWebView.loadUrl("javascript:(function(){ " + "var objs = document.getElementsByTagName(\"img\");"
-//                + " var array=new Array(); " + " for(var j=0;j<objs.length;j++){ " + "array[j]=objs[j].src;" + " }  "
-//                + "window.imagelistner.getImage(array);   })()");
 
         mWebView.loadUrl("javascript:(function getOgMap(){" +
                 "    var image = null, url = null;" +

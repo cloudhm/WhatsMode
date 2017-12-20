@@ -66,7 +66,7 @@ public class BaseWebFragment extends BaseFragment implements View.OnClickListene
         btnRefresh.setOnClickListener(this);
 
         WebSettings settings = mWebView.getSettings();
-        //settings.setUserAgentString(Constant.USER_AGENT);
+        settings.setUserAgentString(Constant.USER_AGENT);
         mProgressBar = (ProgressBar) view.findViewById(R.id.indeterminateBar);
         mWebView.setWebViewClient(new WebViewClient() {
             @Override

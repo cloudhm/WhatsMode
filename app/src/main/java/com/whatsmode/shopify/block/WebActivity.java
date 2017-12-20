@@ -139,10 +139,13 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
         toolbarHolder.titleView.setVisibility(View.GONE);
         ivLogo = (ImageView) findViewById(R.id.logo);
         mWebView = (WebView) findViewById(R.id.webview);
-        mWebView.getSettings().setCacheMode(LOAD_CACHE_ELSE_NETWORK);
-        mWebView.getSettings().setUserAgentString(Constant.USER_AGENT);
-        mProgressBar = (ProgressBar) findViewById(R.id.indeterminateBar);
         mUrl = getIntent().getStringExtra(EXTRA_URL);
+        mWebView.getSettings().setCacheMode(LOAD_CACHE_ELSE_NETWORK);
+        if (!TextUtils.isEmpty(mUrl) && !mUrl.startsWith(Constant.CHECKOUT_URL)) {
+            mWebView.getSettings().setUserAgentString(Constant.USER_AGENT);
+        }
+        mProgressBar = (ProgressBar) findViewById(R.id.indeterminateBar);
+
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.addJavascriptInterface(new AndroidJs(), "android");//AndroidtoJS类对象映射到js的test对象
         mWebView.addJavascriptInterface(new JsInterfaceObtainImage(this,currentTimeStep), "imagelistner");

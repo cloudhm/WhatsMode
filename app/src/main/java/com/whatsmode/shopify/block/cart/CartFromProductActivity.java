@@ -14,6 +14,8 @@ import com.whatsmode.shopify.base.BaseActivity;
 import com.whatsmode.shopify.common.Constant;
 import com.whatsmode.shopify.ui.helper.ToolbarHelper;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.List;
 public class CartFromProductActivity extends BaseActivity {
 
@@ -36,9 +38,10 @@ public class CartFromProductActivity extends BaseActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if (mFragment != null) {
-            mFragment.saveCart();
-        }
+//        if (mFragment != null) {
+//            mFragment.saveCart();
+//        }
+        EventBus.getDefault().post(new CartItem(1));
     }
 
     public String defineCartTitle(int badges){

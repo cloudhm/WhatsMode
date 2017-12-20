@@ -30,6 +30,7 @@ public class Constant {
     public static final String EXTERNAL = "external";
     public static final String USER_AGENT = "mobile-Android";
     public static final String ABOUT_US = "https://whatsmode.com/pages/introduce-us";
+    public static final String DOWNLOAD_MESSENGER = "https://m.me/283544598790548?ref=messenger_commerce_1163199097047119_https://whatsmode.com/";
 
     public static final String DEFAULT_CONTACT_US = "intent://user/283544598790548/?intent_trigger=mme&ref=messenger_commerce_1163199097047119_https%3A%2F%2Fwhatsmode.com%2F&nav=discover#Intent;scheme=fb-messenger;package=com.facebook.orca;end";
     public static final String DEFAULT_CONTACT_US_REDICT = "https://m.facebook.com/msg/283544598790548/?ref=messenger_commerce_1163199097047119_https%3A%2F%2Fwhatsmode.com%2Fpages%2Fholiday&show_interstitial=0&mdotme_uri=https%3A%2F%2Fm.me%2F283" +

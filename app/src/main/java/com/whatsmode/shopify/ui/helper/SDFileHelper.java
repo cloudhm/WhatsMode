@@ -1,6 +1,7 @@
 package com.whatsmode.shopify.ui.helper;
 
 import android.os.Environment;
+import android.text.TextUtils;
 
 import com.whatsmode.library.util.ToastUtil;
 import com.whatsmode.shopify.common.Constant;
@@ -27,6 +28,9 @@ public class SDFileHelper {
     //Glide保存图片
     public static void savePicture(final String suffix, String url) {
         //url = "https://img14.360buyimg.com/da/jfs/t4024/266/968344120/18745/d610233c/5863a879Nb8f02aeb.jpg";
+        if (TextUtils.isEmpty(url)) {
+            return;
+        }
         client = new OkHttpClient();
         final Request request = new Request.Builder().get()
                 .url(url)

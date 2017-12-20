@@ -38,6 +38,7 @@ import com.whatsmode.shopify.block.me.ShareUtil;
 import com.whatsmode.shopify.common.Constant;
 import com.whatsmode.shopify.ui.helper.SDFileHelper;
 import com.whatsmode.shopify.ui.helper.ToolbarHelper;
+import com.zchu.log.Logger;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -244,50 +245,59 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
                 } else if (RegexUtils.isContactUs(url) && !RegexUtils.isJumperMessage(url)) {
                     AppNavigator.jumpToWebActivity(WebActivity.this,WebActivity.STATE_ABOUT_US,url);
                 }  else if (!RegexUtils.isBlock(url)) {
-                    try {
-                        //处理intent协议
-                        if (url.startsWith("intent://")) {
-                            Intent intent;
-                            try {
-                                intent = Intent.parseUri(url, Intent.URI_INTENT_SCHEME);
-                                intent.addCategory("android.intent.category.BROWSABLE");
-                                intent.setComponent(null);
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
-                                    intent.setSelector(null);
-                                }
+                        try {
+                            //处理intent协议
+                            if (url.startsWith("intent://")) {
+                                Intent intent;
+                                try {
+                                    intent = Intent.parseUri(url, Intent.URI_INTENT_SCHEME);
+                                    intent.addCategory("android.intent.category.BROWSABLE");
+                                    intent.setComponent(null);
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
+                                        intent.setSelector(null);
+                                    }
 
-                                List<ResolveInfo> resolves = getPackageManager().queryIntentActivities(intent,0);
+                                    List<ResolveInfo> resolves = getPackageManager().queryIntentActivities(intent, 0);
 
-                                if(resolves.size()>0){
-                                    startActivityIfNeeded(intent, -1);
-                                    if (STATE_CONTACT_US.equalsIgnoreCase(title)) {
+                                    if (resolves.size() > 0) {
+                                        startActivityIfNeeded(intent, -1);
+                                        if (STATE_CONTACT_US.equalsIgnoreCase(title)) {
+                                            finish();
+                                        }
+                                    }else{
+                                        intent = new Intent(Intent.ACTION_VIEW,
+                                                Uri.parse(Constant.DOWNLOAD_MESSENGER));
+                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                                                | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                                        startActivity(intent);
                                         finish();
                                     }
+                                    return true;
+                                } catch (URISyntaxException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            // 处理自定义scheme协议
+                            if (!url.startsWith("http")) {
+                                try {
+                                    // 以下固定写法
+                                    final Intent intent = new Intent(Intent.ACTION_VIEW,
+                                            Uri.parse(url));
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                                            | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                                    startActivity(intent);
+                                    finish();
+                                } catch (Exception e) {
+                                    // 防止没有安装的情况
+                                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                                    startActivity(intent);
+                                    e.printStackTrace();
                                 }
                                 return true;
-                            } catch (URISyntaxException e) {
-                                e.printStackTrace();
                             }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                        // 处理自定义scheme协议
-                        if (!url.startsWith("http")) {
-                            try {
-                                // 以下固定写法
-                                final Intent intent = new Intent(Intent.ACTION_VIEW,
-                                        Uri.parse(url));
-                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                                        | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                                startActivity(intent);
-                                finish();
-                            } catch (Exception e) {
-                                // 防止没有安装的情况
-                                e.printStackTrace();
-                            }
-                            return true;
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
                     /*
                     if (RegexUtils.isJumperMessage(url)) {
                         Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse(url));

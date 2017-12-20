@@ -2,6 +2,7 @@ package com.whatsmode.shopify.block.me;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.view.Gravity;
 import android.view.View;
@@ -10,11 +11,15 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.whatsmode.library.util.FileUtil;
+import com.whatsmode.library.util.SerializableUtil;
 import com.whatsmode.library.util.SnackUtil;
 import com.whatsmode.shopify.R;
+import com.whatsmode.shopify.common.Constant;
 import com.zhy.base.fileprovider.FileProvider7;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 
 import cn.sharesdk.facebook.Facebook;
@@ -74,14 +79,13 @@ public class ShareDialog extends Dialog implements View.OnClickListener {
         mParams.setUrl(url);
 
         mLink = link;
-
-        System.out.println("----------------------dialog imagePath:"+imagePath);
-        ImageView imageView = (ImageView) findViewById(R.id.test);
-        Glide.with(mContext).load(imagePath).error(R.drawable.share_close).into(imageView);
     }
 
     private void share(String name){
         if(mParams == null) return;
+        if (name == Instagram.NAME) {
+            checkImagePath(mParams);
+        }
         Platform platform = ShareSDK.getPlatform(name);
         platform.setPlatformActionListener(new PlatformActionListener() {
             @Override
@@ -102,6 +106,27 @@ public class ShareDialog extends Dialog implements View.OnClickListener {
         platform.share(mParams);
     }
 
+    private void checkImagePath(Platform.ShareParams params) {
+        String imagePath = params.getImagePath();
+        File file = new File(imagePath);
+        if (!file.exists()) {
+            String absolutePath = SerializableUtil.getSerializableFile(Constant.SHARE_DEFAULT_IMAGE_PATH, Constant.SHARE_DEFAULT_IMAGE_NAME).getAbsolutePath();
+            File share = new File(absolutePath);
+            if (!share.exists() || share.length() == 0) {
+                copyImage(absolutePath);
+            }
+            params.setImagePath(absolutePath);
+        }
+    }
+
+    private void copyImage(String absolutePath) {
+        try {
+            FileUtil.writeFile(mContext.getAssets().open("share.png"),absolutePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void onClick(View view) {
         if(mParams != null)
@@ -113,6 +138,7 @@ public class ShareDialog extends Dialog implements View.OnClickListener {
                 share(Instagram.NAME);
                 break;
             case R.id.snapchat:
+                checkImagePath(mParams);
                 ShareUtil.shareSystem(mContext, FileProvider7.getUriForFile(mContext, new File(mParams.getImagePath())));
                 break;
             case R.id.whatsapp:

@@ -307,8 +307,8 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
     public void deleteItem(CartItem item) {
         AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
                 .setMessage(R.string.confirm_delete)
-                .setNegativeButton(R.string.cancel, null)
-                .setPositiveButton(R.string.confirm, (dialog, which) -> {
+                .setNegativeButton("Cancel", null)
+                .setPositiveButton("Confirm", (dialog, which) -> {
                     mAdapter.getData().remove(item);
                     mAdapter.notifyDataSetChanged();
                     mPresenter.saveCart(mAdapter.getData());

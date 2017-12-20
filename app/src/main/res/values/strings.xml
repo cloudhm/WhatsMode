@@ -27,7 +27,7 @@
     <string name="all">ALL</string>
     <string name="cancel">Cancel</string>
     <string name="confirm">Confirm</string>
-    <string name="confirm_delete">CONFIRM DELETE CART ITEMS?</string>
+    <string name="confirm_delete">Would like deleting cart items?</string>
     <string name="total_cost">" : %1$s"</string>
     <string name="delete">DELETE</string>
     <string name="no_clear_error">the server is busying, please try later</string>

@@ -248,26 +248,28 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                prefixNotHttp(url);
+                //prefixNotHttp(url);
                 if (RegexUtils.isProduct(url)) {
                     startActivity(WebActivity.newIntent(WebActivity.this,WebActivity.STATE_PRODUCT,url));
-                }else if (RegexUtils.contactUsUrl(url)) {
-                    //AppNavigator.jumpToWebActivity(WebActivity.this,"",Constant.DEFAULT_CONTACT_US_REDICT);
-                    return true;
-                } else if (RegexUtils.isCollection(url)) {
+                }else if (RegexUtils.isCollection(url)) {
                     startActivity(WebActivity.newIntent(WebActivity.this,WebActivity.STATE_COLLECTIONS,url));
-                } else if (RegexUtils.isPages(url)){
+                } else if (RegexUtils.isPages(url) && !RegexUtils.isJumperMessage(url)){
                     startActivity(WebActivity.newIntent(WebActivity.this,WebActivity.STATE_ABOUT_US,url));
                     aboutUsAnalytics(url);
                 } else if (RegexUtils.isContactUs(url)) {
                     AppNavigator.jumpToWebActivity(WebActivity.this,WebActivity.STATE_ABOUT_US,url);
-                } else if (!RegexUtils.isBlock(url)) {
+                }  else if (!RegexUtils.isBlock(url)) {
+                    if (RegexUtils.isJumperMessage(url)) {
+                        Intent intent = new Intent(Intent.ACTION_VIEW,Uri.parse(url));
+                        startActivity(intent);
+                    }else if (url.startsWith("intent")) {
+                        finish();
+                    }else {
                         view.loadUrl(url);
-                }else if (RegexUtils.isJumperMessage(url)) {
-                    Uri parse = Uri.parse(url);
-                    Intent intent = new Intent(Intent.ACTION_VIEW, parse);
-                    startActivity(intent);
+                    }
+                    return false;
                 }
+
                 return true;
             }
 
@@ -335,7 +337,6 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
                 "             url=item.getAttribute('content');" +
                 "         }" +
                 "    });" +
-                "alert(image);"+
                 "window.imagelistner.getImage(image);" +
                 "})()");
     }

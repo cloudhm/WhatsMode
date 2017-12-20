@@ -82,6 +82,40 @@ public class ChangePasswordPresenter extends BaseRxPresenter<ChangePasswordContr
 
     }
 
+    @Override
+    public void setName(String firstName, String lastName) {
+        Storefront.CustomerUpdateInput input = new Storefront.CustomerUpdateInput();
+        if (!TextUtils.isEmpty(firstName)) input.setFirstName(firstName);
+        if (!TextUtils.isEmpty(lastName)) input.setLastName(lastName);
+        MyRepository.create().updateCustomer(AccountManager.getCustomerAccessToken(),input,new UpdateCustomerFragment())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new SingleObserver<Storefront.Customer>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                        addSubscribe(d);
+                    }
+
+                    @Override
+                    public void onSuccess(@NonNull Storefront.Customer customer) {
+                        if (isViewAttached()) {
+                            getView().updateSuccess();
+                        }
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        if (isViewAttached()) {
+                            if (e instanceof APIException) {
+                                APIException t = (APIException) e;
+                                getView().onError(t.getCode(),t.getMessage());
+                            }else{
+                                getView().onError(APIException.CODE_COMMON_EXCEPTION,e.getMessage());
+                            }
+                        }
+                    }
+                });
+    }
+
     //update password
     public class UpdateCustomerFragment implements Storefront.CustomerUpdatePayloadQueryDefinition{
 

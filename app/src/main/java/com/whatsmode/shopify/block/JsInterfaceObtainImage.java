@@ -27,7 +27,6 @@ public class JsInterfaceObtainImage {
     @JavascriptInterface
     public void getImage(String urls) {
 
-        Logger.e("========进入js方法========" + urls);
 //        if (urls != null && urls.length > 0) {
 ////            for (int i = 0; i < urls.length; i++) {
 ////                SDFileHelper.savaFileToSD(urls);

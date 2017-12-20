@@ -7,7 +7,9 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.whatsmode.library.util.SnackUtil;
 import com.whatsmode.shopify.R;
 import com.zhy.base.fileprovider.FileProvider7;
@@ -72,6 +74,10 @@ public class ShareDialog extends Dialog implements View.OnClickListener {
         mParams.setUrl(url);
 
         mLink = link;
+
+        System.out.println("----------------------dialog imagePath:"+imagePath);
+        ImageView imageView = (ImageView) findViewById(R.id.test);
+        Glide.with(mContext).load(imagePath).error(R.drawable.share_close).into(imageView);
     }
 
     private void share(String name){

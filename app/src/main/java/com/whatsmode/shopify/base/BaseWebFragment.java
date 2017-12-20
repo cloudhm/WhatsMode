@@ -114,7 +114,7 @@ public class BaseWebFragment extends BaseFragment implements View.OnClickListene
                 }else if((RegexUtils.isPages(url))){
                     AppNavigator.jumpToWebActivity(getContext(),WebActivity.STATE_COLLECTIONS,url);
                 } else if (RegexUtils.contactUsUrl(url)) {
-                    AppNavigator.jumpToWebActivity(getContext(),"","intent://user/283544598790548/?intent_trigger=mme&ref=messenger_commerce_1163199097047119_https%3A%2F%2Fwhatsmode.com%2F&nav=discover#Intent;scheme=fb-messenger;package=com.facebook.orca;end");
+                    AppNavigator.jumpToWebActivity(getContext(),"",url);
                     return true;
                 } else {
                     view.loadUrl(url);

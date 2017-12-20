@@ -14,6 +14,7 @@ import com.whatsmode.shopify.R;
 import com.zhy.base.fileprovider.FileProvider7;
 
 import java.io.File;
+import java.sql.SQLOutput;
 
 import cn.sharesdk.onekeyshare.OnekeyShare;
 
@@ -24,6 +25,9 @@ import cn.sharesdk.onekeyshare.OnekeyShare;
 public class ShareUtil {
     public static void showShare(Context context,String text, String imagePath, String url,String link) {
 
+        System.out.println("--------------------------imagePath:"+imagePath);
+        System.out.println("---------------------------:"+new File(imagePath).exists());
+        imagePath += ".jpg";
         //onekeyShare(context,text,imagePath,url,link);
         customShare(context,text,imagePath,url,link);
     }

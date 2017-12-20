@@ -3,6 +3,7 @@ package com.whatsmode.shopify.base;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
@@ -25,6 +26,9 @@ import com.whatsmode.shopify.R;
 import com.whatsmode.shopify.actionlog.ActionLog;
 import com.whatsmode.shopify.block.WebActivity;
 import com.whatsmode.shopify.common.Constant;
+
+import java.net.URISyntaxException;
+import java.util.List;
 
 public class BaseWebFragment extends BaseFragment implements View.OnClickListener {
 
@@ -105,18 +109,18 @@ public class BaseWebFragment extends BaseFragment implements View.OnClickListene
 
             public boolean shouldOverrideUrlLoading(WebView view, String url){
                 //  重写此方法表明点击网页里面的链接还是在当前的webview里跳转，不跳到浏览器那边
-                prefixNotHttp(url);
-                if (RegexUtils.isProduct(url)) {
+                //prefixNotHttp(url);
+                if (RegexUtils.isProduct(url) && !RegexUtils.isJumperMessage(url)) {
                     AppNavigator.jumpToWebActivity(getActivity(), WebActivity.STATE_PRODUCT,url);
                     ActionLog.onEvent(Constant.Event.PRODUCT_DETAIL);
-                } else if (RegexUtils.isCollection(url)) {
+                } else if (RegexUtils.isCollection(url) && !RegexUtils.isJumperMessage(url)) {
                     AppNavigator.jumpToWebActivity(getContext(),WebActivity.STATE_COLLECTIONS,url);
-                }else if((RegexUtils.isPages(url))){
+                }else if((RegexUtils.isPages(url)) && !RegexUtils.isJumperMessage(url)){
                     AppNavigator.jumpToWebActivity(getContext(),WebActivity.STATE_COLLECTIONS,url);
-                } else if (RegexUtils.contactUsUrl(url)) {
-                    AppNavigator.jumpToWebActivity(getContext(),"",url);
+                } else if (RegexUtils.isJumperMessage(url)) {
+                    AppNavigator.jumpToWebActivity(getContext(),WebActivity.STATE_CONTACT_US,url);
                     return true;
-                } else {
+                }else {
                     view.loadUrl(url);
                 }
                 return true;
@@ -128,22 +132,6 @@ public class BaseWebFragment extends BaseFragment implements View.OnClickListene
                 String url = getArguments().getString(KEY_URL);
                 mUrl = url;
                 mWebView.loadUrl(url);
-            }
-        }
-    }
-
-    private void prefixNotHttp(String url) {
-        if (!url.startsWith("http")) {
-            try {
-                // 以下固定写法
-                final Intent intent = new Intent(Intent.ACTION_VIEW,
-                        Uri.parse(url));
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                        | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                getActivity().startActivity(intent);
-            } catch (Exception e) {
-                // 防止没有安装的情况
-                e.printStackTrace();
             }
         }
     }

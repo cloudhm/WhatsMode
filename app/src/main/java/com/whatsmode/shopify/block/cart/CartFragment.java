@@ -146,7 +146,7 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
         }
         if (selected) {
             checkItem.add(cartItems);
-            if (checkItem.size() == mAdapter.getData().size()) {
+            if (mAdapter != null && checkItem.size() == mAdapter.getData().size()) {
                 mPresenter.setSelectAll(true,true);
                 ivCheckAll.setSelected(true);
             }
@@ -210,6 +210,9 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
         int badge = 0;
         for (CartItem cartItem : checkItem) {
             total += cartItem.getPrice() * cartItem.quality;
+        }
+        if (mAdapter == null) {
+            return;
         }
         List<CartItem> totalData = mAdapter.getData();
         for (CartItem cartItem : totalData) {

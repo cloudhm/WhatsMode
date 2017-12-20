@@ -24,7 +24,6 @@ import com.whatsmode.shopify.WhatsApplication;
 import com.whatsmode.shopify.base.BaseListFragment;
 import com.whatsmode.shopify.block.WebActivity;
 import com.whatsmode.shopify.block.main.MainActivity;
-import com.zchu.log.Logger;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -85,13 +84,6 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
                 showOrHideEdit();
             }
         });
-    }
-
-    public void saveCart(){
-        if (mPresenter != null) {
-            mPresenter.saveCart(mAdapter.getData());
-            EventBus.getDefault().post(new CartItem());
-        }
     }
 
     @Override
@@ -307,8 +299,8 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
     public void deleteItem(CartItem item) {
         AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
                 .setMessage(R.string.confirm_delete)
-                .setNegativeButton("Cancel", null)
-                .setPositiveButton("Confirm", (dialog, which) -> {
+                .setNegativeButton(R.string.cancel, null)
+                .setPositiveButton(R.string.confirm, (dialog, which) -> {
                     mAdapter.getData().remove(item);
                     mAdapter.notifyDataSetChanged();
                     mPresenter.saveCart(mAdapter.getData());

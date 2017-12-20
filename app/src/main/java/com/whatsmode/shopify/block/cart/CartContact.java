@@ -6,7 +6,7 @@ import com.whatsmode.shopify.base.BaseListContract;
 import java.util.List;
 
 
-public class CartContact{
+class CartContact{
     interface View extends BaseListContract.View {
 
         void onCheckSelect(boolean selected, CartItem cartItems);

@@ -391,9 +391,4 @@ public class CartFragment extends BaseListFragment<CartContact.Presenter> implem
         checkTotal();
         showOrHideEdit();
     }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
 }

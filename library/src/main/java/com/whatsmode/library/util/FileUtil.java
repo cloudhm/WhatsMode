@@ -841,4 +841,40 @@ public class FileUtil {
         savedir = null;
         return savePath;
     }
+
+    public static void writeFile(InputStream is,String out) {
+        FileOutputStream fos = null;
+        try {
+            //创建文件名
+            File file =new File(out);
+            if(!file.exists()){
+                file.createNewFile();
+            }
+            // 打开一个已存在文件的输出流
+            fos = new FileOutputStream(file);
+            // 将输入流is写入文件输出流fos中
+            int len = 0;
+            byte[] bys = new byte[1024];
+
+            while((len=is.read(bys)) != -1){
+                fos.write(bys,0,len);
+            }
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        } finally{
+            //关闭输入流等
+            try {
+                if(fos != null)
+                fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                if(is != null)
+                is.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

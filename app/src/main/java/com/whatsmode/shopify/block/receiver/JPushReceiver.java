@@ -6,11 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.webkit.WebChromeClient;
 
-import com.whatsmode.library.util.SnackUtil;
 import com.whatsmode.shopify.block.WebActivity;
-import com.whatsmode.shopify.block.me.TrackingActivity;
 import com.whatsmode.shopify.common.Constant;
 
 import org.json.JSONException;

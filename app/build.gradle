@@ -4,15 +4,12 @@ android {
     compileSdkVersion 25
     buildToolsVersion "26.0.1"
 
-    dexOptions {
-        javaMaxHeapSize "4g"
-    }
 
     defaultConfig {
         applicationId "com.whatsmode"
         minSdkVersion 19
         targetSdkVersion 25
-        versionCode 65
+        versionCode 66
         versionName "5.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 

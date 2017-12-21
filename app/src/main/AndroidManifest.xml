@@ -146,11 +146,6 @@
                   android:theme="@style/StatusImmersion"
             />
 
-        <activity android:name=".block.me.TrackingActivity"
-                  android:screenOrientation="portrait"
-                  android:theme="@style/StatusImmersion"
-            />
-
         <!-- share -->
 
         <activity
